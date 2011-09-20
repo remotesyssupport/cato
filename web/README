@@ -1,0 +1,36 @@
+Cloud Sidekick Cato 
+
+------------------------------------------
+Description
+------------------------------------------
+
+The Cato automation toolkit consists of 3 major components: webserver, 
+database and task engine. Cato users can create automation routines
+through the web interface which are stored in a MySQL database. The 
+automation routines are executed by the services component.  
+
+------------------------------------------
+Repository and Download
+------------------------------------------
+
+https://github.com/cloudsidekick/cato
+
+------------------------------------------
+Bug and Feature Requests
+------------------------------------------
+
+https://github.com/cloudsidekick/cato/issues
+
+------------------------------------------
+Requirements
+------------------------------------------
+
+------------------------------------------
+Building
+------------------------------------------
+
+------------------------------------------
+Installation
+------------------------------------------
+
+See the INSTALL file in this directory.
