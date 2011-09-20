@@ -1,0 +1,47 @@
+<connectionTypes>
+  <connectionType id="1">
+    <connection_type></connection_type>
+    <connection_type_desc></connection_type_desc>
+    <credentials_required></credentials_required>
+  </connectionType>
+  <connectionType id="14">
+    <connection_type>ssh - ec2</connection_type>
+    <connection_type_desc>ssh - ec2</connection_type_desc>
+    <credentials_required>1</credentials_required>
+  </connectionType>
+  <connectionType id="9">
+    <connection_type>ssh</connection_type>
+    <connection_type_desc>ssh</connection_type_desc>
+    <credentials_required>1</credentials_required>
+  </connectionType>
+  <connectionType id="12">
+    <connection_type>windows</connection_type>
+    <connection_type_desc>windows</connection_type_desc>
+    <credentials_required>1</credentials_required>
+  </connectionType>
+  <connectionType id="11">
+    <connection_type>telnet</connection_type>
+    <connection_type_desc>telnet</connection_type_desc>
+    <credentials_required>1</credentials_required>
+  </connectionType>
+  <connectionType id="7">
+    <connection_type>oracle</connection_type>
+    <connection_type_desc>oracle</connection_type_desc>
+    <credentials_required>1</credentials_required>
+  </connectionType>
+  <connectionType id="8">
+    <connection_type>sqlserver</connection_type>
+    <connection_type_desc>sqlserver</connection_type_desc>
+    <credentials_required>1</credentials_required>
+  </connectionType>
+  <connectionType id="10">
+    <connection_type>sybase</connection_type>
+    <connection_type_desc>sybase</connection_type_desc>
+    <credentials_required>1</credentials_required>
+  </connectionType>
+  <connectionType id="13">
+    <connection_type>informix</connection_type>
+    <connection_type_desc>Informix</connection_type_desc>
+    <credentials_required>1</credentials_required>
+  </connectionType>
+</connectionTypes>

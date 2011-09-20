@@ -1,0 +1,102 @@
+Cloud Sidekick Cato 
+
+------------------------------------------
+Installation
+------------------------------------------
+
+These installation instructions cover installing Cato on a single linux 
+machine with web, database and services residing under the same home 
+directory. Other installation options such as a multiple server install
+are possible and may be recommended under different circumstances and will 
+be covered in future revisions of this document. 
+
+1.  If installing Cato from binaries prebuilt for your linux distribution
+and architecture, extract from the tar file into an application directory such
+as /opt/cato. 
+
+tar xvzf <cato_tar_file>.tar.gz -C /opt/cato
+
+2. If installing Cato from source, first make sure to perform the build 
+instructions located in the web and services directories. After the build 
+processes have been completed, run the install script located in the source
+root. This install script will copy the appropriate files from the source
+directories to the target directory. 
+
+./install --target=/opt/cato
+
+3. With the binaries in the new cato home, the next step is to create and 
+populate the database. Switch to the cato home directory and use the MySql
+command line tool to create the database and run the following scripts.
+
+	cd /opt/cato
+	
+	export CATO_HOME=/opt/cato
+
+	mysqladmin -u username -p create cato
+
+	mysql -u username -p
+
+Where username is a database user with CREATE and GRANT privileges (typically
+root).
+
+At the MySQL prompt (change password to something appropriate):
+
+	GRANT EXECUTE SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, INDEX,
+	ALTER, LOCK TABLES, CREATE TEMPORARY TABLES 
+	ON `cato`.* TO 'cato'@'localhost' 
+
+	IDENTIFIED BY 'password';
+
+	FLUSH PRIVILEGES;
+
+exit
+
+4. Now setup the configuration file that will allow the web and services
+to connect to the database. Make a copy of the default conf file and edit
+with your favorite tool. 
+
+	cp conf/default.cato.conf conf/cato.conf
+
+	vi conf/cato.conf
+
+Change the database parameter values as appropriate (skip the encryption
+key and password for now). Save and quit.
+
+The database password and encryption key values will themselves need to 
+be stored in the conf file encrypted. Using the setup_conf script create
+the encrypted versions of these values. This script prompts for the 
+encryption key, database password and optionally the application
+administrator password. 
+
+Make note of the values returned, you will need to paste them into files.
+Answer Y when asked if you want to encrypt the application admin password. 
+
+NOTE: this script relies on the CATO_HOME environment variable to be set 
+properly. See step number three above. 
+
+	./conf/setup_config
+
+Reedit the conf file and paste the key and database password values on the
+related lines. Save and quit. 
+
+
+5. Change the application admin password in the database data script to the 
+encrypted value. This was the last value encrypted when the setup_config 
+script was run. Replace encryptedpassword in the following command with 
+the encrypted administrator password and run the command.
+
+sed 's/#REPLACE_PASSWORD#/encryptedpassword/' ./database/cato_data.sql
+
+6. Run the following commands to create and populate the database tables. 
+
+	mysql -u username -p cato < ./database/cato_ddl.sql
+
+	mysql -u username -p cato < ./database/cato_data.sql
+
+7. Next perform the web installation. Change to the web directory and view 
+the INSTALL there for specific steps for the web component. 
+
+8. After the web install piece has been completed, finish the installation 
+process with installing the services component. Change to the services 
+directory and view the INSTALL file for specific steps. 
+document in the database directory. 

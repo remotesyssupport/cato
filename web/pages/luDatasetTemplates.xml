@@ -1,0 +1,29 @@
+<templates>
+  <template template_id="1">
+    <name>Control Test</name>
+    <desc>Control Test Description</desc>
+    <version>1</version>
+    <function command_type="dataset">
+    	<pair>
+        	<key input_type="text">setting</key>
+        	<value input_type="text"></value>
+      	</pair>
+      	<pair>
+      	  	<key input_type="text">pass_fail</key>
+        	<value input_type="text"></value>
+      	</pair>
+      	<pair>
+        	<key input_type="text">reason</key>
+        	<value input_type="text"></value>
+      	</pair>
+      	<pair>
+        	<key input_type="text">expected_value</key>
+        	<value input_type="text"></value>
+	</pair>
+	<pair>
+	        <key input_type="text">found_value</key>
+	        <value input_type="text"></value>
+	</pair>
+    </function>
+  </template>
+</templates>

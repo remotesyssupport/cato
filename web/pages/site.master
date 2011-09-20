@@ -1,0 +1,342 @@
+<!--
+//Copyright 2011 Cloud Sidekick
+// 
+//Licensed under the Apache License, Version 2.0 (the "License");
+//you may not use this file except in compliance with the License.
+//You may obtain a copy of the License at
+// 
+//    http://www.apache.org/licenses/LICENSE-2.0
+// 
+//Unless required by applicable law or agreed to in writing, software
+//distributed under the License is distributed on an "AS IS" BASIS,
+//WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//See the License for the specific language governing permissions and
+//limitations under the License.
+//
+-->
+<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="site.master.cs" Inherits="Web.sitemaster" %>
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1" runat="server">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta http-equiv="content-style-type" content="text/css" />
+    <title>Cloud Sidekick</title>
+    <link rel="icon" href="../images/favicon.png" />
+    <!-- Imp CSS -->
+    <link type="text/css" href="<%= "../style/main.css?v=" + ag.APP_REVISION %>" rel="stylesheet" />
+    <link type="text/css" href="../style/ui.tabs.css" rel="stylesheet" />
+    <link type="text/css" href="../style/superfish/superfish.css" rel="stylesheet" />
+    <link type="text/css" href="../style/tipTip.css" rel="stylesheet" />
+    <!--jQuery -->
+    <script type="text/javascript" src="../script/jquery/jquery-1.6.1.js"></script>
+    <script type="text/javascript" src="../script/jquery/jquery-ui-1.8.12.js"></script>
+    <script type="text/javascript" src="../script/jquery/jquery.corner.js"></script>
+    <!-- Plugins -->
+    <script type="text/javascript" src="../script/jquery/jquery.blockUI.js"></script>
+    <script type="text/javascript" src="../script/jquery/jquery.textarea.js"></script>
+    <script type="text/javascript" src="../script/jquery/jquery.timers.js"></script>
+    <script type="text/javascript" src="../script/superfish/hoverIntent.js"></script>
+    <script type="text/javascript" src="../script/superfish/superfish.js"></script>
+    <script type="text/javascript" src="../script/superfish/supersubs.js"></script>
+    <script type="text/javascript" src="../script/jquery/jquery.scrollTo.js"></script>
+    <script type="text/javascript" src="../script/jquery/jquery.tipTip.js"></script>
+    <script type="text/javascript" src="../script/jquery/jquery.timepicker.js"></script>    
+	<script type="text/javascript" src="../script/jquery/jquery.base64.js"></script>
+    <!-- JavaScript -->
+    <script type="text/javascript" src="../script/masterpage.js?v=<%= ag.APP_REVISION %>"></script>
+    <script type="text/javascript" src="../script/MainScript.js?v=<%= ag.APP_REVISION %>"></script>
+    <script type="text/javascript" src="../script/validation.js?v=<%= ag.APP_REVISION %>"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            //NOTE: this is the main jQuery function that will execute
+            //when the DOM is ready.  Things you want defined on 'page load' should 
+            //go in here.
+
+            //use this to define constants, set up jQuery objects, etc.
+
+            $("ul.sf-menu").supersubs({
+                minWidth: 18,   // minimum width of sub-menus in em units 
+                maxWidth: 27,   // maximum width of sub-menus in em units 
+                extraWidth: .5     // extra width can ensure lines don't sometimes turn over 
+                // due to slight rounding differences and font-family 
+            }).superfish();  // call supersubs first, then superfish, so that subs are 
+            // not display:none when measuring. Call before initialising 
+            // containing tabs for same reason.
+
+
+            //the cloud accounts dropdown updates the server session
+            $("#ctl00_ddlCloudAccounts").change(function () {
+                $("#update_success_msg").text("Updating...").show();
+
+                var account_id = $(this).val();
+                $.ajax({
+                    type: "POST",
+                    async: false,
+                    url: "uiMethods.asmx/wmSetActiveCloudAccount",
+                    data: '{"sAccountID":"' + account_id + '"}',
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (msg) {
+                        $("#update_success_msg").text("Update Successful").fadeOut(2000);
+
+                        //some pages have cloud content, but they are all different.
+                        //This expects a page to have the following function...
+                        //if it doesn't, nothing really happens after the ajax call.
+                        //if it does, it will do some sort of nice clean refresh logic.
+                        CloudAccountWasChanged();
+
+                        if (msg.d.length > 0) {
+                            showInfo(msg.d);
+                        }
+                    },
+                    error: function (response) {
+                        showAlert(response.responseText);
+                    }
+                });
+
+            });
+        });
+
+
+        // Menu
+        $(function () {
+            var tabContainers = $('div.tabs > div');
+            tabContainers.hide().filter(':home').hide();
+            $('div.tabs ul.tabNavigation a').click(function () {
+                tabContainers.slideUp();
+                tabContainers.filter(this.hash).slideDown();
+                //$('div.tabs ul.tabNavigation a').removeClass('selected');
+                //$(this).addClass('selected');
+            }).filter(':first').click();
+        });
+
+        // End Menu
+
+
+        //the timer that keeps the heartbeat updated
+        window.setInterval(updateHeartbeat, 120000);
+
+        //and the jquery ajax it performs
+        function updateHeartbeat() {
+            $.ajax({
+                type: "POST",
+                url: "../pages/uiMethods.asmx/wmUpdateHeartbeat",
+                data: '{}',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (msg) {
+                    if (msg.d.length > 0) {
+                        showAlert(msg.d);
+                    }
+                },
+                error: function (response) {
+                    //nothing to do here but throw you back to the login page.
+                    location.href = "../login.aspx?msg=Server+Session+has+expired+(7)."
+                    //&err=" + escape(response.responseText.replace(/(\r\n|\n|\r)/gm, ""));
+                }
+            });
+        }
+    </script>
+    <!-- End JavaScript -->
+    <asp:ContentPlaceHolder ID="phHead" runat="server">
+    </asp:ContentPlaceHolder>
+    <!-- End Head -->
+</head>
+<body>
+    <div id="fullcontent" class="min900px">
+        <form id="form1" runat="server">
+        <!-- This is the MAIN Content section. -->
+        <asp:ScriptManager ID="ScriptManager" runat="server" EnablePageMethods="true">
+            <Services>
+                <asp:ServiceReference Path="~/pages/taskMethods.asmx" />
+                <asp:ServiceReference Path="~/pages/uiMethods.asmx" />
+            </Services>
+        </asp:ScriptManager>
+        <asp:ContentPlaceHolder ID="phDetail" runat="server">
+        </asp:ContentPlaceHolder>
+        <!--  End MAIN Content section. -->
+        <div id="head" class="ui-widget-header">
+            <!-- Main Menu  -->
+            <ul class="sf-menu">
+                <li>
+                    <asp:Panel ID="pnlHome" runat="server">
+                        <a onclick="showPleaseWait();" href="../pages/home.aspx">
+                            <img src="../images/icons/home_24.png" alt="" />
+                            Home</a>
+                    </asp:Panel>
+                </li>
+                <li>
+                    <asp:Panel ID="pnlInformation" runat="server">
+                        <a href="#">
+                            <img src="../images/demo.png" alt="" />
+                            Information</a>
+                        <ul>
+                            <li class="ui-widget-header"><a onclick="showPleaseWait();" href="../pages/systemStatusView.aspx">
+                                <img src="../images/sys_stat_24.png" alt="" />System Status</a> </li>
+                            <li class="ui-widget-header"><a onclick="showPleaseWait();" href="../pages/taskStatusView.aspx">
+                                <img src="../images/task_stat_24.png" alt="" />Task Status</a> </li>
+                            <li class="ui-widget-header"><a onclick="showPleaseWait();" href="../pages/about.aspx">
+                                <img src="../images/icons/about_24.png" alt="" />About</a> </li>
+                        </ul>
+                    </asp:Panel>
+                </li>
+                <li>
+                    <asp:Panel ID="pnlSecurity" runat="server">
+                        <a href="#">
+                            <img src="../images/icons/password.png" alt="" />
+                            Security</a>
+                        <ul>
+                            <li class="ui-widget-header"><a onclick="showPleaseWait();" href="../pages/userEdit.aspx">
+                                <img src="../images/users_24.png" alt="" />Manage Users</a></li>
+                            <li class="ui-widget-header"><a onclick="showPleaseWait();" href="../pages/sharedCredentialEdit.aspx">
+                                <img src="../images/shared_24.png" alt="" />Manage Shared Credentials</a> </li>
+                        </ul>
+                    </asp:Panel>
+                </li>
+                <li>
+                    <asp:Panel ID="pnlProcedures" runat="server">
+                        <a href="#">
+                            <img src="../images/advanced.png" alt="" />
+                            Tasks</a>
+                        <ul>
+                            <li class="ui-widget-header"><a onclick="showPleaseWait();" href="../pages/taskManage.aspx?type=1">
+                                <img src="../images/icons/manage_auto_task_24.png" alt="" />Manage Automated Tasks</a>
+                            </li>
+                        </ul>
+                    </asp:Panel>
+                </li>
+                <li>
+                    <asp:Panel ID="pnlEcosystems" runat="server">
+                        <a href="#">
+                            <img src="../images/display.png" alt="" />
+                            Ecosystems</a>
+                        <ul>
+                            <li class="ui-widget-header"><a onclick="showPleaseWait();" href="../pages/ecoTemplateManage.aspx">
+                                <img src="../images/icons/ecotemplates_24.png" alt="" />Manage Eco Templates</a>
+                            </li>
+                            <li class="ui-widget-header"><a onclick="showPleaseWait();" href="../pages/ecosystemManage.aspx">
+                                <img src="../images/icons/ecosystems_24.png" alt="" />Manage Ecosystems</a>
+                            </li>
+                            <li class="ui-widget-header"><a onclick="showPleaseWait();" href="../pages/awsDiscovery.aspx">
+                                <img src="../images/icons/discovery_24.png" alt="" />Discovery</a> </li>
+                            <!--<li class="ui-widget-header"><a onclick="showPleaseWait();" href="../pages/cloudAPITester.aspx">
+                                <img src="../images/icons/api_tester_24.png" alt="" />Cloud API Tester</a> </li>-->
+                        </ul>
+                    </asp:Panel>
+                </li>
+                <!--<li>
+                    <asp:Panel ID="pnlAssets" runat="server">
+                        <a href="#">
+                            <img src="../images/display.png" alt="" />
+                            Assets</a>
+                        <ul>
+                            <li><a onclick="showPleaseWait();" href="../pages/assetEdit.aspx">
+                                <img src="../images/manage_asset_24.png" alt="" />Manage Assets</a>
+                            </li>
+                            <li><a onclick="showPleaseWait();" href="../pages/globalAttributesEdit.aspx">
+                                <img src="../images/global_24.png" alt="" />Manage Asset Attributes</a>
+                            </li>
+                            <li><a onclick="showPleaseWait();" href="../pages/sharedCredentialEdit.aspx">
+                                <img src="../images/shared_24.png" alt="" />Manage Shared Credentials</a>
+                            </li>
+                        </ul>
+                    </asp:Panel>
+                </li>
+-->
+                <li>
+                    <asp:Panel ID="pnlConfig" runat="server">
+                        <a href="#">
+                            <img src="../images/config_24.png" alt="" />
+                            Configuration</a>
+                        <ul>
+                            <li class="ui-widget-header"><a onclick="showPleaseWait();" href="../pages/cloudAccountEdit.aspx">
+                                <img src="../images/icons/cloud_accounts_24.png" alt="" />Cloud Accounts</a>
+                            </li>
+                            <li class="ui-widget-header"><a onclick="showPleaseWait();" href="../pages/globalRegistry.aspx">
+                                <img src="../images/icons/global_registry_24.png" alt="" />Global Registry</a></li>
+                            <li class="ui-widget-header"><a onclick="showPleaseWait();" href="../pages/loginDefaultsEdit.aspx">
+                                <img src="../images/login_24.png" alt="" />Set Login Defaults</a></li>
+                            <li class="ui-widget-header"><a onclick="showPleaseWait();" href="../pages/pollerSettings.aspx">
+                                <img src="../images/ldap_24.png" alt="" />Poller Settings</a> </li>
+                            <!--<li class="ui-widget-header"><a onclick="showPleaseWait();" href="../pages/ldapEdit.aspx">
+                                <img src="../images/ldap_24.png" alt="" />Set LDAP Connectivity</a>
+                            </li>
+                            <li class="ui-widget-header"><a onclick="showPleaseWait();" href="../pages/tagEdit.aspx">
+                                <img src="../images/tag_24.png" alt="" />Manage Tags</a> </li>
+                            <li class="ui-widget-header"><a onclick="showPleaseWait();" href="../pages/logserverSettings.aspx">
+                                <img src="../images/logserver_24.png" alt="" />Log Server Settings</a>
+                            </li>-->
+                            <li class="ui-widget-header"><a onclick="showPleaseWait();" href="../pages/notificationEdit.aspx">
+                                <img src="../images/notify_24.png" alt="" />Manage Notifications</a>
+                            </li>
+                            <li class="ui-widget-header"><a onclick="showPleaseWait();" href="../pages/schedulerSettings.aspx">
+                                <img src="../images/date.png" alt="" />Scheduler Settings</a> </li>
+                            <li class="ui-widget-header"><a href="#" onclick="openWindow('../pages/securityLogView.aspx', 'logView', 'location=no,status=no,scrollbars=yes,resizable=yes,width=800,height=700');">
+                                <img src="../images/icons/password.png" alt="" />Security Log</a></li>
+                        </ul>
+                    </asp:Panel>
+                </li>
+                <li><a style="cursor: pointer;" onclick="$('#ctl00_btnLogOut').click();">
+                    <img src="../images/logout.png" alt="" />
+                    Logout</a>
+                    <!-- Logout Button handler -->
+                    <div class="hidden">
+                        <asp:Button ID="btnLogOut" runat="server" Text="testlogout" OnClick="Logout_Click" /></div>
+                </li>
+            </ul>
+            <!--   END Main Menu -->
+            <div id="userPreferences" style="cursor: pointer; text-align: right; margin-right: 4px;
+                color: White">
+                <span>Cloud Account:
+                    <asp:DropDownList ID="ddlCloudAccounts" runat="server">
+                    </asp:DropDownList>
+                </span><a style="color: White;" href="../pages/userPreferenceEdit.aspx">My Account</a></div>
+            <div id="update_success_msg" class="hidden" style="color: #FFF; white-space: nowrap;
+                text-align: right;">
+                UpdateSuccessful</div>
+        </div>
+        <br />
+        </form>
+        <!-- End .Net form. Only dynamic divs below here -->
+        <!-- jQuery Popups. -->
+        <!-- This is the popup error message dialog template.  -->
+        <div id="error_dialog" title="Error" class="ui-state-error">
+            <p>
+                <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 50px 0;"></span>
+                <span id="error_dialog_message"></span>
+            </p>
+            <p>
+                <span id="error_dialog_info"></span>
+            </p>
+        </div>
+        <!-- End popup error message dialog template.  -->
+        <!-- This is the slide up informational message template. -->
+        <div id="info_dialog" title="Info" class="ui-state-highlight">
+            <p>
+                <span class="ui-icon ui-icon-info" style="float: left; margin: 0 7px 50px 0;"></span>
+                <span id="info_dialog_message"></span>
+            </p>
+            <br />
+            <p>
+                <span id="info_dialog_info"></span>
+            </p>
+        </div>
+        <!-- End slide up informational message template. -->
+        <!-- This is the pop up "tag picker" dialog. -->
+        <div id="tag_picker_dialog" class="tag_picker hidden">
+            Select a Tag:
+            <hr />
+            <div style="overflow: auto;">
+                <div id="tag_picker_list">
+                </div>
+            </div>
+            <hr />
+            <div id="tag_picker_description" class="tag_description">
+            </div>
+        </div>
+        <!-- End "tag picker" dialog. -->
+    </div>
+    <!-- jQuery Popups. -->
+</body>
+</html>

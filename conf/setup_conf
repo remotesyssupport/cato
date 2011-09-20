@@ -1,0 +1,84 @@
+#!/usr/bin/env tclsh
+
+#########################################################################
+# Copyright 2011 Cloud Sidekick
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#########################################################################
+
+lappend auto_path $CATO_HOME/conf
+package require catocrypt
+
+proc tty_gets_no_echo {{prompt {}}} {
+	if {$prompt!=""} {
+		puts -nonewline $prompt
+	}
+	flush stdout
+	global _tty_input _tty_wait tcl_platform
+	if {$tcl_platform(platform)!="unix"} {
+		# FIXME:  This routine only works on unix.  On other platforms, the
+		# password is still echoed to the screen as it is typed.
+		return [gets stdin]
+	}
+	set _tty_input {}
+	set _tty_wait 0
+	fileevent stdin readable _tty_read_one_character
+	exec /bin/stty raw -echo <@stdin
+	vwait ::_tty_wait
+	fileevent stdin readable {}
+	return $_tty_input
+}
+proc _tty_read_one_character {} {
+	set c [read stdin 1]
+	if {$c=="\n" || $c=="\003"} {
+		exec /bin/stty -raw echo <@stdin
+		puts ""
+		if {$c=="\003"} exit
+		incr ::_tty_wait
+	} else {
+		puts -nonewline "*"
+		flush stdout
+		append ::_tty_input $c
+	}
+}
+proc get_value {part_prompt} {
+	set value [tty_gets_no_echo "Enter $part_prompt: "]
+	set second ""
+	while {"$value" != "$second"} {
+		set second [tty_gets_no_echo "Retype $part_prompt: "]
+		if {"$value" != "$second"} {
+			puts "Values don't match"
+		}
+	}
+	return $value
+}
+proc get_encrypt_values {} {
+	puts ""
+	set key [get_value "an encryption key"]
+	set enc_key [encrypt_string $key {}]
+	puts "\nYour encrypted key is $enc_key\n"
+	set password [get_value "the database password"]
+	set enc_password [encrypt_string $password $key]
+	puts "\nYour encrypted password is $enc_password\n"
+	puts -nonewline "Do you want to encrypt the application admin password as well (Y/n)? "
+	flush stdout
+	gets stdin doit
+	if {"[string toupper $doit]" == "Y"} {
+		puts ""
+		set admin [get_value "admin password"]
+		set enc_admin [encrypt_string $admin $key]
+		puts "\nYour encrypted administrator password is $enc_admin\n"
+	}
+}
+
+get_encrypt_values

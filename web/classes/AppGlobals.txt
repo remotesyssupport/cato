@@ -1,0 +1,17 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace acUI
+{
+    public class AppGlobals
+    {
+        public string APP_NAME = "Cloud Sidekick";
+        public string APP_COMPANYNAME = "Cloud Sidekick";
+        public string APP_COPYRIGHT = "Copyright © Cloud Sidekick " + DateTime.Today.Year + ". All Rights Reserved.";
+        public string APP_WEB = "http://www.cloudsidekick.com";
+        public string APP_SUPPORT_EMAIL = "support@cloudsidekick.com";
+        public string APP_REVISION = "$WCREV$";
+    }
+}

@@ -1,0 +1,3 @@
+- Daemonize, create init.d scripts
+- Installation packages for Debian / Redhat distros
+- Create proper configure / Makefile.in files for catocrypt lib

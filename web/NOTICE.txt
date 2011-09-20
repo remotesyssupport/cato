@@ -1,0 +1,8 @@
+Cloud Sidekick Cato NOTICE
+===========
+Developed at Cloud Sidekick (http://www.cloudsidekick.com).
+
+Contributors and Copyright holders:
+
+* Copyright 2011, Patrick Dunnigan <patrick.dunnigan@cloudsidekick.com>
+* Copyright 2011, Shannon Cruey <shannon.cruey@cloudsidekick.com>

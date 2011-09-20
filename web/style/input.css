@@ -1,0 +1,64 @@
+/* -----------------------------------*/
+/*           Input Styles             */
+/* -----------------------------------*/
+
+/* Forms
+----------------------------------------------------------------------------------------------------*/
+
+
+input
+{
+	padding: 1px 2px 1px 2px;
+	margin: 2px 2px 2px 0px;
+	border: solid 1px #C5DBEC;
+	line-height: normal;
+	font-size-adjust: none;
+	font-stretch: normal;
+}
+
+textarea
+{
+	overflow: auto;
+	padding: 1px 2px 1px 2px;
+	margin: 2px 2px 2px 0px; /* background-color: #ffffff;  background-image: url(../images/background-input.png);  background-repeat: repeat-x;  background-attachment: scroll;  background-position: left top; */
+	border: solid 1px #C5DBEC;
+	font-family: Gill Sans, sans-serif;
+	font-style: normal;
+	font-variant: normal;
+	font-weight: normal;
+	font-size: 1em;
+	line-height: normal;
+	font-size-adjust: none;
+	font-stretch: normal;
+}
+
+
+
+.btn_image
+{
+	border: none;
+	margin-top: 4px;
+	padding: 1px;
+	vertical-align: bottom;
+}
+
+.search_text
+{
+	margin: 0px 0px 4px 0px;
+	width: 250px;
+}
+
+input[type="checkbox"]
+{
+	border: none;
+	width: 15px;
+}
+.chkbox
+{
+	border: none;
+}
+.chkboxcolumn
+{
+	text-align: center;
+	width: 1px;
+}

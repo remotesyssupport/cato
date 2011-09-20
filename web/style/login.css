@@ -1,0 +1,45 @@
+/* Login Page */
+body
+{
+	background-image: url("../images/login-bggradient.png");
+	background-repeat: repeat-x;
+	font: normal 12px Arial, lucida, sans-serif;
+}
+#wrapper
+{
+	margin-left: auto;
+	margin-right: auto;
+	width: 75%;
+}
+#container
+{
+	margin-top: 20px;
+	padding-top: 20px;
+	height: 240px;
+	background-image: url(../images/login-banner.gif);
+	background-repeat: no-repeat;
+	background-position: -30px; /* shorten it a bit */
+	box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.5);
+	border-radius: 6px 6px 6px 6px;
+	width: 900px;
+}
+#loginbox
+{
+	padding: 20px;
+	color: #FFFFFF;
+	font-weight: bold;
+	margin-left: auto;
+	margin-right: auto;
+	width: 50%;
+	box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.5);
+	border-radius: 6px 6px 6px 6px;
+}
+.loginerror
+{
+	font-weight: normal;
+	color: #FFAAAA;
+}
+.pointer
+{
+	cursor: pointer;
+}

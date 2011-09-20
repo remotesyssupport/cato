@@ -1,0 +1,100 @@
+﻿.logfile_link
+{
+	cursor: pointer;
+}
+body
+{
+	background-color: #FFFFFF;
+	color: #333333;
+}
+.pane h2, #preferences h2
+{
+	color: #CCCCCC;
+	text-shadow: 1px 1px 1px #111111;
+	padding-left: 10px;
+}
+.pane-column
+{
+    cursor: pointer;
+}
+body {
+	background-color:#FFFFFF;
+	color:#333333;
+}
+.panetitle 
+{
+	font-size: 14px;
+	font-weight: bold;
+	color:#CCCCCC;
+    padding-left: 10px;
+}
+.pane-column {
+	padding-left: 30px;
+}
+.display .pane
+{
+	background: #2E2E2E url(../images/bg-round-top-left.gif) no-repeat scroll left top;
+}
+.display .pane h2
+{
+	background: transparent url(../images/bg-round-top-right.gif) no-repeat scroll right top;
+}
+.display .pane .footer
+{
+	background: transparent url(../images/bg-pane-bottom-left.gif) no-repeat scroll left bottom;
+	font-family: 'Lucida Grande' ,Verdana,sans-serif;
+	font-size: 62.5%;
+	font-size-adjust: none;
+	font-style: normal;
+	font-variant: normal;
+	font-weight: normal;
+	line-height: 1.2em;
+}
+.display .pane .footer div
+{
+	background: transparent url(../images/bg-pane-bottom-right.gif) no-repeat scroll right bottom;
+}
+.display .pane .content
+{
+	background: #FFFFFF url(../images/bg-pane-right.gif) repeat-y scroll right top;
+	margin: 0 3px 0 5px;
+}
+.content .content-container
+{
+	background: transparent url(../images/bg-pane-top-left.gif) no-repeat scroll left top;
+	position: relative;
+	margin: 0 0 0 0;
+	z-index: 100;
+	padding: 5px 10px 5px 5px;
+}
+.display table th
+{
+	background-color: #CDE9A7;
+	background-repeat: no-repeat;
+	color: #525D43;
+	font-size: 0.9em;
+	padding: 4px 12px 3px 0;
+}
+.display table th.first-child
+{
+	background-image: url(../images/bg-th-left.gif);
+	background-position: left top;
+}
+.display table th.last-child
+{
+	background-image: url(../images/bg-th-right.gif);
+	background-position: right top;
+}
+.security_log_link 
+{
+	cursor: pointer;
+	font-size: 10px;
+	color:#CCCCCC;
+    padding-left: 10px;
+}
+.table-data {
+    width: 340px;
+}
+#content td
+{
+	border-style: none;

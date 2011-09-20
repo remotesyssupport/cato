@@ -1,0 +1,33 @@
+﻿/* -----------------------------------*/
+/*        Task Step Styles            */
+/* -----------------------------------*/
+
+/*
+These styles apply specifically to instances of 
+specific commands in a task.  (Commands being synonymous
+with 'Step' and 'Function')
+
+Basically, there is a predefined set of step types.
+Rather than bog down the style sheet for the whole task page with it, 
+we're defining them here.
+
+We are using fn_ as a prefix for all command specific styles.
+*/
+.fn_layout_table
+{
+	width: 100%;
+	border: none;
+}
+.fn_label_cell
+{
+	width: 150px;
+	padding-right: 6px;
+}
+.fn_if_else_section
+{
+	border: solid 1px #D3D3D3;
+	background: #EEEEEE;
+	margin: 5px 0px 5px 0px;
+	padding: 2px;
+}
+

@@ -1,0 +1,42 @@
+<templates>
+  	<template template_id="1">
+    		<name>Equal To</name>
+    		<value>{} == {}</value>
+    		<version>1</version>
+  	</template>
+  	<template template_id="2">
+	      	<name>Not Equal To</name>
+	      	<value>{} != {}</value>
+	      	<version>1</version>
+	</template>
+	<template template_id="3">
+	      	<name>Greater Than</name>
+	      	<value>{} &#62; {}</value>
+	      	<version>1</version>
+	 </template>
+	 <template template_id="4">
+	  	    	<name>Less Than</name>
+	  	    	<value>{} &#60; {}</value>
+	  	    	<version>1</version>
+	  	</template>
+	      	<template template_id="4">
+	  	      	<name>Greater Than or Equal To</name>
+	  	      	<value>{} &#62;= {}</value>
+	  	  	<version>1</version>
+	  	</template>
+	      	<template template_id="4">
+	       		<name>Less Than or Equal To</name>
+	        	<value>{} &#60;= {}</value>
+	        	<version>1</version>
+	  	</template>
+	        <template template_id="4">
+	        	<name>And Comparison</name>
+	          	<value>{} == {} &#38;&#38; {} == {}</value>
+	          	<version>1</version>
+		</template>
+		<template template_id="4">
+		        <name>Or Comparison</name>
+		        <value>{} == {} || {} == {}</value>
+		        <version>1</version>
+	</template>
+</templates>

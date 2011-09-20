@@ -1,0 +1,44 @@
+.param_val
+{
+	color: #404040;
+	text-decoration: none;
+	font-size: 12px;
+}
+
+.param_val a
+{
+	color: #404040;
+	text-decoration: none;
+}
+
+.param_val a:hover
+{
+	color: #606060;
+}
+
+.param_val a:visited
+{
+	color: #404040;
+}
+
+.param_tbl
+{
+	margin-left: 10px;
+}
+
+.param_tbl th
+{
+	background: #404040;
+	color: #efefef;
+}
+
+.param_edit_options
+{
+	margin-top: 3px;
+	padding: 2px;
+	font-size: .9em;
+}
+.param_edit_option
+{
+	padding: 2px;
+}

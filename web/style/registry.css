@@ -1,0 +1,43 @@
+/* Registry Styles */
+
+.registry
+{
+}
+
+.registry_section
+{
+	margin: 2px 0px 2px 10px;
+	border: 1px solid #e3e3e3;
+}
+.registry_section_header
+{
+	height: 18px;
+	vertical-align: middle;
+}
+.registry_section_header_title
+{
+	float: left;
+}
+.registry_section_header_icons
+{
+	float: right;
+}
+.registry_section_inner_group
+{
+	border: 1px solid #E4E4E4;
+	margin: 4px 0px 2px 5px;
+}
+
+.registry_node
+{
+	clear: both;
+	margin-left: 10px;
+}
+.registry_node_label
+{
+	font-weight: bold;
+	float: left; /* so the icons will float right*/
+}
+.registry_node_value
+{
+}

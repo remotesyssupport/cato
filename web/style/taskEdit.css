@@ -1,0 +1,721 @@
+﻿@import url('taskSteps.css');
+@import url('taskParams.css');
+/* -----------------------------------*/
+/*         Task Edit Styles           */
+/* -----------------------------------*/
+
+
+/* Alternate content def */
+
+#content_te
+{
+	overflow: auto;
+	position: absolute;
+	z-index: 0;
+	top: 39px;
+	left: 350px;
+	right: 0px;
+	bottom: 0px;
+	background: #f8f8f8;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+* html #content_te
+{
+	top: 0px;
+	left: 0px;
+	right: 0px;
+	bottom: 0px;
+	height: 100%;
+	max-height: 100%;
+	width: 100%;
+	overflow: auto;
+	position: absolute;
+	z-index: -1;
+	border-top: 39px solid #f8f8f8; /*border-bottom: 20px solid #f8f8f8;*/
+	border-left: 350px solid #f8f8f8;
+}
+
+
+#left_panel_te
+{
+	position: absolute;
+	left: 0px;
+	top: 37px;
+	bottom: 0px;
+	width: 350px;
+	font-size: 1.2em;
+	z-index: 0;
+	overflow: hidden;
+	background: #f8f8f8;
+	padding: 2px 2px 2px 0px;
+}
+
+* html #left_panel_te
+{
+	height: 100%;
+	top: 0px;
+	bottom: 0px;
+	border-top: 37px solid #f8f8f8; /*border-bottom: 20px solid #f8f8f8;*/
+	color: #444;
+}
+
+
+/* End Alternate content */
+.detail_label
+{
+	color: #000000;
+	padding-left: 2px;
+	padding-top: 5px;
+	font-weight: bold;
+	font-size: 1.0em;
+}
+.no_step
+{
+	height: 20px;
+	vertical-align: middle;
+	text-align: center;
+	list-style-type: none;
+}
+
+.category
+{
+	font-size: 0.9em;
+}
+.category_selected
+{
+	background-color: #DDDDDD;
+	color: #3333FF;
+}
+.category_functions
+{
+}
+.category_icon
+{
+	width: 16px;
+	height: 16px;
+}
+.function
+{
+	font-size: 0.8em;
+}
+.function_icon
+{
+	width: 16px;
+	height: 16px;
+}
+.function_helper
+{
+	border: 1px solid #D3D3D3;
+	z-index: 1000;
+	width: 200px;
+	background: #EEEEEE;
+}
+.codeblock
+{
+	padding: 5px 0px 10px 5px;
+	margin: 5px 5px 5px 5px; /*background-image: url( 'images/item_bg_alt.png' );*/
+	color: #404040;
+	font-weight: bold;
+	height: 10px;
+	list-style-type: none;
+}
+.codeblock_title
+{
+	margin: 0px 0px 0px 5px;
+	float: left;
+	cursor: pointer;
+}
+.codeblock_icons
+{
+	margin: 0px 5px 0px 0px;
+	float: right;
+}
+.codeblock_delete_btn
+{
+	cursor: pointer;
+}
+
+#content_te h3
+{
+	padding: 2px 0px 2px 4px;
+	margin: 0px 0px 5px 0px;
+}
+
+.atribute_add_title
+{
+	border-bottom: solid 1px #000;
+	background-image: url( 'task_edit/bg-panel-header.gif' );
+	padding: 2px 0px 2px 4px;
+	margin: 0px 0px 5px 0px;
+	display: block;
+}
+.attribute_groups
+{
+	overflow: auto;
+}
+.attribute_group
+{
+	border: 1px solid #D3D3D3;
+	background: #FFF;
+	color: #555555;
+	margin: 4px 4px 4px 4px;
+}
+.attribute_title
+{
+	background-color: #eeeeee;
+	margin: 1px 4px 0px 0px;
+}
+.attribute
+{
+	margin: 0px 0px 0px 4px;
+}
+.attribute_and
+{
+	margin: 0px 0px 0px 4px;
+	font-style: italic;
+}
+.attribute_or
+{
+	margin: 0px 0px 0px 10px;
+}
+.attribute_group_title
+{
+	background-color: #DDD;
+	height: 20px;
+}
+.attribute_group_remove_btn
+{
+	cursor: pointer;
+	float: right;
+}
+.attribute_remove_btn
+{
+	cursor: pointer;
+}
+.value_picker
+{
+	position: absolute;
+	background: #FFFFFF;
+	margin: 0px 0px 0px 10px;
+	width: 200px;
+	border-width: 3px;
+	-moz-box-shadow: 5px 5px 5px #ccc;
+	-webkit-box-shadow: 5px 5px 5px #ccc;
+	box-shadow: 5px 5px 5px #ccc;
+	overflow: auto;
+	z-index: 1000;
+}
+.value_picker_title
+{
+	padding: 2px 0px 2px 4px;
+	margin: 0px 0px 5px 0px;
+	display: block;
+}
+.value_picker_group
+{
+	font-weight: bold;
+	width: 95%;
+	margin: 1px 1px 1px 1px;
+	padding: 1px 1px 1px 1px;
+	cursor: pointer;
+	list-style: none;
+}
+.value_picker_value
+{
+	width: 95%;
+	margin: 1px 1px 1px 4px;
+	padding: 1px 1px 1px 1px;
+	cursor: pointer;
+	list-style: none;
+}
+.value_picker_value_hover
+{
+	background: #bcd4ec;
+}
+
+
+
+.parameter
+{
+	margin: 4px 4px 4px 4px;
+}
+.parameter_header
+{
+	height: 16px;
+}
+.parameter_desc
+{
+	font-style: italic;
+}
+.parameter_detail
+{
+	font-size: .8em;
+}
+.parameter_value
+{
+	margin: 1px 4px 1px 6px;
+	padding-left: 4px;
+	min-height: 14px;
+}
+.step_section_title
+{
+	float: left;
+}
+.step_section_icons
+{
+	float: right;
+}
+.version
+{
+	padding: 5px 0px 8px 10px;
+	margin: 5px 5px 5px 5px; /*background-image: url( 'images/item_bg_alt.png' );*/
+	color: #606060;
+	height: 15px;
+	cursor: pointer;
+}
+.version_selected
+{
+	/* this style indicates the 'selected' one */
+	font-weight: bold;
+	color: #000000;
+}
+
+.toolbox_tabs_3row
+{
+	padding: 5px 4px 0px 1px;
+	height: 60px;
+}
+.toolbox_tabs_2row
+{
+	padding: 5px 4px 0px 1px;
+	height: 42px;
+}
+.toolbox_tabs_1row
+{
+	padding: 5px 4px 0px 1px;
+	height: 20px;
+}
+
+.toolbox_tab
+{
+	cursor: pointer;
+	padding: 2px 4px 2px 4px;
+	line-height: 20px;
+	font-weight: normal;
+}
+.toolbox_tab_selected
+{
+}
+
+.toolbox_panel
+{
+	padding-top: 10px;
+	background-color: #f8f8f8;
+	height: 500px;
+	overflow: auto;
+}
+
+.toolbox_panel h3
+{
+	padding: 2px 0px 2px 4px;
+	margin: 0px 0px 5px 0px;
+}
+
+.command_item
+{
+	background-color: #f8f8f8;
+	cursor: pointer;
+	margin: 0px 0px 2px 4px;
+	padding-left: 5px;
+	color: #202020;
+	list-style-type: none;
+}
+.command_item_hover
+{
+	/*background: url( 'images/item_bg_alt.png' ) repeat-x scroll;*/
+	color: #101010;
+}
+.clip
+{
+	height: 60px;
+	width: 300px;
+	border-bottom: solid 1px #e3e3e3;
+	margin-left: 10px;
+}
+.task_li
+{
+	padding: 0px 0px 15px 0px;
+	margin: 10px 5px 15px 5px;
+}
+
+.search_task_ul
+{
+	list-style-type: none;
+}
+
+#task_steps
+{
+	background: #fff; /*padding: 5px 5px 5px 5px;*/
+}
+
+.te_header
+{
+	height: 25px;
+	font-size: 12px;
+	font-weight: bold;
+}
+
+.te_help_box
+{
+	height: 20px;
+	margin: 3px 0px 3px 0px;
+	border: 1px solid #cccccc;
+	color: #000000;
+	background: #efefef;
+	font-size: 12px;
+	-moz-border-radius: 12px;
+	padding: 3px 0px 0px 23px;
+}
+.te_help_box_detail
+{
+	display: inline;
+}
+.step
+{
+	padding: 3px;
+	list-style-type: none;
+}
+.step_skip
+{
+	margin-left: 25px;
+}
+.step_collapsed
+{
+	display: none;
+	overflow: hidden;
+}
+.step_drop_placeholder
+{
+	padding: 3px;
+	height: 20px;
+}
+.step_header
+{
+	/*color: #202020;*/
+	font-weight: bold;
+	font-size: 12px;
+	height: 24px;
+	cursor: pointer;
+}
+.step_header_skip
+{
+	background: #EFEFEF;
+	color: #ACACAC;
+}
+.step_reorder_helper
+{
+	border: 1px solid #D3D3D3;
+	height: 24px;
+}
+.step_header img
+{
+	padding: 2px 2px 2px 2px;
+}
+.step_header_function_icon
+{
+	margin: 0px;
+	padding: 0px;
+	height: 16px;
+	width: 16px;
+}
+.step_header_title
+{
+	float: left;
+}
+.step_header_icons
+{
+	float: right;
+}
+.step_delete_btn
+{
+	cursor: pointer;
+}
+.variable_popup_btn
+{
+	cursor: pointer;
+}
+.step_toggle_btn
+{
+	cursor: pointer;
+}
+.step_toggle_all_btn
+{
+	cursor: pointer;
+	margin: 4px 4px 0px 4px;
+}
+.step_title
+{
+	font-size: 1.4em;
+}
+.step_detail
+{
+	clear: both;
+	padding: 4px 4px 4px 4px;
+	background: #f8f8f8;
+	font-size: 12px;
+	border-top: none; /*border-left: 3px solid #BCBCBC; 	border-right: 3px solid #BCBCBC; 	border-bottom: 3px solid #BCBCBC; 	-moz-border-radius-bottomleft: 17px;*/
+}
+
+.step_common
+{
+	margin: 0px 0px 5px 5px;
+	border: 0px solid #D3D3D3;
+}
+.step_common_collapsed
+{
+	display: none;
+	overflow: hidden;
+}
+
+.step_common_header
+{
+	padding: 2px 4px 2px 4px;
+}
+
+.step_common_button
+{
+	border: 1px solid #404040;
+	background-color: #e3e3e3;
+	cursor: pointer;
+	width: 100px;
+	padding: 0px 4px 0px 4px;
+	margin: 1px 2px 1px 2px;
+	height: 16px;
+	-moz-border-radius: 12px;
+}
+.step_common_button_active
+{
+	background-color: #b3b3b3;
+}
+.step_common_detail
+{
+	overflow: auto;
+	padding: 2px;
+}
+.step_common_note_snippet
+{
+	margin-left: 12px;
+	font-size: .9em;
+	font-style: italic;
+	overflow: hidden;
+}
+
+.step_group
+{
+	margin-top: 1px;
+	margin-left: 10px;
+	font-size: .9em;
+}
+.step_inner_group
+{
+	margin: 4px 0px 2px 5px;
+}
+.step_group_header
+{
+	/*pull off a border*/
+	border-top: none !important;
+	color: #202020;
+	font-weight: bold;
+	height: 14px;
+}
+
+#ulEditParameterValues li
+{
+	list-style-type: none;
+	margin-left: 10px;
+	margin-bottom: 5px;
+}
+
+/*
+EMBEDDED STEPS
+*/
+.embedded_step
+{
+	padding: 3px;
+}
+.embedded_step_header
+{
+	/*background: url( 'images/item_bg_alt.png' ) repeat-x scroll; 	border: 1px solid #E4E4E4; 	color: #202020;*/
+	vertical-align: middle;
+	font-weight: bold;
+	font-size: 12px;
+	height: 20px;
+}
+.embedded_step_delete_btn
+{
+	cursor: pointer;
+}
+.step_delete_btn
+{
+	cursor: pointer;
+}
+
+/*
+END EMBEDDED STEPS
+*/
+/* input fields on this page */
+textarea
+{
+	width: 95%;
+}
+.task_details
+{
+	width: 95%;
+}
+
+
+/* variable tables inside each step */
+tr.row td
+{
+	padding: 1px 1px 1px 3px;
+	border: 1px solid #C5DBEC;
+}
+tr.row_alt td
+{
+	background: #dddddd;
+}
+tr.row_header td
+{
+	background: #C5DBEC;
+	font-weight: bold;
+	padding: 0px 0px 0px 4px;
+	border: 1px solid #C5DBEC;
+}
+
+
+
+/* Step Popouts */
+
+#div_delimiters
+{
+	font-weight: bold;
+}
+
+#div_variables
+{
+	font-size: 14px;
+	font-weight: bold;
+	color: #2c2c2c;
+	padding: 2px 4px 3px 4px;
+	background: url( 'images/variables_bg.png' ) repeat-x scroll;
+}
+
+.variable_name
+{
+}
+
+#variable_add_btn
+{
+	cursor: pointer;
+	font-weight: normal;
+	font-size: 10pt;
+}
+#variable_clearall_btn
+{
+	cursor: pointer;
+	font-weight: normal;
+	font-size: 10pt;
+}
+
+.variable_delete_btn
+{
+	color: #a44;
+	position: absolute;
+	right: 25px;
+}
+
+.variable
+{
+	background-color: #efefef;
+	color: #444;
+	font-weight: normal;
+}
+
+.variable_detail
+{
+}
+
+/*Debug Panel*/
+.debug_btn
+{
+	cursor: pointer;
+}
+.debug_btn_dim
+{
+	opacity: 0.2;
+	filter: alpha(opacity=20);
+}
+.step_nested_drop_target
+{
+	background: #ffeeee;
+	font-style: italic;
+	padding: 5px 0px 0px 15px;
+	border: 1px solid #cccccc;
+	cursor: pointer;
+	height: 20px;
+}
+.step_nested_drop_target_cancel_btn
+{
+	cursor: pointer;
+	font-weight: bold;
+}
+.step_validation_template
+{
+	background: #FFDDDD;
+	border: 1px solid#CCCCCC;
+	margin: 4px 0px 4px 0px;
+	padding: 4px 0px 0px 20px;
+	-moz-border-radius: 12px;
+}
+.info_syntax_errors
+{
+	margin-left: 35px;
+	font-size: .75em;
+}
+.schedule
+{
+	cursor: pointer;
+	padding: 0px 0px 0px 10px;
+}
+
+.task_print_link
+{
+	cursor: pointer;
+	margin: 4px 4px 0px 4px;
+}
+
+/* elipse button small */
+.elipse_btn
+{
+	height: 20px;
+	width: 20px;
+}
+
+/* must be last */
+.is_required
+{
+	background-color: #FFDDDD;
+}
+.step_nested_drop_target_active
+{
+	border: 3px ridge #CCCCCC;
+	cursor: default;
+}
+.step_nested_drop_target_hover
+{
+	border: 4px ridge #CCCCCC;
+}
+
+

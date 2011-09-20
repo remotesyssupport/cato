@@ -1,0 +1,102 @@
+﻿@import url('taskSteps.css');
+@import url('taskParams.css');
+/* -----------------------------------*/
+/*         Task Edit Styles           */
+/* -----------------------------------*/
+
+
+/* Alternate content def */
+.cblink /*highlights the "codeblock" link on v3 task view and print pages.*/
+{
+	font-weight: bold;
+	font-style: italic;
+	color: #20AA20;
+}
+.codeblock_box
+{
+	padding: 5px 5px 5px 5px;
+	margin: 0px 0px 5px 0px;
+}
+
+.view_step
+{
+	padding: 3px;
+}
+.view_step_header
+{
+	/*background: url( 'images/item_bg_alt.png' ) repeat-x scroll;*/
+	border: 1px solid #BCBCBC;
+	color: #202020;
+	font-weight: bold;
+	font-size: 12px;
+	padding: 0px 0px 0px 4px;
+}
+.view_step_detail
+{
+	clear: both;
+	padding: 4px 4px 4px 4px;
+	background: #f8f8f8;
+	font-size: 12px;
+	border-left: 1px solid #BCBCBC;
+	border-right: 1px solid #BCBCBC;
+	border-bottom: 1px solid #BCBCBC;
+	-moz-border-radius-bottomleft: 10px;
+}
+.view_step_detail_block
+{
+	margin: 0px 10px 0px 10px;
+	padding: 4px 4px 4px 4px;
+	background: #f4f4f4;
+	border: 1px solid #BCBCBC;
+	-moz-border-radius: 8px;
+	height: 85px;
+}
+
+.view_attribute_groups
+{
+	background: #EEEEEE;
+}
+.view_attribute_group
+{
+	border: 1px solid #D3D3D3;
+	background: #FFF;
+	color: #555555;
+	margin: 4px 4px 4px 4px;
+}
+.view_attribute
+{
+	margin: 0px 0px 0px 10px;
+}
+.view_attribute_group_title
+{
+	background-color: #DDD;
+	height: 20px;
+}
+.view_attribute_groups
+{
+	background: #EEEEEE;
+}
+.view_parameters
+{
+	border: 1px solid #D3D3D3;
+	background: #FFF;
+	color: #555555;
+	margin: 4px 4px 4px 4px;
+}
+.view_parameter
+{
+}
+.view_parameter_title
+{
+	margin: 0px 0px 0px 10px;
+	background-color: #DDD;
+	height: 20px;
+}
+
+.view_notes
+{
+	font-family: Courier New;
+	color: #151;
+	font-style: italic;
+	font-size: .9em;
+}

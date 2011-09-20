@@ -1,0 +1,787 @@
+@import url('reset.css');
+@import url('table.css');
+@import url('text.css');
+@import url('input.css');
+@import url('sizing.css');
+@import url('jquery-ui-1.8.13.custom.css');
+/*@import url('menu/menu.css'); 
+@import url('ac_pro/css/ac_pro/jquery-ui-1.7.1.custom.css');*/
+
+
+body
+{
+	height: 100%;
+	max-height: 100%;
+	padding: 0px;
+	margin: 0px;
+	border: 0;
+	background: #f8f8f8;
+	font: normal 12px Arial, lucida, sans-serif;
+}
+
+#content
+{
+	/*overflow: auto;*/
+	position: absolute;
+	z-index: 1;
+	top: 39px;
+	left: 200px;
+	right: 2px;
+	padding-left: 10px;
+}
+
+* html #content
+{
+	top: 0px;
+	left: 0px;
+	right: 0px;
+	bottom: 0px;
+	height: 100%;
+	max-height: 100%;
+	width: 100%;
+	overflow: auto;
+	position: absolute;
+	z-index: -1;
+	border-top: 39px solid #f0f0f0; /*border-bottom: 20px solid #f0f0f0;*/
+	border-left: 200px solid #f0f0f0;
+}
+
+/* Alternate content def */
+
+#content_alt
+{
+	overflow: auto;
+	position: absolute;
+	z-index: -1;
+	top: 39px;
+	left: 400px;
+	right: 0px;
+	background: #f0f0f0;
+	margin-left: 10px;
+}
+
+* html #content_alt
+{
+	top: 0px;
+	left: 0px;
+	right: 0px;
+	bottom: 0px;
+	height: 100%;
+	max-height: 100%;
+	width: 100%;
+	overflow: auto;
+	position: absolute;
+	z-index: -1;
+	border-top: 39px solid #f0f0f0; /*border-bottom: 20px solid #f0f0f0;*/
+	border-left: 400px solid #f0f0f0;
+}
+
+
+#left_panel_alt
+{
+	position: absolute;
+	left: 0px;
+	top: 39px;
+	width: 400px;
+	font-size: 1.2em;
+	z-index: 0;
+	overflow: auto;
+	background-repeat: no-repeat;
+	padding: 2px 2px 2px 2px;
+}
+
+* html #left_panel_alt
+{
+	height: 100%;
+	top: 0px;
+	bottom: 0px;
+	z-index: 0;
+	border-top: 39px solid #f0f0f0; /*border-bottom: 20px solid #f0f0f0;*/
+	color: #444;
+}
+
+
+/* End Alternate content */
+#fullwidthcontent
+{
+	padding-top: 50px;
+}
+
+/*#content table
+{
+	margin: 0px 0px 0px 0px;
+}
+
+#content tr
+{
+	padding: 0px 2px 0px 2px;
+}
+
+#content td
+{
+	padding: 0px 1px 0px 1px;
+	border: 1px solid #aaa;
+}
+*/
+#content_form_outer
+{
+	padding: 20px 20px 20px 20px;
+}
+
+#content_form_inner
+{
+	border: solid 1px #ddd;
+	background: #ddd;
+}
+
+.row_odd
+{
+	padding: 0px 0px 0px 0px;
+	background: #e0e0e0;
+}
+
+.row_even
+{
+	background: #f0f0f0;
+}
+
+#head
+{
+	position: absolute;
+	margin: 0px;
+	top: 0px;
+	left: 0px;
+	right: 10px;
+	display: block;
+	width: 100%;
+	height: 38px;
+	border: none; /*overrides the border from the ui-widget_header class*/ /*background-image: url( 'images/header-bg.png' ); 	background-repeat: repeat-x; 	background-attachment: fixed;*/
+	z-index: 2;
+	font: normal 12px Arial;
+}
+
+#left_panel
+{
+	position: absolute;
+	left: 0px;
+	top: 39px;
+	width: 200px;
+	font-size: 1.2em;
+	z-index: 0;
+	overflow: auto;
+	background-repeat: no-repeat;
+	padding: 2px 2px 2px 2px;
+}
+
+* html #left_panel
+{
+	height: 100%;
+	top: 0px;
+	bottom: 0px;
+	z-index: 0;
+	border-top: 39px solid #f0f0f0; /*border-bottom: 20px solid #f0f0f0;*/
+	color: #444;
+}
+
+.center
+{
+	text-align: center;
+}
+.hidden
+{
+	display: none;
+}
+.pointer
+{
+	cursor: pointer;
+}
+.italic
+{
+	font-style: italic;
+}
+.page_title
+{
+	font-weight: bold;
+	font-size: 20px;
+	padding: 5px 5px 10px 0px;
+}
+
+.left_tooltip
+{
+	width: 195px;
+}
+
+#left_tooltip_box_outer
+{
+	margin-top: 10px;
+	margin-left: 10px;
+	background: #111;
+}
+
+#left_tooltip_box_inner
+{
+	background: #eee3d0;
+	padding: 8px 6px 18px 8px;
+}
+
+#left_tooltip_box_inner p
+{
+	margin: 8px 10px 10px 10px;
+	font-size: .9em;
+	line-height: 1.25em;
+}
+
+#left_tooltip_box_inner img
+{
+	padding: 4px 4px 4px 4px;
+	float: left;
+}
+
+#left_tooltip_box_inner ul
+{
+	margin-top: 8px;
+	margin-left: 8px;
+	font-size: .75em;
+	font-weight: bold;
+	color: #333;
+}
+
+#left_tooltip_box_inner li
+{
+	margin-top: 3px;
+	margin-left: 10px;
+}
+
+.cancel_x
+{
+	margin: 5px 5px 0px 0px;
+}
+
+/* Text alignment. Use these in spans */
+#left
+{
+	text-align: left;
+}
+#right
+{
+	text-align: right;
+}
+#center
+{
+	text-align: center;
+}
+/* End Text alignment. */
+
+/* Assets */
+
+#AssetAttributes
+{
+}
+
+#AssetAttributes li
+{
+	list-style-type: none;
+	font-size: 14px;
+}
+
+/* Credentials */
+
+.edit_credential
+{
+	border: 0px solid #000;
+}
+
+.row
+{
+	border: 0px solid #000;
+}
+.row_log
+{
+	border: 0px solid #000;
+	font-size: 9px;
+	background: #eeeeee;
+	padding: 1px 1px 1px 3px;
+	border: 1px solid #cccccc;
+}
+
+/* System Status*/
+
+.row_header td h4
+{
+	color: #202020; /*background: url( 'images/item_bg_alt.png' ) repeat-x scroll;*/
+	border-bottom: 1px solid #aaa;
+}
+
+.row_header
+{
+	background: #202020;
+}
+
+/* Search Picker Dialogs */
+.search_dialog_value
+{
+	margin: 1px 1px 1px 1px;
+	padding: 1px 1px 1px 1px;
+	cursor: pointer;
+	list-style: none;
+	font-size: 0.8em;
+}
+.search_dialog_value_name
+{
+	display: block;
+}
+.search_dialog_value_block_item
+{
+	margin-right: 10px;
+	display: block;
+}
+.search_dialog_value_inline_item
+{
+	margin-right: 10px;
+}
+
+.code
+{
+	font-family: Courier New;
+	font-size: 10pt;
+	color: #11A;
+}
+.codebox
+{
+	font-family: Courier New;
+	font-size: 10pt;
+	color: #11A;
+	border: solid 1px #CCC;
+	background-color: #FFFFFF;
+	margin: 0px 0px 4px 0px;
+	padding: 2px;
+}
+
+.red_text
+{
+	color: #FF0000;
+}
+
+/*Attribute picker*/
+.attribute_picker
+{
+}
+.attribute_add_btn
+{
+}
+.attribute_picker_attribute
+{
+	background: #f8f8f8;
+	width: 95%;
+	border: solid 1px #404040;
+	margin: 1px 1px 1px 1px;
+	padding: 1px 1px 1px 1px;
+	cursor: pointer;
+	list-style: none;
+}
+.attribute_picker_attribute_selected
+{
+	background: #c5c5c5;
+}
+.attribute_picker_attribute_hover
+{
+	background: #c5c5c5;
+}
+.attribute_picker_value
+{
+	background: #c5c5c5;
+	width: 95%;
+	border: solid 0px #CCCCCC;
+	margin: 1px 1px 1px 1px;
+	padding: 1px 1px 1px 1px;
+	cursor: pointer;
+	list-style: none;
+}
+.attribute_picker_value_hover
+{
+	background: #d6d6d6;
+}
+.attribute_picker_description
+{
+	height: 40px;
+	border: solid 1px #CCCCCC;
+}
+
+/*tag picker*/
+.tag_picker_tag
+{
+	background: #f8f8f8;
+	width: 95%;
+	border: solid 1px #404040;
+	margin: 1px 1px 1px 1px;
+	padding: 1px 1px 1px 1px;
+	cursor: pointer;
+	list-style: none;
+}
+.tag_picker_tag_selected
+{
+	background: #c5c5c5;
+}
+.tag_picker_tag_hover
+{
+	background: #c5c5c5;
+}
+.tag_description
+{
+	height: 40px;
+	border: solid 1px #CCCCCC;
+}
+
+/* 
+These classes are used by all the 'Manage' pages
+(userEdit, scheduleManage, taskManage, etc.)
+They are tabular data classes for the most part.
+*/
+th.col_header
+{
+	border: 1px solid #c5dbec;
+	background: #dfeffc;
+	font-weight: bold;
+	color: #2e6e9e;
+}
+td.row
+{
+	border: 1px solid #c5dbec;
+	background: #fcfdfd;
+	color: #222222;
+}
+td.row_alt
+{
+	background: #ebecec;
+}
+td.row_over
+{
+	background: #bcd4ec;
+	cursor: pointer;
+}
+/*tr.row_header td
+{
+	background: #cccccc;
+	font-weight: bold;
+}*/
+.pager_button
+{
+	padding: 0px 4px 0px 4px;
+	cursor: pointer;
+}
+.pager_button_selected
+{
+	font-weight: bold;
+	cursor: auto;
+}
+/* End Manage classes */
+
+/* what is this one? */
+.usertextbox
+{
+	width: 300px;
+}
+
+
+
+.trans25
+{
+	opacity: 0.25;
+	filter: alpha(opacity=25);
+}
+.trans50
+{
+	opacity: 0.5;
+	filter: alpha(opacity=50);
+}
+.trans75
+{
+	opacity: 0.75;
+	filter: alpha(opacity=75);
+}
+
+
+/*Group "Tabs" on the home pages, for the different user groups home dashboards...*/
+#group_tabs
+{
+	margin: 6px 0px 4px 0px;
+	padding-right: 15px;
+}
+.group_tab
+{
+	padding: 3px;
+	border: 1px solid #d3d3d3;
+	background: #e6e6e6 url(images/ui-bg_glass_75_e6e6e6_1x400.png) 50% 50% repeat-x;
+	font-weight: normal;
+	font-size: 10pt;
+	color: #555555;
+	outline: none;
+	cursor: pointer;
+	-moz-border-radius-bottomright: 6px;
+	-webkit-border-top-right-radius: 6px;
+	-moz-border-radius-topright: 6px;
+	-webkit-border-top-right-radius: 6px;
+}
+.group_tab_selected
+{
+	background: #ffffff url(images/ui-bg_glass_55_ffffff_1x400.png) 50% 50% repeat-x;
+	border: 1px solid #aaaaaa;
+	border-right: none;
+	-moz-border-radius-bottomright: 0px;
+	-webkit-border-top-right-radius: 0px;
+	-moz-border-radius-topright: 0px;
+	-webkit-border-top-right-radius: 0px;
+	font-weight: normal;
+	color: #212121;
+	outline: none;
+}
+.group_tab_hover
+{
+	border: 1px solid #999999;
+	background: #dadada url(images/ui-bg_glass_65_dadada_1x400.png) 50% 50% repeat-x;
+	font-weight: normal;
+	color: #212121;
+	outline: none;
+}
+
+/*"Tags" that show up on the various edit pages.*/
+.tag
+{
+	border: 1px solid #D3D3D3;
+	background: #FFF;
+	color: #555555;
+	margin: 4px 4px 4px 4px;
+	padding: 3px 3px 3px 3px;
+}
+/*
+"Attributes" that show up on ONLY THE ASSET AND USER edit pages.
+--this will be overridded by the style on the task/proc pages
+*/
+.attribute
+{
+	border: 1px solid #D3D3D3;
+	background: #FFF;
+	color: #555555;
+	margin: 4px 4px 4px 4px;
+}
+/*
+The "object_tags_table" appears on many pages, however the table is inside a list item.
+We used a table to avoid the annoyance of div float left and right.
+*/
+.object_tags_table
+{
+	width: 95%;
+}
+
+.gradient
+{
+	color: #fff;
+	background: -webkit-gradient(linear, left top, left bottom, from(#000), to(#fff)); /* For WebKit (Safari, Google Chrome etc) */
+	background: -moz-linear-gradient(top, #000, #fff); /* For Mozilla/Gecko (Firefox etc) */
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#00000000, endColorstr=#FFFFFFFF); /* For Internet Explorer 5.5 - 7 */
+	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#00000000, endColorstr=#FFFFFFFF)"; /* For Internet Explorer 8 */
+}
+
+
+/* Vertical Tabs
+----------------------------------*/
+.ui-tabs-vertical
+{
+	width: 55em;
+}
+.ui-tabs-vertical .ui-tabs-nav
+{
+	padding: .2em .1em .2em .2em;
+	float: left;
+	width: 12em;
+}
+.ui-tabs-vertical .ui-tabs-nav li
+{
+	clear: left;
+	width: 100%;
+	border-bottom-width: 1px !important;
+	border-right-width: 0 !important;
+	margin: 0 -1px .2em 0;
+}
+.ui-tabs-vertical .ui-tabs-nav li a
+{
+	display: block;
+}
+.ui-tabs-vertical .ui-tabs-nav li.ui-tabs-selected
+{
+	padding-bottom: 0;
+	padding-right: .1em;
+	border-right-width: 1px;
+	border-right-width: 1px;
+}
+.ui-tabs-vertical .ui-tabs-panel
+{
+	padding: 1em;
+	float: right;
+	width: 40em;
+}
+
+
+
+/* Buttons */
+.image
+{
+	position: relative;
+	width: 100%; /* for IE 6 */
+}
+
+
+.textimage span
+{
+	position: relative;
+	top: 0px;
+	left: -40px;
+	right: 2px;
+	width: 0px;
+	height: 40px; /* For getting rid of white space */
+	color: #ffffff;
+	text-decoration: none;
+}
+
+.textimage img
+{
+	zmargin-top: -40px; /* For getting rid of white space */
+	height: 24px;
+	width: 65px;
+}
+
+.custom_icon
+{
+	margin-right: 4px;
+}
+
+
+/*For the task launch popup dialog*/
+.task_launch_column 
+{
+	width: 48%;
+}
+.task_launch_parameter
+{
+	border: solid 1px #e5e5e5;
+	font-size: 9pt;
+	-moz-border-radius: 8px;
+	font-weight: bold;
+	margin: 2px 0px 2px 0px;
+	padding: 2px 4px 0px 4px;
+}
+.task_launch_parameter_required
+{
+	background-color: #eeeeee;
+	-moz-box-shadow: 5px 5px 5px #ccc;
+	-webkit-box-shadow: 5px 5px 5px #ccc;
+	box-shadow: 5px 5px 5px #ccc;
+}
+.task_launch_parameter_name
+{
+	float: left;
+}
+.task_launch_parameter_icons
+{
+	float: right;
+}
+.task_launch_parameter_value
+{
+	clear: both;
+	font-size: 8pt;
+	font-weight: normal;
+	border: solid 1px #e5e5e5;
+	padding: 2px 0px 2px 8px;
+	-moz-border-radius: 8px;
+}
+.task_launch_parameter_value_input
+{
+	width: 375px;
+}
+.task_launch_params_title 
+{
+	padding: 6px 0px 6px 6px;
+	margin-bottom: 8px;
+}
+.action_plan
+{
+	height: 16px;
+}
+.action_schedule
+{
+	height: 16px;
+}
+
+/*specifically for the recurring schedule editing on the taskLaunchDialog*/
+.ui-dropslide ol
+{
+	list-style-image: none;
+	list-style-position: outside;
+	list-style-type: none;
+	margin-top: 2px;
+}
+.ui-dropslide li
+{
+	float: left;
+	list-style-image: none;
+	list-style-position: outside;
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+.ui-dropslide span
+{
+	-moz-border-radius-bottomleft: 2px;
+	-moz-border-radius-bottomright: 2px;
+	-moz-border-radius-topleft: 2px;
+	-moz-border-radius-topright: 2px;
+	cursor: pointer;
+	display: block;
+	font-size: 0.7em;
+	margin-left: 1px;
+	padding: 2px 2px;
+	text-align: center;
+}
+.plan_datepoint
+{
+	width: 28px;
+}
+.plan_datepoint_active span
+{
+	background: #3679AE !important;
+	color: #FFFFFF !important;
+}
+
+/*END of the taskLaunchDialog styles*/
+
+.parameter_dialog_add_btn
+{
+	font-size: 8pt;
+	font-weight: normal;
+	cursor: pointer;
+}
+.parameter_dialog_remove_btn
+{
+	cursor: pointer;
+}
+
+/*for floats*/
+.floatleft
+{
+	float: left;
+}
+.floatright
+{
+	float: right;
+}
+.clearfloat
+{
+	clear: both;
+}
+
+/* css for timepicker */
+.ui-timepicker-div .ui-widget-header{ margin-bottom: 8px; }
+.ui-timepicker-div dl{ text-align: left; }
+.ui-timepicker-div dl dt{ height: 25px; }
+.ui-timepicker-div dl dd{ margin: -25px 0 10px 65px; }
+.ui-timepicker-div td { font-size: 90%; }

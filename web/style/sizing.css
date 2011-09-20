@@ -1,0 +1,89 @@
+/* -------------------------------------*/
+/*            Sixing Styles             */
+/* -------------------------------------*/
+/*Some handy width classes (in use heavily on the taskEdit page)*/
+.min900px
+{
+	min-width: 900px;
+}
+.w100pct
+{
+	width: 100%;
+}
+.w99pct
+{
+	width: 99%;
+}
+.w98pct
+{
+	width: 98%;
+}
+.w95pct
+{
+	width: 95%;
+}
+.w90pct
+{
+	width: 90%;
+}
+.w50pct
+{
+	width: 50%;
+}
+.w75pct
+{
+	width: 75%;
+}
+.w33pct
+{
+	width: 33%;
+}
+.w25pct
+{
+	width: 25%;
+}
+.w1pct
+{
+	width: 1%;
+}
+.w50px
+{
+	width: 50px;
+}
+.w100px
+{
+	width: 100px;
+}
+.w200px
+{
+	width: 200px;
+}
+.w300px
+{
+	width: 300px;
+}
+
+.h10px
+{
+	height: 10px;
+}
+.h16px
+{
+	height: 16px;
+}
+.h18px
+{
+	height: 18px;
+}
+.h20px
+{
+	height: 20px;
+}
+.h30px
+{
+	height: 30px;
+}
+.h40px
+{
+	height: 40px;
+}

@@ -1,0 +1,137 @@
+﻿.ui-effects-transfer
+{
+	/* style the transfer element */
+	border-right: #d0e5f5 1px solid;
+	border-top: #d0e5f5 1px solid;
+	border-bottom: #d0e5f5 1px solid;
+	-moz-box-shadow: 5px 5px 5px #ccc;
+	-webkit-box-shadow: 5px 5px 5px #ccc;
+	box-shadow: 5px 5px 5px #ccc;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+}
+div.action_btn
+{
+	height: 50px;
+	margin: 1px 4px 1px 4px;
+	padding: 1px 1px 1px 4px;
+	font-weight: normal;
+	cursor: pointer;
+	border-style: outset;
+}
+div.action_btn_focus
+{
+	border-style: inset !important;
+}
+
+/*can't use themeroller - this one should be a copy of ui-state-active
+div.action_btn:hover
+{
+	border: 1px solid #79b7e7;
+	background: #f5f8f9 url(images/ui-bg_inset-hard_100_f5f8f9_1x100.png) 50% 50% repeat-x;
+	font-weight: bold;
+	color: #e17009;
+	border-style: outset;
+}*/
+/*and this one should be a copy of ui-state-hover*/
+div.action_btn:active
+{
+	background: #d0e5f5 url(images/ui-bg_glass_75_d0e5f5_1x400.png) 50% 50% repeat-x;
+	border-style: inset !important;
+	-moz-box-shadow: none !important;
+	-webkit-box-shadow: none !important;
+	box-shadow: none !important;
+}
+#action_flow
+{
+	width: 98%;
+}
+#action_flow td
+{
+	width: 20%;
+}
+div.action
+{
+	text-align: center;
+	width: 90px;
+	margin: 20px 0px 20px 30px;
+}
+.action_name
+{
+	font-weight: bold;
+}
+div.action_inner
+{
+	height: 80px;
+	margin-bottom: 10px;
+	-moz-box-shadow: 5px 5px 5px #ccc;
+	-webkit-box-shadow: 5px 5px 5px #ccc;
+	box-shadow: 5px 5px 5px #ccc;
+}
+
+.ecosystem_type
+{
+	cursor: pointer;
+	margin: 0px 0px 5px 4px;
+	padding-left: 5px;
+	color: #202020;
+	list-style-type: none;
+}
+.ecosystem_type_header
+{
+	font-weight: bold;
+	height: 24px;
+}
+.ecosystem_type img
+{
+	padding: 2px 2px 2px 2px;
+}
+.ecosystem_type_icon
+{
+	margin: 0px;
+	padding: 0px;
+	height: 16px;
+	width: 16px;
+}
+.ecosystem_item_header_title
+{
+	float: left;
+}
+.ecosystem_item_header_icons
+{
+	float: right;
+}
+.ecosystem_item_title
+{
+	font-size: 1.4em;
+}
+.ecosystem_type_detail
+{
+	clear: both;
+	padding: 4px 4px 4px 4px;
+}
+.ecosystem_item
+{
+	margin: 2px 10px 2px 10px;
+}
+.ecosystem_item_header
+{
+	font-weight: bold;
+	height: 16px;
+	padding-left: 4px;
+}
+.ecosystem_item_detail
+{
+	clear: both;
+	padding: 0px 4px 0px 4px;
+}
+
+.ecosystem_item_property
+{
+	margin-right: 15px;
+}
+.breadcrumb
+{
+	cursor: pointer;
+}

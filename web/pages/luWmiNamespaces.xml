@@ -1,0 +1,22 @@
+<namespaces>
+  <namespace namespace_id="1">
+    <name>cimv2</name>
+    <desc>cimv2 Description</desc>
+    <version>1</version>
+  </namespace>
+    <namespace namespace_id="2">
+      <name>default</name>
+      <desc>default Description</desc>
+      <version>1</version>
+  </namespace>
+    <namespace namespace_id="3">
+      <name>rsop\computer</name>
+      <desc>rsop\computer Description</desc>
+      <version>1</version>
+  </namespace>
+    <namespace namespace_id="4">
+      <name>rsop\user</name>
+      <desc>rsop\user Description</desc>
+      <version>1</version>
+  </namespace>
+</namespaces>

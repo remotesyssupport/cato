@@ -1,0 +1,73 @@
+/* -----------------------------------*/
+/*            Type Styles             */
+/* -----------------------------------*/
+
+
+
+/* `Basic HTML
+----------------------------------------------------------------------------------------------------*/
+
+body
+{
+	/* font: 13px/1.5 Helvetica, Arial, 'Liberation Sans' , FreeSans, sans-serif; */
+}
+
+a:focus
+{
+	outline: 1px dotted invert;
+}
+
+hr
+{
+	border: 0 #ccc solid;
+	border-top-width: 1px;
+	clear: both;
+	height: 0;
+}
+
+/* `Headings
+----------------------------------------------------------------------------------------------------*/
+
+h1
+{
+	font-size: 25px;
+}
+
+h2
+{
+	font-size: 22px;
+}
+
+h3
+{
+	font-size: 20px;
+}
+
+h4
+{
+	font-size: 18px;
+}
+
+h5
+{
+	font-size: 14px;
+}
+
+h6
+{
+	font-size: 12px;
+}
+
+/* `Spacing
+----------------------------------------------------------------------------------------------------*/
+
+ol
+{
+	list-style: decimal;
+}
+
+ul
+{
+	list-style-type: none;
+}
+
