@@ -1,0 +1,6 @@
+[submodule "services/lib/tclcloud"]
+	path = services/lib/tclcloud
+	url = git@github.com:cloudsidekick/tclcloud.git
+[submodule "services/lib/tclwinrm"]
+	path = services/lib/tclwinrm
+	url = git@github.com:cloudsidekick/tclwinrm.git
