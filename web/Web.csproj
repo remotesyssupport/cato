@@ -74,252 +74,6 @@
     <Compile Include="login.aspx.designer.cs">
       <DependentUpon>login.aspx</DependentUpon>
     </Compile>
-    <Compile Include="pages\about.aspx.cs">
-      <DependentUpon>about.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="pages\about.aspx.designer.cs">
-      <DependentUpon>about.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="pages\awsDiscovery.aspx.cs">
-      <DependentUpon>awsDiscovery.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="pages\awsDiscovery.aspx.designer.cs">
-      <DependentUpon>awsDiscovery.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="pages\awsMethods.asmx.cs">
-      <DependentUpon>awsMethods.asmx</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="pages\cloudAccountEdit.aspx.cs">
-      <DependentUpon>cloudAccountEdit.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="pages\cloudAccountEdit.aspx.designer.cs">
-      <DependentUpon>cloudAccountEdit.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="pages\cloudAPITester.aspx.cs">
-      <DependentUpon>cloudAPITester.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="pages\cloudAPITester.aspx.designer.cs">
-      <DependentUpon>cloudAPITester.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="pages\ecoTemplateEdit.aspx.cs">
-      <DependentUpon>ecoTemplateEdit.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="pages\ecoTemplateEdit.aspx.designer.cs">
-      <DependentUpon>ecoTemplateEdit.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="pages\ecoTemplateManage.aspx.cs">
-      <DependentUpon>ecoTemplateManage.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="pages\ecoTemplateManage.aspx.designer.cs">
-      <DependentUpon>ecoTemplateManage.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="pages\ecosystemEdit.aspx.cs">
-      <DependentUpon>ecosystemEdit.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="pages\ecosystemEdit.aspx.designer.cs">
-      <DependentUpon>ecosystemEdit.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="pages\ecosystemManage.aspx.cs">
-      <DependentUpon>ecosystemManage.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="pages\ecosystemManage.aspx.designer.cs">
-      <DependentUpon>ecosystemManage.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="pages\globalRegistry.aspx.cs">
-      <DependentUpon>globalRegistry.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="pages\globalRegistry.aspx.designer.cs">
-      <DependentUpon>globalRegistry.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="pages\schedulerSettings.aspx.cs">
-      <DependentUpon>schedulerSettings.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="pages\schedulerSettings.aspx.designer.cs">
-      <DependentUpon>schedulerSettings.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="pages\tagEdit.aspx.cs">
-      <DependentUpon>tagEdit.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="pages\tagEdit.aspx.designer.cs">
-      <DependentUpon>tagEdit.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="pages\notAllowed.aspx.cs">
-      <DependentUpon>notAllowed.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="pages\notAllowed.aspx.designer.cs">
-      <DependentUpon>notAllowed.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="pages\taskRunLog.aspx.cs">
-      <DependentUpon>taskRunLog.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="pages\taskRunLog.aspx.designer.cs">
-      <DependentUpon>taskRunLog.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="pages\uiMethods.asmx.cs">
-      <DependentUpon>uiMethods.asmx</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="pages\pollerSettings.aspx.cs">
-      <DependentUpon>pollerSettings.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="pages\pollerSettings.aspx.designer.cs">
-      <DependentUpon>pollerSettings.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="pages\taskEdit.aspx.designer.cs">
-      <DependentUpon>taskEdit.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="pages\securityLogView.aspx.cs">
-      <DependentUpon>securityLogView.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="pages\securityLogView.aspx.designer.cs">
-      <DependentUpon>securityLogView.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="pages\taskCommandHelp.aspx.cs">
-      <DependentUpon>taskCommandHelp.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="pages\taskCommandHelp.aspx.designer.cs">
-      <DependentUpon>taskCommandHelp.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="pages\taskPrint.aspx.cs">
-      <DependentUpon>taskPrint.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="pages\taskPrint.aspx.designer.cs">
-      <DependentUpon>taskPrint.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="pages\taskView.aspx.cs">
-      <DependentUpon>taskView.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="pages\ldapEdit.aspx.cs">
-      <DependentUpon>ldapEdit.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="pages\ldapEdit.aspx.designer.cs">
-      <DependentUpon>ldapEdit.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="pages\taskStatusView.aspx.cs">
-      <DependentUpon>taskStatusView.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="pages\taskStatusView.aspx.designer.cs">
-      <DependentUpon>taskStatusView.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="pages\sharedCredentialEdit.aspx.cs">
-      <DependentUpon>sharedCredentialEdit.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="pages\sharedCredentialEdit.aspx.designer.cs">
-      <DependentUpon>sharedCredentialEdit.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="pages\taskMethods.asmx.cs">
-      <DependentUpon>taskMethods.asmx</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="pages\taskView.aspx.designer.cs">
-      <DependentUpon>taskView.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="pages\userPreferenceEdit.aspx.cs">
-      <DependentUpon>userPreferenceEdit.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="pages\userPreferenceEdit.aspx.designer.cs">
-      <DependentUpon>userPreferenceEdit.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="pages\taskActivityLog.aspx.cs">
-      <DependentUpon>taskActivityLog.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="pages\taskActivityLog.aspx.designer.cs">
-      <DependentUpon>taskActivityLog.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="pages\systemStatusView.aspx.cs">
-      <DependentUpon>systemStatusView.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="pages\systemStatusView.aspx.designer.cs">
-      <DependentUpon>systemStatusView.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="pages\notificationEdit.aspx.cs">
-      <DependentUpon>notificationEdit.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="pages\notificationEdit.aspx.designer.cs">
-      <DependentUpon>notificationEdit.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="pages\taskManage.aspx.cs">
-      <DependentUpon>taskManage.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="pages\taskManage.aspx.designer.cs">
-      <DependentUpon>taskManage.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="pages\home.aspx.cs">
-      <DependentUpon>home.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="pages\home.aspx.designer.cs">
-      <DependentUpon>home.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="pages\loginDefaultsEdit.aspx.cs">
-      <DependentUpon>loginDefaultsEdit.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="pages\loginDefaultsEdit.aspx.designer.cs">
-      <DependentUpon>loginDefaultsEdit.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="pages\taskEdit.aspx.cs">
-      <DependentUpon>taskEdit.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="pages\taskStepVarsEdit.aspx.cs">
-      <DependentUpon>taskStepVarsEdit.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="pages\taskStepVarsEdit.aspx.designer.cs">
-      <DependentUpon>taskStepVarsEdit.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="pages\userEdit.aspx.cs">
-      <DependentUpon>userEdit.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="pages\userEdit.aspx.designer.cs">
-      <DependentUpon>userEdit.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="pages\logserverSettings.aspx.cs">
-      <DependentUpon>logserverSettings.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="pages\logserverSettings.aspx.designer.cs">
-      <DependentUpon>logserverSettings.aspx</DependentUpon>
-    </Compile>
-    <None Include="pages\taskStepVarsEdit.aspx" />
-    <None Include="script\taskedit\taskStepVarsEdit.js" />
-    <None Include="script\cloudAccountEdit.js" />
-    <None Include="script\taskRunLog.js" />
-    <None Include="script\tagEdit.js" />
-    <None Include="script\ldapEdit.js" />
-    <None Include="script\taskStatusView.js" />
-    <None Include="script\sharedCredentialEdit.js" />
-    <None Include="script\taskActivityLog.js" />
-    <None Include="script\systemStatusView.js" />
     <Compile Include="classes\AppGlobals.cs" />
     <Compile Include="classes\UI.cs">
       <SubType>ASPXCodeBehind</SubType>
@@ -334,24 +88,232 @@
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="classes\AssemblyInfo.cs" />
-    <Compile Include="pages\site.master.cs">
-      <DependentUpon>site.master</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
+    <None Include="style\task_edit\Thumbs.db" />
+    <Compile Include="pages\about.aspx.designer.cs">
+      <DependentUpon>about.aspx</DependentUpon>
     </Compile>
-    <Compile Include="pages\site.master.designer.cs">
-      <DependentUpon>site.master</DependentUpon>
+    <Compile Include="pages\about.aspx.cs">
+      <DependentUpon>about.aspx</DependentUpon>
     </Compile>
-    <Compile Include="pages\popupwindow.master.cs">
-      <DependentUpon>popupwindow.master</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
+    <Compile Include="pages\awsDiscovery.aspx.designer.cs">
+      <DependentUpon>awsDiscovery.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="pages\awsDiscovery.aspx.cs">
+      <DependentUpon>awsDiscovery.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="pages\awsEC2Instances.aspx.designer.cs">
+      <DependentUpon>awsEC2Instances.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="pages\awsEC2Instances.aspx.cs">
+      <DependentUpon>awsEC2Instances.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="pages\awsMethods.asmx.cs">
+      <DependentUpon>awsMethods.asmx</DependentUpon>
+    </Compile>
+    <Compile Include="pages\cloudAccountEdit.aspx.designer.cs">
+      <DependentUpon>cloudAccountEdit.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="pages\cloudAccountEdit.aspx.cs">
+      <DependentUpon>cloudAccountEdit.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="pages\cloudAPITester.aspx.designer.cs">
+      <DependentUpon>cloudAPITester.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="pages\cloudAPITester.aspx.cs">
+      <DependentUpon>cloudAPITester.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="pages\ecosystemEdit.aspx.designer.cs">
+      <DependentUpon>ecosystemEdit.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="pages\ecosystemEdit.aspx.cs">
+      <DependentUpon>ecosystemEdit.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="pages\ecosystemManage.aspx.designer.cs">
+      <DependentUpon>ecosystemManage.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="pages\ecosystemManage.aspx.cs">
+      <DependentUpon>ecosystemManage.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="pages\ecoTemplateEdit.aspx.designer.cs">
+      <DependentUpon>ecoTemplateEdit.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="pages\ecoTemplateEdit.aspx.cs">
+      <DependentUpon>ecoTemplateEdit.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="pages\ecoTemplateManage.aspx.designer.cs">
+      <DependentUpon>ecoTemplateManage.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="pages\ecoTemplateManage.aspx.cs">
+      <DependentUpon>ecoTemplateManage.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="pages\globalRegistry.aspx.designer.cs">
+      <DependentUpon>globalRegistry.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="pages\globalRegistry.aspx.cs">
+      <DependentUpon>globalRegistry.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="pages\home.aspx.designer.cs">
+      <DependentUpon>home.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="pages\home.aspx.cs">
+      <DependentUpon>home.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="pages\ldapEdit.aspx.designer.cs">
+      <DependentUpon>ldapEdit.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="pages\ldapEdit.aspx.cs">
+      <DependentUpon>ldapEdit.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="pages\loginDefaultsEdit.aspx.designer.cs">
+      <DependentUpon>loginDefaultsEdit.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="pages\loginDefaultsEdit.aspx.cs">
+      <DependentUpon>loginDefaultsEdit.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="pages\logserverSettings.aspx.designer.cs">
+      <DependentUpon>logserverSettings.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="pages\logserverSettings.aspx.cs">
+      <DependentUpon>logserverSettings.aspx</DependentUpon>
+    </Compile>
+    <None Include="pages\luAWSRegions.xml" />
+    <None Include="pages\luCompareTemplates.xml" />
+    <None Include="pages\luConnectionType.xml" />
+    <None Include="pages\luDatasetTemplates.xml" />
+    <None Include="pages\luGlobalVariable.xml" />
+    <None Include="pages\luWmiNamespaces.xml" />
+    <Compile Include="pages\notAllowed.aspx.designer.cs">
+      <DependentUpon>notAllowed.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="pages\notAllowed.aspx.cs">
+      <DependentUpon>notAllowed.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="pages\notificationEdit.aspx.designer.cs">
+      <DependentUpon>notificationEdit.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="pages\notificationEdit.aspx.cs">
+      <DependentUpon>notificationEdit.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="pages\pollerSettings.aspx.designer.cs">
+      <DependentUpon>pollerSettings.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="pages\pollerSettings.aspx.cs">
+      <DependentUpon>pollerSettings.aspx</DependentUpon>
     </Compile>
     <Compile Include="pages\popupwindow.master.designer.cs">
       <DependentUpon>popupwindow.master</DependentUpon>
     </Compile>
-    <None Include="conf\cato.conf" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="pages\taskCommandHelp.aspx" />
+    <Compile Include="pages\popupwindow.master.cs">
+      <DependentUpon>popupwindow.master</DependentUpon>
+    </Compile>
+    <Compile Include="pages\schedulerSettings.aspx.designer.cs">
+      <DependentUpon>schedulerSettings.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="pages\schedulerSettings.aspx.cs">
+      <DependentUpon>schedulerSettings.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="pages\securityLogView.aspx.designer.cs">
+      <DependentUpon>securityLogView.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="pages\securityLogView.aspx.cs">
+      <DependentUpon>securityLogView.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="pages\sharedCredentialEdit.aspx.designer.cs">
+      <DependentUpon>sharedCredentialEdit.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="pages\sharedCredentialEdit.aspx.cs">
+      <DependentUpon>sharedCredentialEdit.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="pages\site.master.designer.cs">
+      <DependentUpon>site.master</DependentUpon>
+    </Compile>
+    <Compile Include="pages\site.master.cs">
+      <DependentUpon>site.master</DependentUpon>
+    </Compile>
+    <Compile Include="pages\systemStatusView.aspx.designer.cs">
+      <DependentUpon>systemStatusView.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="pages\systemStatusView.aspx.cs">
+      <DependentUpon>systemStatusView.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="pages\tagEdit.aspx.designer.cs">
+      <DependentUpon>tagEdit.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="pages\tagEdit.aspx.cs">
+      <DependentUpon>tagEdit.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="pages\taskActivityLog.aspx.designer.cs">
+      <DependentUpon>taskActivityLog.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="pages\taskActivityLog.aspx.cs">
+      <DependentUpon>taskActivityLog.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="pages\taskCommandHelp.aspx.designer.cs">
+      <DependentUpon>taskCommandHelp.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="pages\taskCommandHelp.aspx.cs">
+      <DependentUpon>taskCommandHelp.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="pages\taskEdit.aspx.designer.cs">
+      <DependentUpon>taskEdit.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="pages\taskEdit.aspx.cs">
+      <DependentUpon>taskEdit.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="pages\taskManage.aspx.designer.cs">
+      <DependentUpon>taskManage.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="pages\taskManage.aspx.cs">
+      <DependentUpon>taskManage.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="pages\taskMethods.asmx.cs">
+      <DependentUpon>taskMethods.asmx</DependentUpon>
+    </Compile>
+    <Compile Include="pages\taskPrint.aspx.designer.cs">
+      <DependentUpon>taskPrint.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="pages\taskPrint.aspx.cs">
+      <DependentUpon>taskPrint.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="pages\taskRunLog.aspx.designer.cs">
+      <DependentUpon>taskRunLog.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="pages\taskRunLog.aspx.cs">
+      <DependentUpon>taskRunLog.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="pages\taskStatusView.aspx.designer.cs">
+      <DependentUpon>taskStatusView.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="pages\taskStatusView.aspx.cs">
+      <DependentUpon>taskStatusView.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="pages\taskStepVarsEdit.aspx.designer.cs">
+      <DependentUpon>taskStepVarsEdit.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="pages\taskStepVarsEdit.aspx.cs">
+      <DependentUpon>taskStepVarsEdit.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="pages\taskView.aspx.designer.cs">
+      <DependentUpon>taskView.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="pages\taskView.aspx.cs">
+      <DependentUpon>taskView.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="pages\uiMethods.asmx.cs">
+      <DependentUpon>uiMethods.asmx</DependentUpon>
+    </Compile>
+    <Compile Include="pages\userEdit.aspx.designer.cs">
+      <DependentUpon>userEdit.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="pages\userEdit.aspx.cs">
+      <DependentUpon>userEdit.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="pages\userPreferenceEdit.aspx.designer.cs">
+      <DependentUpon>userPreferenceEdit.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="pages\userPreferenceEdit.aspx.cs">
+      <DependentUpon>userPreferenceEdit.aspx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
@@ -391,11 +353,139 @@
     </PreBuildEvent>
   </PropertyGroup>
   <ItemGroup>
-    <Folder Include="conf\" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="login.aspx" />
     <Content Include="Default.aspx" />
     <Content Include="Web.config" />
+    <Content Include="style\images\ui-bg_flat_0_aaaaaa_40x100.png" />
+    <Content Include="style\images\ui-bg_flat_55_fbec88_40x100.png" />
+    <Content Include="style\images\ui-bg_glass_75_d0e5f5_1x400.png" />
+    <Content Include="style\images\ui-bg_glass_85_dfeffc_1x400.png" />
+    <Content Include="style\images\ui-bg_glass_95_fef1ec_1x400.png" />
+    <Content Include="style\images\ui-bg_gloss-wave_55_5c9ccc_500x100.png" />
+    <Content Include="style\images\ui-bg_inset-hard_100_f5f8f9_1x100.png" />
+    <Content Include="style\images\ui-bg_inset-hard_100_fcfdfd_1x100.png" />
+    <Content Include="style\images\ui-icons_217bc0_256x240.png" />
+    <Content Include="style\images\ui-icons_2e83ff_256x240.png" />
+    <Content Include="style\images\ui-icons_469bdd_256x240.png" />
+    <Content Include="style\images\ui-icons_6da8d5_256x240.png" />
+    <Content Include="style\images\ui-icons_cd0a0a_256x240.png" />
+    <Content Include="style\images\ui-icons_d8e7f3_256x240.png" />
+    <Content Include="style\images\ui-icons_f9bd01_256x240.png" />
+    <Content Include="style\superfish\item_bg.png" />
+    <Content Include="style\superfish\item_bg_hover.png" />
+    <Content Include="style\superfish\shadow.png" />
+    <Content Include="style\superfish\superfish.css" />
+    <Content Include="style\task_edit\bg-panel-header.gif" />
+    <Content Include="style\task_edit\toolbox_li.png" />
+    <Content Include="style\task_edit\toolbox_li_hover.png" />
+    <Content Include="style\ecosystemEdit.css" />
+    <Content Include="style\ecoTemplateEdit.css" />
+    <Content Include="style\input.css" />
+    <Content Include="style\jquery-ui-1.8.13.custom.css" />
+    <Content Include="style\login.css" />
+    <Content Include="style\main.css" />
+    <Content Include="style\registry.css" />
+    <Content Include="style\reset.css" />
+    <Content Include="style\sizing.css" />
+    <Content Include="style\statusView.css" />
+    <Content Include="style\table.css" />
+    <Content Include="style\taskEdit.css" />
+    <Content Include="style\taskParams.css" />
+    <Content Include="style\taskRunLog.css" />
+    <Content Include="style\taskSteps.css" />
+    <Content Include="style\taskView.css" />
+    <Content Include="style\text.css" />
+    <Content Include="style\tipTip.css" />
+    <Content Include="style\ui.tabs.css" />
+    <Content Include="script\jquery\jquery.base64.js" />
+    <Content Include="script\jquery\jquery.blockUI.js" />
+    <Content Include="script\jquery\jquery.corner.js" />
+    <Content Include="script\jquery\jquery.rightClick.js" />
+    <Content Include="script\jquery\jquery.scrollTo.js" />
+    <Content Include="script\jquery\jquery.textarea.js" />
+    <Content Include="script\jquery\jquery.timepicker.js" />
+    <Content Include="script\jquery\jquery.timers.js" />
+    <Content Include="script\jquery\jquery.tipTip.js" />
+    <Content Include="script\jquery\jquery-1.6.1.js" />
+    <Content Include="script\jquery\jquery-ui-1.8.12.js" />
+    <Content Include="script\superfish\hoverIntent.js" />
+    <Content Include="script\superfish\jquery.bgiframe.min.js" />
+    <Content Include="script\superfish\superfish.js" />
+    <Content Include="script\superfish\supersubs.js" />
+    <Content Include="script\taskedit\taskEdit.js" />
+    <Content Include="script\taskedit\taskEditAttributes.js" />
+    <Content Include="script\taskedit\taskEditCodeblock.js" />
+    <Content Include="script\taskedit\taskEditCommandSpecific.js" />
+    <Content Include="script\taskedit\taskEditDebug.js" />
+    <Content Include="script\taskedit\taskEditParams.js" />
+    <Content Include="script\taskedit\taskEditSteps.js" />
+    <Content Include="script\taskedit\taskStepVarsEdit.js" />
+    <Content Include="script\taskedit\taskVersions.js" />
+    <Content Include="script\taskedit\taskView.js" />
+    <Content Include="script\awsDiscovery.js" />
+    <Content Include="script\cloudAccountEdit.js" />
+    <Content Include="script\ecosystemEdit.js" />
+    <Content Include="script\ecosystemManage.js" />
+    <Content Include="script\ecoTemplateEdit.js" />
+    <Content Include="script\ecoTemplateManage.js" />
+    <Content Include="script\ldapEdit.js" />
+    <Content Include="script\MainScript.js" />
+    <Content Include="script\managePageCommon.js" />
+    <Content Include="script\masterpage.js" />
+    <Content Include="script\multiEcosystemPickerDialog.js" />
+    <Content Include="script\notificationEdit.js" />
+    <Content Include="script\objectTag.js" />
+    <Content Include="script\parametersOnDialog.js" />
+    <Content Include="script\pollerSettings.js" />
+    <Content Include="script\registry.js" />
+    <Content Include="script\sharedCredentialEdit.js" />
+    <Content Include="script\systemStatusView.js" />
+    <Content Include="script\tagEdit.js" />
+    <Content Include="script\taskActivityLog.js" />
+    <Content Include="script\taskLaunchDialog.js" />
+    <Content Include="script\taskManage.js" />
+    <Content Include="script\taskRunLog.js" />
+    <Content Include="script\taskStatusView.js" />
+    <Content Include="script\toolbox.js" />
+    <Content Include="script\userEdit.js" />
+    <Content Include="script\validation.js" />
+    <Content Include="pages\about.aspx" />
+    <Content Include="pages\awsDiscovery.aspx" />
+    <Content Include="pages\awsEC2Instances.aspx" />
+    <Content Include="pages\awsMethods.asmx" />
+    <Content Include="pages\cloudAccountEdit.aspx" />
+    <Content Include="pages\cloudAPITester.aspx" />
+    <Content Include="pages\ecosystemEdit.aspx" />
+    <Content Include="pages\ecosystemManage.aspx" />
+    <Content Include="pages\ecoTemplateEdit.aspx" />
+    <Content Include="pages\ecoTemplateManage.aspx" />
+    <Content Include="pages\globalRegistry.aspx" />
+    <Content Include="pages\home.aspx" />
+    <Content Include="pages\ldapEdit.aspx" />
+    <Content Include="pages\loginDefaultsEdit.aspx" />
+    <Content Include="pages\logserverSettings.aspx" />
+    <Content Include="pages\notAllowed.aspx" />
+    <Content Include="pages\notificationEdit.aspx" />
+    <Content Include="pages\pollerSettings.aspx" />
+    <Content Include="pages\popupwindow.master" />
+    <Content Include="pages\schedulerSettings.aspx" />
+    <Content Include="pages\securityLogView.aspx" />
+    <Content Include="pages\sharedCredentialEdit.aspx" />
+    <Content Include="pages\site.master" />
+    <Content Include="pages\systemStatusView.aspx" />
+    <Content Include="pages\tagEdit.aspx" />
+    <Content Include="pages\taskActivityLog.aspx" />
+    <Content Include="pages\taskCommandHelp.aspx" />
+    <Content Include="pages\taskEdit.aspx" />
+    <Content Include="pages\taskManage.aspx" />
+    <Content Include="pages\taskMethods.asmx" />
+    <Content Include="pages\taskPrint.aspx" />
+    <Content Include="pages\taskRunLog.aspx" />
+    <Content Include="pages\taskStatusView.aspx" />
+    <Content Include="pages\taskStepVarsEdit.aspx" />
+    <Content Include="pages\taskView.aspx" />
+    <Content Include="pages\uiMethods.asmx" />
+    <Content Include="pages\userEdit.aspx" />
+    <Content Include="pages\userPreferenceEdit.aspx" />
   </ItemGroup>
 </Project>
