@@ -6,3 +6,7 @@ web/CloudSidekick.userprefs
 web/bin/Web.dll
 
 web/bin/Web.dll.mdb
+
+conf/cato.conf
+
+web/conf
