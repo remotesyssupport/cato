@@ -393,4 +393,9 @@
   <ItemGroup>
     <Folder Include="conf\" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="login.aspx" />
+    <Content Include="Default.aspx" />
+    <Content Include="Web.config" />
+  </ItemGroup>
 </Project>
