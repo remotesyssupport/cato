@@ -101,12 +101,6 @@
     <Compile Include="pages\awsDiscovery.aspx.cs">
       <DependentUpon>awsDiscovery.aspx</DependentUpon>
     </Compile>
-    <Compile Include="pages\awsEC2Instances.aspx.designer.cs">
-      <DependentUpon>awsEC2Instances.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="pages\awsEC2Instances.aspx.cs">
-      <DependentUpon>awsEC2Instances.aspx</DependentUpon>
-    </Compile>
     <Compile Include="pages\awsMethods.asmx.cs">
       <DependentUpon>awsMethods.asmx</DependentUpon>
     </Compile>
@@ -451,7 +445,6 @@
     <Content Include="script\validation.js" />
     <Content Include="pages\about.aspx" />
     <Content Include="pages\awsDiscovery.aspx" />
-    <Content Include="pages\awsEC2Instances.aspx" />
     <Content Include="pages\awsMethods.asmx" />
     <Content Include="pages\cloudAccountEdit.aspx" />
     <Content Include="pages\cloudAPITester.aspx" />
