@@ -80,10 +80,10 @@ Reedit the conf file and paste the key and database password values on the
 related lines. Save and quit. 
 
 
-5. Change the application admin password in the database data script to the 
+5. Change the application "Administrator" password in the database data script to the 
 encrypted value. This was the last value encrypted when the setup_config 
 script was run. Replace encryptedpassword in the following command with 
-the encrypted administrator password and run the command.
+the encrypted Administrator password and run the command.
 
 sed 's/#REPLACE_PASSWORD#/encryptedpassword/' ./database/cato_data.sql
 

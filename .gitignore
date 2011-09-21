@@ -10,3 +10,11 @@ web/bin/Web.dll.mdb
 conf/cato.conf
 
 web/conf
+
+web/config.log
+
+web/obj/Debug/Web.dll.mdb
+
+web/obj/Debug/Web.dll
+
+web/obj/Debug/Web.csproj.FilesWrittenAbsolute.txt
