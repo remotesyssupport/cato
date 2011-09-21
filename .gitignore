@@ -18,3 +18,7 @@ web/obj/Debug/Web.dll.mdb
 web/obj/Debug/Web.dll
 
 web/obj/Debug/Web.csproj.FilesWrittenAbsolute.txt
+
+web/Web.userprefs
+
+web/bin/mysql.data.dll

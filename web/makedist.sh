@@ -1,29 +1,48 @@
 #!/bin/bash
 
-DEPLOY_DIR="../deploy"
-echo "$DEPLOY_DIR"
+CONFDIR=$(cd ../conf && pwd)
 
+read -p "Enter a target directory. (default: /opt/cato/web): " dir
+if [ "$dir" = "" ]; then
+  DEPLOY_DIR="/opt/cato/web"
+else
+  DEPLOY_DIR=$dir
+fi
+
+echo "Installing to $DEPLOY_DIR ..."
+
+echo "Cleaning up..."
 rm -rf $DEPLOY_DIR
-
 mkdir -p $DEPLOY_DIR
 
-tar --exclude=".svn" --exclude="*.cs" -cvf foo.tar *
+echo "Copying files..."
+#copy pages WITHOUT the .cs files
+rsync -aq --exclude=*.cs pages/* $DEPLOY_DIR/pages
 
-mv foo.tar $DEPLOY_DIR
+#copy all images, script and style
+rsync -aq images/* $DEPLOY_DIR/images
+rsync -aq script/* $DEPLOY_DIR/script
+rsync -aq style/* $DEPLOY_DIR/style
 
-cd $DEPLOY_DIR
+#just the dll's not the extras
+rsync -q bin/*.dll $DEPLOY_DIR/bin/
 
-tar -xvf foo.tar
+#explicit local files
+rsync -q *.aspx $DEPLOY_DIR/
+rsync -q *.htm $DEPLOY_DIR/
+rsync -q Web.config $DEPLOY_DIR/
+rsync -q NOTICE $DEPLOY_DIR/
+rsync -q LICENSE $DEPLOY_DIR/
 
-rm *.csproj
-rm *.sln
-rm foo.tar
-rm makedist.sh
-rm *.userprefs
-rm BuildAll.bat
-rm GenerateAppGlobals.bat
-rm MakeDistribution.bat
+echo "Creating configuration link to $CONFDIR ..."
+ln -s $CONFDIR $DEPLOY_DIR/conf
 
-tar -cvf dist.tar *
+echo "... Done"
+
+
+
+
+
+
 
 
