@@ -36,11 +36,11 @@ https://github.com/cloudsidekick/cato/issues
 Requirements
 ------------------------------------------
 
-The Cato Web Application requires the Mono to be installed and configured on the target machine.
+The Cato Web Application requires the Mono Framework to be installed and configured on the target machine.
 The current Mono version as of this writing is 2.10.5.  While the Cato Web Application may build with 
 previous versions of Mono, it has been tested using 2.10.5.
 
-Some Linux distrobutions have Mono pre-installed.  The latest Mono can be downloaded from:
+Some Linux distributions have Mono pre-installed.  The latest Mono can be downloaded from:
 http://www.mono-project.com
 
 Install Mono according to the instructions for your platform.
