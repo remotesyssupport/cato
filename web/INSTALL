@@ -4,3 +4,71 @@ Cloud Sidekick Cato
 Installation
 ------------------------------------------
 
+The following instructions are specific to Debian / Ubuntu linux and cover the installation
+of Apache, mod_mono and the Cato web application.   
+
+1. Install Apache and mod_mono, skip this step if Apache is already installed.
+
+NOTE: Make sure to stop the apache2 service or else the mono install will hang.
+
+	sudo apt-get update
+	sudo apt-get install apache2 
+	sudo service apache2 stop
+
+
+2. Install mono server and mod_mono
+
+	sudo apt-get install mono-apache-server2  libapache2-mod-mono
+	sudo a2enmod mod_mono
+
+3.  Add the following lines to the default sites available file.
+
+	sudo vi /etc/apache2/sites-available/default
+
+
+        Alias /cato "/opt/cato/web/"
+        <Directory /opt/cato/web/>
+                Options Indexes FollowSymLinks MultiViews
+                AllowOverride None
+                Order allow,deny
+                allow from all
+                SetHandler mono
+                DirectoryIndex login.aspx
+        </Directory>
+        <FilesMatch "\.conf">
+                Order allow,deny
+                Deny from all
+                Satisfy All
+        </FilesMatch>
+
+4. Make sure the following file contents are pointing to mod_mono "2" for .net 2 runtime (this should be the default).
+
+	sudo vi /etc/apache2/mods-available/mod_mono.conf
+
+5. Let mono know about the cato application. Add the following lines to the default.webapp file.
+
+	sudo vi /etc/mono-server2/default.webapp
+
+	<apps>
+		<web-application>
+			<name>cato</name>
+			<vpath>/cato</vpath>
+			<path>/opt/www/cato</path>
+		</web-application>
+	</apps>
+
+
+6. Install root ssl certificates and the AWS ssl certificate.
+ 
+	sudo mozroots --import --machine
+	sudo certmgr -ssl -m https://ec2.us-east-1.amazonaws.com
+
+7. Create a link to the conf directory. 
+
+	cd /opt/cato/web
+	sudo ln -s /opt/cato/conf conf
+
+8. Restart apache.
+
+	sudo service apache2 restart
+

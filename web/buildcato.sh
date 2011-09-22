@@ -6,6 +6,6 @@ xbuild /target:Clean CloudSidekick.sln
 
 echo "Building..."
 
-xbuild CloudSidekick.sln
+xbuild /p:configuration=Release CloudSidekick.sln
 
 echo "Done."

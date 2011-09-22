@@ -99,7 +99,6 @@ Answer the prompt for the target directory, or take the recommended default.
 browse to the URL and verify.
 
 
-
 ------------------------------------------
 Configuring Apache for Mono Applications
 ------------------------------------------
@@ -132,26 +131,6 @@ Assuming Cato Web is in /opt/cato/web, add the following entries to the bottom o
 	<Location /cloudsidekick>
 	      SetHandler mono
 	</Location>
-
-This setting will activate the URL <host>/cloudsidekick as the Cato Web Application.
-
-3. If you have not already done so, follow the steps in the main INSTALL document to create
-your specific cato.conf file. 
-
-4. Create a symbolic directory link using the following command:
-(Assuming Cato was installed into /opt/cato)
-
-	ln -s /opt/cato/conf /opt/cato/web/conf
-
-5. Confirm that Apache is configured to allow following of symbolic links.
-Typically this will appear in apache2.conf (or httpd.conf) similar to the following snip:
-
-	<Directory />
-	    Options FollowSymLinks
-	...
-
-
-
 
 ------------------------------------------
 Building and Testing in MonoDevelop
