@@ -711,10 +711,12 @@ namespace Web
                         lblErrorMessage.Text = sErr;
                         return;
                     }
-                    if (sLastPasswordUpdate == null)
+                    if (string.IsNullOrEmpty(sLastPasswordUpdate))
                     {
-                        // no history exists for this user, they must change their password.
-                        //lblErrorMessage.Text = "must change PAssowrd";
+                        // no history exists for this user, so what should we do?
+						//right now we just allow login, since a new user wouldn't have history anyway.
+						//there was discussion about setting sForceChange = "1", but since 
+						//creating a new user emails out a random password and set the force_change flag anyway
                     }
                     else
                     {
@@ -732,7 +734,6 @@ namespace Web
                             pnlResetPassword.Visible = true;
                             lblResetMessage.Text = "You password has expired and must be changed.";
                             return;
-
                         }
                         else
                         {
@@ -759,12 +760,8 @@ namespace Web
                                 {
                                     txtLoginPassword.Text = dc.DeCrypt(hidID.Value);
                                 }
-
-
-
                             }
                         }
-
                     }
 
 
