@@ -40,16 +40,25 @@ The Cato Web Application requires the Mono to be installed and configured on the
 The current Mono version as of this writing is 2.10.5.  While the Cato Web Application may build with 
 previous versions of Mono, it has been tested using 2.10.5.
 
-Some Linux distrobutions have Mono pre-installed.  The latest Mono can be downloaded from:
-http://www.mono-project.com
+For Ubuntu / Debian linux, to install the minimum Mono requires to build, perform 
+the following command:
 
-Install Mono according to the instructions for your platform.
+sudo apt-get install mono-devel mono-gmcs
+
+Other Linux distrobutions may have Mono pre-installed or prebuilt packages.  
+The latest Mono can be downloaded from:
+
+http://www.go-mono.com/mono-downloads/download.html
+
+Mono sources can be obtained at the following location:
+
+http://origin-download.mono-project.com/sources/mono/
+
+Build and/or install Mono according to the instructions for your platform.
 
 While the Web Application can be modified and built from the command line, since it is an ASP.NET application,
 it is strongly recommended that any changes be made using MonoDevelop - the Mono IDE.  Using MonoDevelop ensures
 all project references and .aspx/.cs "codebehind" references remain intact, and that collaborative efforts are uniform.
-
-The current MonoDevelop version is 2.6.
 
 MonoDevelop can be downloaded from:
 http://www.mono-project.com
@@ -77,7 +86,7 @@ Confirm the version is at least 2.10.5.
 
 2. Prepare the build using the configure command:
 
-	cd <source location>/cato/web
+	cd <source location>/web
 
 3. Build the solution:
 

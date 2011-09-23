@@ -15,6 +15,10 @@ Repository and Download
 
 https://github.com/cloudsidekick/cato
 
+To download source:
+
+	wget -O cato.tar.gz https://github.com/cloudsidekick/cato/tarball/master
+
 ------------------------------------------
 Bug and Feature Requests
 ------------------------------------------
@@ -37,6 +41,13 @@ Building
 
 To build Cato from source, see the README files in the web and services
 directories. 
+
+To download source and unpack tarball, perform the following commands:
+
+	wget -O cato.tar.gz https://github.com/cloudsidekick/cato/tarball/master
+	tar -xvzf cato.tar.gz
+	cd cloudsidekick-cato-*
+
 
 ------------------------------------------
 Installation

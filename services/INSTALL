@@ -1,0 +1,137 @@
+Cloud Sidekick Cato Task Engine
+
+------------------------------------------
+Description
+------------------------------------------
+
+The Cato automation toolkit consists of 3 major components: webserver, 
+database and task engine. This document covers the Task Engine component.  
+
+The Cato Task Engine serves as the main processing engine of Cato and 
+includes 4 services:
+
+cato_poller	- Polls the MySQL database looking for Tasks to run
+cato_scheduler	- Schedules Tasks for the future
+cato_messenger	- Sends email messages
+cato_ecosync	- Adds and removes Ecosystem objects, syncing them with the 
+		  cloud provider
+
+This document will cover the Cato services build process. Once the build is 
+complete, see the INSTALl document in the services directory.
+
+------------------------------------------
+Requirements
+------------------------------------------
+
+Third party open source packages required for install:
+
+Tcl >= 8.5, mysqltcl, TclCurl, Tcl tls, MySQL client, Tdom, Tcllib, Expect and 
+TclOO if Tcl version 8.5 is used.
+
+Optional components:
+
+FreeTDS, tcltds, Oracle client, OraTcl
+
+See the README document details on building Cato and TclOO from source.
+
+------------------------------------------
+Install
+------------------------------------------
+
+The following build instructions document the install process assuming Debian 
+Linux. Other flavors of linux will be covered as well in the future. 
+
+NOTE: these installation instructions assume the root install directory as being
+/opt/cato. Change in the commands below as appropriate.
+
+1. Download and install third party packages. 
+
+Use the following command to download the required third party packages. 
+
+On Debian / Ubuntu:
+
+   sudo apt-get update
+
+NOTE: if the build instructions have already been performed on this machine
+(tcl8.5 and tcl8.5-dev installed) then skip the next line.
+
+   sudo apt-get install tcl8.5 tcl8.5-dev 
+
+   sudo apt-get install tcllib mysqltcl tclcurl tcl-tls tdom expect
+
+2. Download and install tclcloud
+
+NOTE: perform this step only if tclcloud was not included in your distribution. 
+Perform the ls command below. If there are no files in the tclcloud directory, 
+continue with this step.
+
+   ls -l /opt/cato/services/lib/tclcloud
+
+   wget -O /tmp/tclcloud.tar.gz https://github.com/cloudsidekick/tclcloud/tarball/master
+   cd /tmp
+   tar -xvzf tclcloud.tar.gz  
+
+Change to the directory that was created.
+
+   cd cloudsidekick-tclcloud-314d26b
+   cp * /opt/cato/services/lib/tclcloud/.
+
+3. Optional third party libraries are listed below. Install if needed in your 
+   automation environment. 
+
+   3.a Connectivity to Sybase and Microsoft SQL Server databases: FreeTDS and Tcltds.
+
+      http://www.freetds.org/
+
+      On Debian / Ubuntu:
+   
+      sudo apt-get install libaprutil1-dbd-freetds
+
+      Also, you will need the Tcltds library which exposes FreeTDS to Tcl. 
+
+      wget -O tcltds.tar.gz https://github.com/cloudsidekick/tcltds/tarball/master 
+      tar xvzf tcltds.tar.gz
+
+      Change into the tcltds directory and view the README file for build and install instructions.
+
+
+   3.b Oracle connectivity: Oracle client and Oratcl
+
+      The Oracle client will need to be installed on any Cato Task Engine server
+      that needs Oracle database connectivity. See www.oracle.com form client options. 
+      It should be noted that the Task Engine has been tested with most of the Oracle
+      Client options, including the Instant Client. 
+
+      Once the Oracle Client has been installed, See the following link for the Oratcl
+      extension:
+
+      http://sourceforge.net/projects/oratcl/files/oratcl/4.5/
+
+   3.c Tclwinrm: to connect to MS Windows servers using the Winrm protocol
+
+   NOTE: perform this step only if tclwinrm was not included in your distribution.
+   Perform the ls command below. If there are no files in the tclwinrm directory,
+   continue with this step.
+
+   ls -l /opt/cato/services/lib/tclwinrm
+
+   wget -O /tmp/tclwinrm.tar.gz https://github.com/cloudsidekick/tclwinrm/tarball/master
+   cd /tmp
+   tar -xvzf tclwinrm.tar.gz
+
+Change to the directory that was created.
+
+   cd cloudsidekick-tclwinrm-90dcb06
+   cp * /opt/cato/services/lib/tclwinrm/.
+     
+3. Create a link to the conf directory if it doesn't already exist.
+
+        cd /opt/cato/services
+        sudo ln -s /opt/cato/conf conf
+
+4. Ensure that cron is installed and enabled for the user. If using sudo, enable cron for root.
+
+5. Run the start_services.sh script in the services directory.
+
+	sudo ./start_services.sh
+

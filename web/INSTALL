@@ -21,7 +21,8 @@ NOTE: Make sure to stop the apache2 service or else the mono install will hang.
 	sudo apt-get install mono-apache-server2  libapache2-mod-mono
 	sudo a2enmod mod_mono
 
-3.  Add the following lines to the default sites available file.
+3.  Add the following lines to the default sites available file below the 
+last </Directory> line but above the </VirtualHost> line. 
 
 	sudo vi /etc/apache2/sites-available/default
 
@@ -41,7 +42,8 @@ NOTE: Make sure to stop the apache2 service or else the mono install will hang.
                 Satisfy All
         </FilesMatch>
 
-4. Make sure the following file contents are pointing to mod_mono "2" for .net 2 runtime (this should be the default).
+4. Make sure the following file contents are pointing to mod_mono "2" for 
+.net 2 runtime (this should be the default). See the comments in the file.
 
 	sudo vi /etc/apache2/mods-available/mod_mono.conf
 
@@ -53,17 +55,17 @@ NOTE: Make sure to stop the apache2 service or else the mono install will hang.
 		<web-application>
 			<name>cato</name>
 			<vpath>/cato</vpath>
-			<path>/opt/www/cato</path>
+			<path>/opt/cato/web</path>
 		</web-application>
 	</apps>
 
 
-6. Install root ssl certificates and the AWS ssl certificate.
+6. Install root ssl certificates and the AWS ssl certificate. Enter "yes" if prompted.
  
-	sudo mozroots --import --machine
+	sudo mozroots --import --machine --sync
 	sudo certmgr -ssl -m https://ec2.us-east-1.amazonaws.com
 
-7. Create a link to the conf directory. 
+7. Create a link to the conf directory if it doesn't already exist. 
 
 	cd /opt/cato/web
 	sudo ln -s /opt/cato/conf conf
@@ -72,3 +74,13 @@ NOTE: Make sure to stop the apache2 service or else the mono install will hang.
 
 	sudo service apache2 restart
 
+9. Access the webpage by using the following url, replacing <host address> with the
+ip address or FQDN of the install server.
+
+	http://<host address>/cato/login.aspx
+
+You should see a login screen and the "New Cato Install" message. This message is
+confirmation that the web component is connecting to the database.
+
+10. Login with the user id "administrator" and the admin password that you specified during
+conf file configuration.

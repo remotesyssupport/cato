@@ -15,7 +15,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #########################################################################
-
+set ::CATO_HOME $::env(CATO_HOME)
 lappend auto_path $CATO_HOME/conf
 package require catocrypt
 

@@ -16,7 +16,7 @@
 # limitations under the License.
 #########################################################################
 
-set PROCESS_NAME scheduler
+set PROCESS_NAME cato_scheduler
 source $::env(CATO_HOME)/services/bin/common.tcl
 read_config
 
@@ -33,9 +33,7 @@ proc check_schedules {} {
 		from action_plan ap 
 		join ecosystem e on e.ecosystem_id = ap.ecosystem_id
 		where run_on_dt < now() and schedule_id is null"
-	output $sql
 	set rows [::mysql::sel $::CONN $sql -list]
-	output $rows
 	foreach row $rows {
 		run_schedule_instance $row
 	}
@@ -52,7 +50,6 @@ proc split_clean {it} {
 }
 proc expand_this_schedule {sched_row} {
 	set proc_name expand_this_schedule
-	output $sched_row
 	set id [lindex $sched_row 0]
 	set now [lindex $sched_row 1]
 	#set start_dt [lindex $sched_row 2]
@@ -87,7 +84,7 @@ proc expand_this_schedule {sched_row} {
 	#	set start_dt $top_run_dt
 	#}
 	#output "start date is $start_dt and real now is [clock seconds]"
-	output "start_dt = $start_dt, now is $now"
+	#output "start_dt = $start_dt, now is $now"
 	if {$start_dt == 0 || $start_dt == ""} {
 		set start_dt $now
 	} else {
@@ -99,8 +96,8 @@ proc expand_this_schedule {sched_row} {
 	set start_day [clock format $start_dt -format "%d"]
 	set start_hr [clock format $start_dt -format "%H"]
 	set start_min [clock format $start_dt -format "%M"]
-	output "start_dt = $start_dt, now is $now"
-	output "$start_year, $start_mon, $start_day, $start_hr, $start_min"
+	#output "start_dt = $start_dt, now is $now"
+	#output "$start_year, $start_mon, $start_day, $start_hr, $start_min"
 
 	#if {$stop_dt == 0} {
 	#	set stop_dt [expr $now + ($::MAX_DAYS * 24 * 60 * 60)]
@@ -140,7 +137,7 @@ proc expand_this_schedule {sched_row} {
 						}
 						set the_time [clock scan "$y-$m-$d $h:$min" -format {%Y-%m-%d %H:%M}]
 						if {$the_time >= $start_dt} {
-							output $the_time
+							#output $the_time
 							lappend the_dates $the_time
 						}
 						if {[llength $the_dates] >= $start_instances} {
@@ -189,7 +186,7 @@ proc run_schedule_instance {instance_row} {
 	set account_id [lindex $instance_row 8]
 
 	set sql "call addTaskInstance ('$task_id',NULL,'$schedule_id','$debug_level','$plan_id','$parameter_xml','$ecosystem_id,','$account_id')"
-output $sql
+#output $sql
 	set ti [::mysql::sel $::CONN $sql -list]
 	output "Started task instance $ti for schedule id $schedule_id and plan id $plan_id"
 	set sql "insert into action_plan_history (plan_id, task_id, run_on_dt, action_id, ecosystem_id, parameter_xml, debug_level, source, schedule_id, task_instance)

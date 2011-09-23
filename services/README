@@ -16,8 +16,8 @@ cato_messenger	- Sends email messages
 cato_ecosync	- Adds and removes Ecosystem objects, syncing them with the 
 		  cloud provider
 
-This document will cover the most basic configuration, a single Task Engine
-node. More advanced configuration will be covered in future installments. 
+This document will cover the Cato services build process. Once the build is 
+complete, see the INSTALl document in the services directory.
 
 ------------------------------------------
 Repository and Download
@@ -35,14 +35,9 @@ https://github.com/cloudsidekick/cato/issues
 Requirements
 ------------------------------------------
 
-Third party open source packages needed:
+Third party open source packages required for build:
 
-Tcl >= 8.5, mysqltcl, TclCurl, Tcl tls, MySQL client, Tdom, Tcllib, Expect and 
-TclOO if Tcl version 8.5 is used.
-
-Optional components:
-
-FreeTDS, tcltds, Oracle client, OraTcl
+Tcl >= 8.5
 
 See the build instructions below for details on these components.
 
@@ -55,37 +50,28 @@ Linux. Other flavors of linux will be covered as well in the future.
 
 1. Download and install third party packages. 
 
-   Use the following command to download the required third party packages. 
+Use the following command to download the required third party packages. 
 
-   On Debian / Ubuntu:
+On Debian / Ubuntu:
 
-   sudo apt-get install tcl8.5 tcl8.5-dev tcllib mysqltcl tclcurl tcl-tls tdom expect
+   sudo apt-get update
+   sudo apt-get install tcl8.5 tcl8.5-dev 
 
-2. Build the catocrypt shared library.
+If make and gcc is not installed, download and install
 
-   Go to the catocrypt library and edit the Makefile. Notice the 
-   first few lines. Change TCL_* lines to match the appropriate locations
-   and version of tcl installed. The default locations are appropriate  
-   for the standard Debian / Ubuntu package install. Lastly run make.
+   sudo apt-get install make
+   sudo apt-get install gcc g++
 
-   The resulting shared library will be located in the lib/catocrypt 
-   directory under the source root.
+2. Download, build and install TclOO.
 
-   cd src/catocrypt
-   vi Makefile
-   make
+NOTE: If Tcl version 8.6 or higher being used for the tcl runtime, SKIP THIS 
+STEP. TclOO is part of the 8.6 distribution. 
 
-   TODO: create TEA-based configure / Makefiles
+If using Tcl 8.5, the TclOO (Object-Oriented Tcl) package must be compiled 
+and installed. First download TclOO and proceed with the following steps.
 
-3. Download, build and install TclOO.
-
-   NOTE: If Tcl version 8.6 or higher being used for the tcl runtime, SKIP THIS 
-   STEP. TclOO is part of the 8.6 distribution. 
-
-   If using Tcl 8.5, the TclOO (Object-Oriented Tcl) package must be compiled 
-   and installed. First download TclOO and proceed with the following steps.
-
-   NOTE: you may need to refer to the TclOO README.txt for further build help.   
+NOTE: you may need to refer to the TclOO README.txt for further build help.   
+Change the configure --with-tcl argument to the tcl8.5 library directory as needed.
 
    wget http://downloads.sourceforge.net/project/tcl/TclOO%20Package/0.6/TclOO0.6.tar.gz
    tar -zxvf TclOO0.6.tar.gz
@@ -94,40 +80,36 @@ Linux. Other flavors of linux will be covered as well in the future.
    make
    sudo make install
 
-4. Optional third party libraries are listed below. Install if needed in your 
-   automation environment. 
-
-   5.a Connectivity to Sybase and Microsoft SQL Server databases: FreeTDS and Tcltds.
-
-      http://www.freetds.org/
-
-      On Debian / Ubuntu:
-   
-      sudo apt-get install libaprutil1-dbd-freetds
-
-      Also, you will need the Tcltds library which exposes FreeTDS to Tcl. 
-
-      wget -O tcltds.tar.gz https://github.com/cloudsidekick/tcltds/tarball/master 
-      tar xvzf tcltds.tar.gz
-
-      Change into the tcltds directory and view the README file for build and install instructions.
+3. Build the catocrypt shared library.
 
 
-   5.b Oracle connectivity: Oracle client and Oratcl
+Go to the catocrypt library and edit the Makefile. Notice the 
+first few lines. Change TCL_* lines to match the appropriate locations
+and version of tcl installed. 
 
-      The Oracle client will need to be installed on any Cato Task Engine server
-      that needs Oracle database connectivity. See www.oracle.com form client options. 
-      It should be noted that the Task Engine has been tested with most of the Oracle
-      Client options, including the Instant Client. 
+   cd <cato-source-directory>/services/src/catocrypt
 
-      Once the Oracle Client has been installed, See the following link for the Oratcl
-      extension:
+NOTE: The default locations are appropriate  for the standard 
+Debian / Ubuntu package install. 
 
-      http://sourceforge.net/projects/oratcl/files/oratcl/4.5/
+   vi Makefile
+
+Lastly run make.
+
+   make
+
+The resulting shared library will be located in the lib/catocrypt 
+directory under the source root.
+
+
+TODO: create TEA-based configure / Makefiles
 
 ------------------------------------------
 Installation
 ------------------------------------------
 
-Assuming the build process and third party packages are ins
 
+It is recommended if you are planning on installing the web component of the Cato 
+application that you build it as well before performing the final application install.
+
+Refer to the INSTALL file in the services directory for the services installation.

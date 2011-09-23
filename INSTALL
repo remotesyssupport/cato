@@ -31,19 +31,24 @@ command line tool to create the database and run the following scripts.
 	cd /opt/cato
 	
 	export CATO_HOME=/opt/cato
+	
+If MySQL is not installed, install it using the following for Debian / Ubuntu
 
-	mysqladmin -u username -p create cato
+	sudo apt-get install mysql-server
 
-	mysql -u username -p
+Create the database, where username is a database user with CREATE and GRANT 
+privileges (typically root).
 
-Where username is a database user with CREATE and GRANT privileges (typically
-root).
+	mysqladmin -u root -p create cato
+	mysql -u root -p
+
 
 At the MySQL prompt (change password to something appropriate):
 
-	GRANT EXECUTE, SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, INDEX, ALTER, 
-	LOCK TABLES, CREATE TEMPORARY TABLES ON `cato`.* TO 'cato'@'localhost' IDENTIFIED BY 'password';
+NOTE: change the password!
 
+	GRANT EXECUTE, SELECT, INSERT, UPDATE, DELETE,  
+	LOCK TABLES, CREATE TEMPORARY TABLES ON `cato`.* TO 'cato'@'localhost' IDENTIFIED BY 'password';
 	FLUSH PRIVILEGES;
 	exit
 
@@ -70,10 +75,12 @@ Answer Y when asked if you want to encrypt the application admin password.
 NOTE: this script relies on the CATO_HOME environment variable to be set 
 properly. See step number three above. 
 
-	./conf/setup_config
+	./conf/setup_conf
 
 Reedit the conf file and paste the key and database password values on the
 related lines. Save and quit. 
+
+	vi conf/cato.conf
 
 
 5. Change the application "Administrator" password in the database data script to the 
@@ -81,13 +88,14 @@ encrypted value. This was the last value encrypted when the setup_config
 script was run. Replace encryptedpassword in the following command with 
 the encrypted Administrator password and run the command.
 
-sed 's/#REPLACE_PASSWORD#/encryptedpassword/' ./database/cato_data.sql
+	sed -i 's/#ADMINPASSWORD#/<password_from_setup_conf>/' data/cato_data.sql
 
 6. Run the following commands to create and populate the database tables. 
+Use the super user and password.
 
-	mysql -u username -p cato < ./database/cato_ddl.sql
+	mysql -u root -p cato < ./data/cato_ddl.sql
 
-	mysql -u username -p cato < ./database/cato_data.sql
+	mysql -u root -p cato < ./data/cato_data.sql
 
 7. Next perform the web installation. Change to the web directory and view 
 the INSTALL there for specific steps for the web component. 

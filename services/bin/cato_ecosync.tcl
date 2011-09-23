@@ -16,7 +16,7 @@
 # limitations under the License.
 #########################################################################
 
-set PROCESS_NAME ecosystem_sync
+set PROCESS_NAME cato_ecosync
 source $::env(CATO_HOME)/services/bin/common.tcl
 read_config
 
@@ -195,6 +195,7 @@ proc get_account_creds {account_id} {
 proc get_settings {} {
 }
 proc initialize_process {} {
+	package require TclOO
 	package require tclcloud
 	package require tdom
 	get_object_types

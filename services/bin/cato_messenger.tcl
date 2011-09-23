@@ -16,7 +16,7 @@
 # limitations under the License.
 #########################################################################
 
-set PROCESS_NAME messenger
+set PROCESS_NAME cato_messenger
 source $::env(CATO_HOME)/services/bin/common.tcl
 read_config
 
@@ -416,6 +416,7 @@ proc initialize_process {} {
 	#package require smtp
 	#init_mimetypes
 	package require base64
+	package require TclOO
 	package require tclcloud
 	set ::SES [::tclcloud::connection new $::SES_ACCESS_KEY $::SES_SECRET_KEY]
 }

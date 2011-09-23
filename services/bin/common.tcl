@@ -90,8 +90,8 @@ proc startup {} {
 	get_settings
 	get_email_settings
 	output "Mode is $::MODE"
-	set sql "insert into message (date_time_entered,process_type,status,msg_to,msg_from,msg_subject,msg_body) values (now(),1,0,'$::ADMIN_EMAIL','$::PROCESS_NAME','$::PROCESS_NAME $::HOST_DOMAIN started',concat('$::PROCESS_NAME service on $::HOST_DOMAIN was started at ' , now()))"
-	::mysql::exec $::CONN $sql
+	#set sql "insert into message (date_time_entered,process_type,status,msg_to,msg_from,msg_subject,msg_body) values (now(),1,0,'$::ADMIN_EMAIL','$::PROCESS_NAME','$::PROCESS_NAME $::HOST_DOMAIN started',concat('$::PROCESS_NAME service on $::HOST_DOMAIN was started at ' , now()))"
+	#::mysql::exec $::CONN $sql
 	check_running	
 	while {"$::RUNNING" == "on"} {
 		update_heartbeat
@@ -146,29 +146,55 @@ proc read_config {} {
         set file_data [read $fp]
         close $fp
         set data [split $file_data "\n"]
+	set exit_flag 0
         foreach x $data {
                 set x [string trim $x]
-                if {"string index $x 0" != "#" && [string length $x] > 0} {
+                if {"[string index $x 0]" != "#" && [string length $x] > 0} {
                         set key [string tolower [lindex $x 0]]
                         set value [lindex $x 1]
                         switch $key {
                                 database {
                                         set ::CONNECT_DB $value
+					if {"$value" == ""} {
+						puts "The parameter $key is required, no value found"
+						set exit_flag 1
+					}
                                 }
                                 server {
                                         set ::CONNECT_SERVER $value
+					if {"$value" == ""} {
+						puts "The parameter $key is required, no value found"
+						set exit_flag 1
+					}
                                 }
                                 user {
                                         set ::CONNECT_USER $value
+					if {"$value" == ""} {
+						puts "The parameter $key is required, no value found"
+						set exit_flag 1
+					}
                                 }
                                 password {
                                         set password $value
+					if {"$value" == ""} {
+						puts "The parameter $key is required, no value found"
+						set exit_flag 1
+					}
                                 }
                                 port {
                                         set ::CONNECT_PORT $value
+					if {"$value" == ""} {
+						puts "The parameter $key is required, no value found"
+						set exit_flag 1
+					}
                                 }
                                 key {
-                                        set ::SITE_KEY [decrypt_string $value {}]
+					if {"$value" == ""} {
+						puts "The parameter $key is required, no value found"
+						set exit_flag 1
+					} else {
+						set ::SITE_KEY [decrypt_string $value {}]
+					}
                                 }
                                 ses_access_key {
                                         set ::SES_ACCESS_KEY $value
@@ -178,6 +204,10 @@ proc read_config {} {
                                 }
                                 logfiles {
                                         set ::LOGFILES $value
+					if {"$value" == ""} {
+						puts "The parameter $key is required, no value found"
+						set exit_flag 1
+					}
                                 }
                                 tmpdir {
                                         set ::TMP $value
@@ -185,6 +215,9 @@ proc read_config {} {
                         }
                 }
         }
+	if {$exit_flag == 1} {
+                return -code error -level 1 "Error: Required conf file parameters are missing"
+	}
         if {[info exists password]} {
                 set ::CONNECT_PASSWORD [decrypt_string $password $::SITE_KEY]
         }

@@ -16,7 +16,7 @@
 # limitations under the License.
 #########################################################################
 
-set PROCESS_NAME ecosystem_sync
+set PROCESS_NAME cato_poller
 source $::env(CATO_HOME)/services/bin/common.tcl
 read_config
 
