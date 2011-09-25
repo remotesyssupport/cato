@@ -15,7 +15,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #########################################################################
-set ::CATO_HOME $::env(CATO_HOME)
+set ::CATO_HOME [file dirname [file dirname [file normalize $argv0]]]
 lappend auto_path $CATO_HOME/conf
 package require catocrypt
 
@@ -45,6 +45,7 @@ proc _tty_read_one_character {} {
 		puts ""
 		if {$c=="\003"} exit
 		incr ::_tty_wait
+	} elseif {$c=="\010"}
 	} else {
 		puts -nonewline "*"
 		flush stdout
@@ -64,21 +65,21 @@ proc get_value {part_prompt} {
 }
 proc get_encrypt_values {} {
 	puts ""
+	if {"$::CATO_HOME" == ""} {
+		puts "Environment variable CATO_HOME not set. Set CATO_HOME and rerun"
+		puts "Example:\n"
+		puts "export CATO_HOME=/opt/cato"
+		exit
+	}
 	set key [get_value "an encryption key"]
 	set enc_key [encrypt_string $key {}]
 	puts "\nYour encrypted key is $enc_key\n"
 	set password [get_value "the database password"]
 	set enc_password [encrypt_string $password $key]
-	puts "\nYour encrypted password is $enc_password\n"
-	puts -nonewline "Do you want to encrypt the application admin password as well (Y/n)? "
-	flush stdout
-	gets stdin doit
-	if {"[string toupper $doit]" == "Y"} {
-		puts ""
-		set admin [get_value "admin password"]
-		set enc_admin [encrypt_string $admin $key]
-		puts "\nYour encrypted administrator password is $enc_admin\n"
-	}
+	set enc_admin [encrypt_string password $key]
+	exec sed -i "s/#ADMINPASSWORD#/$enc_admin/" $::CATO_HOME/conf/data/cato_data.sql
+	exec sed -i "s/^password */password $enc_password/" $::CATO_HOME/conf/cato.conf
+	exec sed -i "s/^key */key $enc_key/" $::CATO_HOME/conf/cato.conf
 }
 
 get_encrypt_values

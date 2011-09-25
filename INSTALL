@@ -14,7 +14,9 @@ be covered in future revisions of this document.
 and architecture, extract from the tar file into an application directory such
 as /opt/cato. 
 
-tar xvzf <cato_tar_file>.tar.gz -C /opt/cato
+Note: you will need write privileges in the target directory. 
+
+tar xvzf <cato_tar_file>.tar.gz -C /opt
 
 2. If installing Cato from source, first make sure to perform the build 
 instructions located in the web and services directories. After the build 
@@ -22,7 +24,17 @@ processes have been completed, run the install script located in the source
 root. This install script will copy the appropriate files from the source
 directories to the target directory. 
 
-./install --target=/opt/cato
+Note: you will need write privileges in the target directory or use sudo
+to run the install script. 
+
+	cd <cato source directory>
+	chmod +x install.sh
+	./install.sh [-s] [-t targetpath] [-c component (web|service|all)
+
+or for interactive installation:
+
+	./install.sh
+
 
 3. With the binaries in the new cato home, the next step is to create and 
 populate the database. Switch to the cato home directory and use the MySql
@@ -33,6 +45,7 @@ command line tool to create the database and run the following scripts.
 	export CATO_HOME=/opt/cato
 	
 If MySQL is not installed, install it using the following for Debian / Ubuntu
+NOTE: MySQL 5.1 or higher is required for Cato.
 
 	sudo apt-get install mysql-server
 
@@ -45,7 +58,7 @@ privileges (typically root).
 
 At the MySQL prompt (change password to something appropriate):
 
-NOTE: change the password!
+NOTE: change the password value below!
 
 	GRANT EXECUTE, SELECT, INSERT, UPDATE, DELETE,  
 	LOCK TABLES, CREATE TEMPORARY TABLES ON `cato`.* TO 'cato'@'localhost' IDENTIFIED BY 'password';
@@ -75,6 +88,7 @@ Answer Y when asked if you want to encrypt the application admin password.
 NOTE: this script relies on the CATO_HOME environment variable to be set 
 properly. See step number three above. 
 
+	chmod +x conf/setup_conf
 	./conf/setup_conf
 
 Reedit the conf file and paste the key and database password values on the

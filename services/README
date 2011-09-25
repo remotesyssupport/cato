@@ -73,6 +73,7 @@ and installed. First download TclOO and proceed with the following steps.
 NOTE: you may need to refer to the TclOO README.txt for further build help.   
 Change the configure --with-tcl argument to the tcl8.5 library directory as needed.
 
+   cd /tmp
    wget http://downloads.sourceforge.net/project/tcl/TclOO%20Package/0.6/TclOO0.6.tar.gz
    tar -zxvf TclOO0.6.tar.gz
    cd TclOO0.6

@@ -42,15 +42,24 @@ Building
 To build Cato from source, see the README files in the web and services
 directories. 
 
-To download source and unpack tarball, perform the following commands:
+1. To download source and unpack tarball, perform the following commands:
 
 	wget -O cato.tar.gz https://github.com/cloudsidekick/cato/tarball/master
 	tar -xvzf cato.tar.gz
 	cd cloudsidekick-cato-*
 
+2. View the README file in web and perform the web build instructions
+
+	cd web 
+	vi README
+
+3. View the README file in services and perform the services build
+
+	cd services
+	vi README
 
 ------------------------------------------
 Installation
 ------------------------------------------
 
-See the INSTALL file in this directory.
+After performing the web and services build, see the INSTALL file in this directory.

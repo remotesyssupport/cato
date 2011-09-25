@@ -44,7 +44,6 @@ mkdir -p $DEPLOY_DIR
 mkdir -p $DEPLOY_DIR/web
 mkdir -p $DEPLOY_DIR/services
 mkdir -p $DEPLOY_DIR/conf
-mkdir -p $DEPLOY_DIR/data
 rsync -aq conf/default.cato.conf $DEPLOY_DIR/conf
 rsync -aq conf/setup_conf $DEPLOY_DIR/conf
 rsync -aq services/lib/catocrypt/* $DEPLOY_DIR/conf/catocrypt

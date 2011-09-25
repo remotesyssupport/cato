@@ -36,14 +36,16 @@ https://github.com/cloudsidekick/cato/issues
 Requirements
 ------------------------------------------
 
-The Cato Web Application requires the Mono to be installed and configured on the target machine.
-The current Mono version as of this writing is 2.10.5.  While the Cato Web Application may build with 
-previous versions of Mono, it has been tested using 2.10.5.
+The Cato Web Application requires the Mono to be installed and configured on 
+the target machine.  The current Mono version as of this writing is 2.10.5.  
+While the Cato Web Application may build with previous versions of Mono, 
+it has been tested using 2.10.5.
 
 For Ubuntu / Debian linux, to install the minimum Mono requires to build, perform 
 the following command:
 
-sudo apt-get install mono-devel mono-gmcs
+	sude apt-get update
+	sudo apt-get install mono-devel mono-gmcs
 
 Other Linux distrobutions may have Mono pre-installed or prebuilt packages.  
 The latest Mono can be downloaded from:
@@ -56,9 +58,11 @@ http://origin-download.mono-project.com/sources/mono/
 
 Build and/or install Mono according to the instructions for your platform.
 
-While the Web Application can be modified and built from the command line, since it is an ASP.NET application,
-it is strongly recommended that any changes be made using MonoDevelop - the Mono IDE.  Using MonoDevelop ensures
-all project references and .aspx/.cs "codebehind" references remain intact, and that collaborative efforts are uniform.
+While the Web Application can be modified and built from the command line, 
+since it is an ASP.NET application, it is strongly recommended that any 
+changes be made using MonoDevelop - the Mono IDE.  Using MonoDevelop 
+ensures all project references and .aspx/.cs "codebehind" references 
+remain intact, and that collaborative efforts are uniform.
 
 MonoDevelop can be downloaded from:
 http://www.mono-project.com
@@ -68,9 +72,12 @@ http://www.mono-project.com
 Building at the Command Line
 ------------------------------------------
 
-For building a run time installation of Cato hosted with Apache, the MonoDevelop IDE is not required.  If it is desired
-to make changes to the Web Application source code, skip this section and follow the steps 
-for Building and Testing in MonoDevelop.
+See the Requirements section above first for the Mono install instructions. 
+
+For building a run time installation of Cato hosted with Apache, the 
+MonoDevelop IDE is not required.  If it is desired to make changes to the 
+Web Application source code, skip this section and follow the steps for 
+Building and Testing in MonoDevelop.
 
 1. Confirm Mono installation and version.
 
@@ -96,17 +103,8 @@ Confirm the version is at least 2.10.5.
 	
 	ls -l bin/Web.dll
 
-5. Decide where to install the runtime web server files, default recommended: /opt/cato/web
-
-6. Run the distribution script:
-
-	./makedist.sh
-
-Answer the prompt for the target directory, or take the recommended default.
-
-7. Proceed to Configuring Apache for Mono Applications, or if this step is already complete
-browse to the URL and verify.
-
+5. Either proceed with the services build or perform the installation steps 
+found in the installation base directory.
 
 ------------------------------------------
 Configuring Apache for Mono Applications
