@@ -2154,7 +2154,7 @@ namespace ACWebMethods
                     throw new Exception("Unable to check for existing names." + sErr);
                 }
 
-                if (sValueExists != null)
+                if (sValueExists != "")
                 {
                     return "Another Task with that Code or Name exists, please choose another value.";
                 }
