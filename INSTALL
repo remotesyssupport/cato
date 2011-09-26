@@ -1,7 +1,28 @@
 Cloud Sidekick Cato 
 
 ------------------------------------------
-Installation
+Requirements
+------------------------------------------
+
+Third party open source packages required for the base install:
+
+MySQL 5.1+, Tcl >= 8.5
+
+Third party open source packages required for the web install:
+
+Apache 2, mod_mono
+
+Third party open source packages required for the services install:
+
+Tcl >= 8.5, mysqltcl, TclCurl, Tcl tls, MySQL client, Tdom, Tcllib, Expect and 
+TclOO if Tcl version 8.5 is used.
+
+Optional components:
+
+FreeTDS, tcltds, Oracle client, OraTcl
+
+------------------------------------------
+Base Install
 ------------------------------------------
 
 These installation instructions cover installing Cato on a single linux 
@@ -65,6 +86,10 @@ NOTE: change the password value below!
 	FLUSH PRIVILEGES;
 	exit
 
+3. Install tcl
+
+	sudo apt-get install tcl8.5 tcl8.5-dev
+	
 4. Now setup the configuration file that will allow the web and services
 to connect to the database. Make a copy of the default conf file and edit
 with your favorite tool. 
@@ -77,44 +102,264 @@ Change the database parameter values as appropriate (skip the encryption
 key and password for now). Save and quit.
 
 The database password and encryption key values will themselves need to 
-be stored in the conf file encrypted. Using the setup_conf script create
-the encrypted versions of these values. This script prompts for the 
-encryption key, database password and optionally the application
-administrator password. 
+be stored in the conf file encrypted. 
 
-Make note of the values returned, you will need to paste them into files.
-Answer Y when asked if you want to encrypt the application admin password. 
-
-NOTE: this script relies on the CATO_HOME environment variable to be set 
-properly. See step number three above. 
+Using the setup_conf script create the encrypted versions of these values. 
+This script prompts for the encryption key and database password and updates
+the cato.conf file. It also encrypts the default application admin password 
+which will be used to login to the user interface.
 
 	chmod +x conf/setup_conf
 	./conf/setup_conf
 
-Reedit the conf file and paste the key and database password values on the
-related lines. Save and quit. 
+5. Run the following commands to create and populate the database tables. 
+Use the super user and password.
+
+	mysql -u root -p cato < ./conf/data/cato_ddl.sql
+
+	mysql -u root -p cato < ./conf/data/cato_data.sql
+
+6. Proceed with the web install instructions below. 
+
+------------------------------------------
+Web Install
+------------------------------------------
+
+The following instructions are specific to Debian / Ubuntu linux and cover the installation
+of Apache, mod_mono and the Cato web application.   
+
+1. Install Apache and mod_mono, skip this step if Apache is already installed.
+
+NOTE: Make sure to stop the apache2 service or else the mono install will hang.
+
+	sudo apt-get update
+	sudo apt-get install apache2 
+	sudo service apache2 stop
+
+
+2. Install mono server and mod_mono
+
+	sudo apt-get install mono-apache-server2  libapache2-mod-mono
+	sudo a2enmod mod_mono
+
+3.  Add the following lines to the default sites available file below the 
+last </Directory> line but above the </VirtualHost> line. 
+
+	sudo vi /etc/apache2/sites-available/default
+
+
+        Alias /cato "/opt/cato/web/"
+        <Directory /opt/cato/web/>
+                Options Indexes FollowSymLinks MultiViews
+                AllowOverride None
+                Order allow,deny
+                allow from all
+                SetHandler mono
+                DirectoryIndex login.aspx
+        </Directory>
+        <FilesMatch "\.conf">
+                Order allow,deny
+                Deny from all
+                Satisfy All
+        </FilesMatch>
+
+4. Make sure the following file contents are pointing to mod_mono "2" for 
+.net 2 runtime (this should be the default). See the comments in the file.
+
+	sudo vi /etc/apache2/mods-available/mod_mono.conf
+
+5. Let mono know about the cato application. Add the following lines to the default.webapp file.
+
+	sudo vi /etc/mono-server2/default.webapp
+
+	<apps>
+		<web-application>
+			<name>cato</name>
+			<vpath>/cato</vpath>
+			<path>/opt/cato/web</path>
+		</web-application>
+	</apps>
+
+
+6. Install root ssl certificates and the AWS ssl certificate. Enter "yes" if prompted.
+ 
+	sudo mozroots --import --machine --sync
+	sudo certmgr -ssl -m https://ec2.us-east-1.amazonaws.com
+
+7. Create a link to the conf directory if it doesn't already exist. 
+
+NOTE: this may have been automatically created by the  install.sh script
+if build from source.
+
+	cd /opt/cato/web
+	sudo ln -s /opt/cato/conf conf
+
+8. Restart apache.
+
+	sudo service apache2 restart
+
+9. Access the webpage by using the following url, replacing <host address> with the
+ip address or FQDN of the install server.
+
+	http://<host address>/cato/login.aspx
+
+You should see a login screen and the "New Cato Install" message. This message is
+confirmation that the web component is connecting to the database.
+
+10. Login with the user id "administrator". The intial password is "password", you
+will be required to change it on first login. 
+
+------------------------------------------
+Services Install
+------------------------------------------
+
+The following build instructions document the install process assuming Debian 
+Linux. Other flavors of linux will be covered as well in the future. 
+
+NOTE: these installation instructions assume the root install directory as being
+/opt/cato. Change in the commands below as appropriate.
+
+1. Download and install third party packages. 
+
+Use the following command to download the required third party packages. 
+
+On Debian / Ubuntu:
+
+   sudo apt-get update
+
+NOTE: if the build instructions have already been performed on this machine
+(tcl8.5 and tcl8.5-dev installed) then skip the next line.
+
+   sudo apt-get install tcl8.5 tcl8.5-dev 
+
+   sudo apt-get install tcllib mysqltcl tclcurl tcl-tls tdom expect
+
+2. Download and install tclcloud
+
+NOTE: perform this step only if tclcloud was not included in your distribution. 
+Perform the ls command below. If there are no files in the tclcloud directory, 
+continue with this step.
+
+   ls -l /opt/cato/services/lib/tclcloud
+
+   wget -O /tmp/tclcloud.tar.gz https://github.com/cloudsidekick/tclcloud/tarball/master
+   cd /tmp
+   tar -xvzf tclcloud.tar.gz  
+
+Change to the directory that was created.
+
+   cd cloudsidekick-tclcloud-*
+   cp * /opt/cato/services/lib/tclcloud/.
+
+3. Optional third party libraries are listed below. Install if needed in your 
+   automation environment. 
+
+   3.a Connectivity to Sybase and Microsoft SQL Server databases: FreeTDS and Tcltds.
+
+      http://www.freetds.org/
+
+      On Debian / Ubuntu:
+   
+      sudo apt-get install libaprutil1-dbd-freetds
+
+      Also, you will need the Tcltds library which exposes FreeTDS to Tcl. 
+
+      wget -O tcltds.tar.gz https://github.com/cloudsidekick/tcltds/tarball/master 
+      tar xvzf tcltds.tar.gz
+
+      Change into the tcltds directory and view the README file for build and install instructions.
+
+
+   3.b Oracle connectivity: Oracle client and Oratcl
+
+      The Oracle client will need to be installed on any Cato Task Engine server
+      that needs Oracle database connectivity. See www.oracle.com form client options. 
+      It should be noted that the Task Engine has been tested with most of the Oracle
+      Client options, including the Instant Client. 
+
+      Once the Oracle Client has been installed, See the following link for the Oratcl
+      extension:
+
+      http://sourceforge.net/projects/oratcl/files/oratcl/4.5/
+
+   3.c Tclwinrm: to connect to MS Windows servers using the Winrm protocol
+
+   NOTE: perform this step only if tclwinrm was not included in your distribution.
+   Perform the ls command below. If there are no files in the tclwinrm directory,
+   continue with this step.
+
+   ls -l /opt/cato/services/lib/tclwinrm
+
+   wget -O /tmp/tclwinrm.tar.gz https://github.com/cloudsidekick/tclwinrm/tarball/master
+   cd /tmp
+   tar -xvzf tclwinrm.tar.gz
+
+Change to the directory that was created.
+
+   cd cloudsidekick-tclwinrm-*
+   cp * /opt/cato/services/lib/tclwinrm/.
+     
+3. Create a link to the conf directory if it doesn't already exist.
+
+        cd /opt/cato/services
+        sudo ln -s /opt/cato/conf conf
+
+4. Ensure that cron is installed and enabled for the user. If using sudo to start the services, 
+enable cron for root.
+
+5. Determine log files location.
+
+The Cato services produce logfiles during the normal course of execution. The logs 
+can be used to troubleshoot and monitor the processes. The logfile location is 
+is setting in the cato.conf file and can be customized to the installation. 
+
+The default logfile location is /var/cato/logs. If the default is used, create a directory
+structure as follows. Another potential logfile location can be under the services directory.
+
+First edit or note the logfile location in conf/cato.conf. Look for the logfiles setting. 
 
 	vi conf/cato.conf
 
+Create a directory structure for the logfiles.
 
-5. Change the application "Administrator" password in the database data script to the 
-encrypted value. This was the last value encrypted when the setup_config 
-script was run. Replace encryptedpassword in the following command with 
-the encrypted Administrator password and run the command.
+	sudo mkdir -p /var/cato/log/ce
 
-	sed -i 's/#ADMINPASSWORD#/<password_from_setup_conf>/' data/cato_data.sql
+6. Run the start_services.sh script in the services directory.
 
-6. Run the following commands to create and populate the database tables. 
-Use the super user and password.
+        cd /opt/cato
+	chmod +x services/bin/cato_*.tcl
+	sudo ./services/start_services.sh
 
-	mysql -u root -p cato < ./data/cato_ddl.sql
+Assuming all goes well, you should see the following output
 
-	mysql -u root -p cato < ./data/cato_data.sql
+	CATO_HOME not set, assuming /opt/cato
+	/var/cato/log
+	Looking for processes to start
+	Starting /opt/cato/services/bin/cato_poller.tcl
+	Starting /opt/cato/services/bin/cato_scheduler.tcl
+	Starting /opt/cato/services/bin/cato_messenger.tcl
+	Starting /opt/cato/services/bin/cato_ecosync.tcl
+	Ending starting processes
 
-7. Next perform the web installation. Change to the web directory and view 
-the INSTALL there for specific steps for the web component. 
+NOTE: the start services script will register itself with the cron file for the user
+under which it is run. The script will be run once a minute to make sure the services
+processes are running, if not it will restart them.
 
-8. After the web install piece has been completed, finish the installation 
-process with installing the services component. Change to the services 
-directory and view the INSTALL file for specific steps. 
-document in the database directory. 
+Now check to see that all processes are running:
+
+	ps -eafl|grep cato_ |grep -v grep
+
+If all four processes are not running, check the logfiles for errors. 
+
+	cd /var/cato/log
+	ls -l *.log
+	more cato_poller.log
+
+Login to the Cato user interface (Web install instructions above), go to the 
+Information, System Status page and check that the services are have a current
+timestamp value. 
+
+NOTE: if at any time the services need to be shutdown, the services/stop_services.sh
+script can be run to kill the processes and remove them from the user's cron entry.
+
+	sudo ./services/stop_services.sh

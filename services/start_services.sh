@@ -1,4 +1,5 @@
 #!/bin/bash
+date
 if [ -z "$CATO_HOME" ]; then
     
     EX_FILE=`readlink -f $0`

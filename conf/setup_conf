@@ -16,7 +16,7 @@
 # limitations under the License.
 #########################################################################
 set ::CATO_HOME [file dirname [file dirname [file normalize $argv0]]]
-lappend auto_path $CATO_HOME/conf
+lappend auto_path $CATO_HOME/services/lib
 package require catocrypt
 
 proc tty_gets_no_echo {{prompt {}}} {
@@ -45,16 +45,29 @@ proc _tty_read_one_character {} {
 		puts ""
 		if {$c=="\003"} exit
 		incr ::_tty_wait
-	} elseif {$c=="\010"}
 	} else {
-		puts -nonewline "*"
+		if {$c!="\010" && $c != "\177"} {
+			puts -nonewline "*"
+			append ::_tty_input $c
+		} else {
+			if {[string length $::_tty_input] > 0} {
+				puts -nonewline "\b \b"
+			}
+			set ::_tty_input [string range $::_tty_input 0 end-1]
+		}
+	
 		flush stdout
-		append ::_tty_input $c
 	}
 }
 proc get_value {part_prompt} {
-	set value [tty_gets_no_echo "Enter $part_prompt: "]
+	set value ""
 	set second ""
+	while {"$value" == ""} {
+		set value [tty_gets_no_echo "Enter $part_prompt: "]
+		if {"$value" == ""} {
+			puts "$part_prompt cannot be blank. Retry"
+		}
+	}
 	while {"$value" != "$second"} {
 		set second [tty_gets_no_echo "Retype $part_prompt: "]
 		if {"$value" != "$second"} {
@@ -77,9 +90,23 @@ proc get_encrypt_values {} {
 	set password [get_value "the database password"]
 	set enc_password [encrypt_string $password $key]
 	set enc_admin [encrypt_string password $key]
-	exec sed -i "s/#ADMINPASSWORD#/$enc_admin/" $::CATO_HOME/conf/data/cato_data.sql
-	exec sed -i "s/^password */password $enc_password/" $::CATO_HOME/conf/cato.conf
-	exec sed -i "s/^key */key $enc_key/" $::CATO_HOME/conf/cato.conf
+
+	set fp [open $::CATO_HOME/conf/data/cato_data.sql RDONLY]
+	set data [read $fp]
+	close $fp
+	regsub -all {#ADMINPASSWORD#} $data "$enc_admin" data
+	set fp [open $::CATO_HOME/conf/data/cato_data.sql {WRONLY CREAT TRUNC}]
+	puts -nonewline $fp $data
+	close $fp
+
+	set fp [open $::CATO_HOME/conf/cato.conf RDONLY]
+	set data [read $fp]
+	close $fp
+	regsub -line {^key.*$} $data "key $enc_key" data
+	regsub -line {^password.*$} $data "password $enc_password" data
+	set fp [open $::CATO_HOME/conf/cato.conf {WRONLY CREAT TRUNC}]
+	puts -nonewline $fp $data
+	close $fp
 }
 
 get_encrypt_values

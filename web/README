@@ -44,7 +44,7 @@ it has been tested using 2.10.5.
 For Ubuntu / Debian linux, to install the minimum Mono requires to build, perform 
 the following command:
 
-	sude apt-get update
+	sudo apt-get update
 	sudo apt-get install mono-devel mono-gmcs
 
 Other Linux distrobutions may have Mono pre-installed or prebuilt packages.  
@@ -104,7 +104,7 @@ Confirm the version is at least 2.10.5.
 	ls -l bin/Web.dll
 
 5. Either proceed with the services build or perform the installation steps 
-found in the installation base directory.
+found in the INSTALL file found below the web directory.
 
 ------------------------------------------
 Configuring Apache for Mono Applications
