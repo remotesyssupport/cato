@@ -2169,10 +2169,10 @@ namespace ACWebMethods
 
                     // all good, save the new user and redirect to the user edit page.
                     sSql = "insert task" +
-                        " (task_id, original_task_id, version, default_version, manual_or_digital," +
+                        " (task_id, original_task_id, version, default_version," +
                         " task_name, task_code, task_desc, created_dt)" +
                            " values " +
-                           "('" + sNewID + "', '" + sNewID + "', 1.0000, 1, 1, '" +
+                           "('" + sNewID + "', '" + sNewID + "', 1.0000, 1, '" +
                            sTaskName + "', '" + sTaskCode + "', '" + sTaskDesc + "', now())";
                     oTrans.Command.CommandText = sSql;
                     if (!oTrans.ExecUpdate(ref sErr))
