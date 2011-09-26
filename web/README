@@ -47,7 +47,7 @@ the following command:
 	sudo apt-get update
 	sudo apt-get install mono-devel mono-gmcs
 
-Other Linux distrobutions may have Mono pre-installed or prebuilt packages.  
+Other Linux distributions may have Mono pre-installed or prebuilt packages.  
 The latest Mono can be downloaded from:
 
 http://www.go-mono.com/mono-downloads/download.html
