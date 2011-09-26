@@ -45,8 +45,8 @@ processes have been completed, run the install script located in the source
 root. This install script will copy the appropriate files from the source
 directories to the target directory. 
 
-Note: you will need write privileges in the target directory or use sudo
-to run the install script. 
+Note: you will need write privileges in the target directory.
+You may need to use sudo to run the install script. 
 
 	cd <cato source directory>
 	./install.sh [-s] [-t targetpath] [-c component (web|service|all)
@@ -54,6 +54,9 @@ to run the install script.
 or for interactive installation:
 
 	./install.sh
+
+NOTE: If sudo was used to run the install script, some of the instructions below
+may require sudo to as well. 
 
 
 3. With the binaries in the new cato home, the next step is to create and 
@@ -93,6 +96,9 @@ NOTE: change the password value below!
 to connect to the database. Make a copy of the default conf file and edit
 with your favorite tool. 
 
+NOTE: sudo may be required for the following commands if sudo was used to install
+Cato.
+
 	cp conf/default.cato.conf conf/cato.conf
 
 	vi conf/cato.conf
@@ -107,6 +113,9 @@ Using the setup_conf script create the encrypted versions of these values.
 This script prompts for the encryption key and database password and updates
 the cato.conf file. It also encrypts the default application admin password 
 which will be used to login to the user interface.
+
+NOTE: sudo may be required for the following commands if sudo was used to install
+Cato.
 
 	./conf/setup_conf
 
@@ -155,6 +164,10 @@ See step above!
 
 3.  Add the following lines to the default sites available file below the 
 last </Directory> line but above the </VirtualHost> line. 
+
+NOTE: on the next couple of steps, if Cato was installed in a directory
+different from the default, you will need to edit the path locations
+to point Apache and mod_mono appropriately. 
 
 	sudo vi /etc/apache2/sites-available/default
 

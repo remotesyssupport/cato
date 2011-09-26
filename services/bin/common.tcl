@@ -133,7 +133,7 @@ proc check_already_running {} {
 }
 
 proc read_config {} {
-	set ::HOME $::env(CATO_HOME)
+	set ::HOME $::CATO_HOME
 	lappend ::auto_path $::HOME/services/lib
 	package require base64
 	package require blowfish

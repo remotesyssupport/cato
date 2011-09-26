@@ -17,7 +17,8 @@
 #########################################################################
 
 set PROCESS_NAME cato_messenger
-source $::env(CATO_HOME)/services/bin/common.tcl
+set ::CATO_HOME [file dirname [file dirname [file dirname [file normalize $argv0]]]]
+source $::CATO_HOME/services/bin/common.tcl
 read_config
 
 proc init_mimetypes {} {

@@ -16,7 +16,9 @@
 # limitations under the License.
 #########################################################################
 
-source $::env(CATO_HOME)/services/bin/common.tcl
+set ::CATO_HOME [file dirname [file dirname [file dirname [file normalize $argv0]]]]
+source $::CATO_HOME/services/bin/common.tcl
+
 read_config
 
 proc get_ecosystem_name {} {
@@ -494,8 +496,8 @@ proc send_email_2 {command} {
 proc pre_initialize {} {
 	set proc_name pre_initialize
 #!/usr/bin/env tclsh
-	#lappend ::auto_path [file join $::env(CATO_HOME) lib]
-	set BIN_DIR [file join $::env(CATO_HOME) services bin]
+	#lappend ::auto_path [file join $::CATO_HOME lib]
+	set BIN_DIR [file join $::CATO_HOME services bin]
 	#package require cato_common
 	
 	read_config
@@ -4194,7 +4196,7 @@ proc process_task {} {
 
 	output "Task Name $::TASK_NAME - Version $::TASK_VERSION (DEBUG LEVEL: $::DEBUG_LEVEL), Ecosystem id: $::ECOSYSTEM_ID" -99
 
-	if {"$::CLOUD_ACCOUNT" > ""} {
+	if {"$::CLOUD_ACCOUNT" > "" && "$::CLOUD_ACCOUNT" != "null"} {
 		gather_account_info $::CLOUD_ACCOUNT
 	}
 	set ::ECOSYSTEM_NAME ""

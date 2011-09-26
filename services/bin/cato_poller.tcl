@@ -17,7 +17,8 @@
 #########################################################################
 
 set PROCESS_NAME cato_poller
-source $::env(CATO_HOME)/services/bin/common.tcl
+set ::CATO_HOME [file dirname [file dirname [file dirname [file normalize $argv0]]]]
+source $::CATO_HOME/services/bin/common.tcl
 read_config
 
 proc start_submitted_tasks {get_num} {
