@@ -104,10 +104,10 @@ Confirm the version is at least 2.10.5.
 	ls -l bin/Web.dll
 
 5. Either proceed with the services build or perform the installation steps 
-found in the INSTALL file found below the web directory.
+found in the INSTALL file found in the base install directory. 
 
 ------------------------------------------
-Configuring Apache for Mono Applications
+Additional Information: Configuring Apache for Mono Applications
 ------------------------------------------
 
 A typical Cato install will make use of the Apache v2 web server to host the Cato Web Application.
@@ -140,7 +140,7 @@ Assuming Cato Web is in /opt/cato/web, add the following entries to the bottom o
 	</Location>
 
 ------------------------------------------
-Building and Testing in MonoDevelop
+Additional Information: Building and Testing in MonoDevelop
 ------------------------------------------
 
 For working with the source code to make enhancements or fix reported issues, an Apache/mod_mono configuration 

@@ -88,7 +88,7 @@ then
 		echo "Copying services files..."
 	fi
 
-	#copy all images, script and style
+	rsync -aq services/*.sh $DEPLOY_DIR/services
 	rsync -aq services/bin/* $DEPLOY_DIR/services/bin
 	rsync -aq services/lib/* $DEPLOY_DIR/services/lib
 

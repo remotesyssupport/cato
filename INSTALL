@@ -49,7 +49,6 @@ Note: you will need write privileges in the target directory or use sudo
 to run the install script. 
 
 	cd <cato source directory>
-	chmod +x install.sh
 	./install.sh [-s] [-t targetpath] [-c component (web|service|all)
 
 or for interactive installation:
@@ -63,10 +62,10 @@ command line tool to create the database and run the following scripts.
 
 	cd /opt/cato
 	
-	export CATO_HOME=/opt/cato
-	
 If MySQL is not installed, install it using the following for Debian / Ubuntu
-NOTE: MySQL 5.1 or higher is required for Cato.
+
+NOTE: MySQL 5.1 or higher is required for Cato. You will be prompted for the 
+database root password. Make sure to remember this for later steps.
 
 	sudo apt-get install mysql-server
 
@@ -86,7 +85,7 @@ NOTE: change the password value below!
 	FLUSH PRIVILEGES;
 	exit
 
-3. Install tcl
+3. Install tcl, required for encrypting the conf file entries in later steps.
 
 	sudo apt-get install tcl8.5 tcl8.5-dev
 	
@@ -109,8 +108,18 @@ This script prompts for the encryption key and database password and updates
 the cato.conf file. It also encrypts the default application admin password 
 which will be used to login to the user interface.
 
-	chmod +x conf/setup_conf
 	./conf/setup_conf
+
+Verify that the encrypted values where saved in data load sql file. The value
+#ADMINPASSWORD# should be replaced with a encrypted password value on the first
+two lines.
+
+	head -n2 conf/data/cato_data.sql
+
+Next verify that the cato.conf file was updated. 
+
+	grep "^key" conf/cato.conf
+	grep "^password" conf/cato.conf
 
 5. Run the following commands to create and populate the database tables. 
 Use the super user and password.
@@ -139,8 +148,10 @@ NOTE: Make sure to stop the apache2 service or else the mono install will hang.
 
 2. Install mono server and mod_mono
 
-	sudo apt-get install mono-apache-server2  libapache2-mod-mono
-	sudo a2enmod mod_mono
+NOTE: Make sure to stop the apache2 service or else the mono install will hang.
+See step above!
+
+	sudo apt-get install mono-apache-server2 libapache2-mod-mono
 
 3.  Add the following lines to the default sites available file below the 
 last </Directory> line but above the </VirtualHost> line. 
@@ -182,6 +193,9 @@ last </Directory> line but above the </VirtualHost> line.
 
 
 6. Install root ssl certificates and the AWS ssl certificate. Enter "yes" if prompted.
+
+NOTE: the second command, certmgr, is onlt require if you are using Cato to manage
+AWS. 
  
 	sudo mozroots --import --machine --sync
 	sudo certmgr -ssl -m https://ec2.us-east-1.amazonaws.com
@@ -197,6 +211,7 @@ if build from source.
 8. Restart apache.
 
 	sudo service apache2 restart
+	sudo a2enmod mod_mono
 
 9. Access the webpage by using the following url, replacing <host address> with the
 ip address or FQDN of the install server.
@@ -246,7 +261,8 @@ continue with this step.
    cd /tmp
    tar -xvzf tclcloud.tar.gz  
 
-Change to the directory that was created.
+Change to the directory that was created and copy the files to the install, 
+services/lib/tclcloud directory.
 
    cd cloudsidekick-tclcloud-*
    cp * /opt/cato/services/lib/tclcloud/.
@@ -299,15 +315,15 @@ Change to the directory that was created.
    cd cloudsidekick-tclwinrm-*
    cp * /opt/cato/services/lib/tclwinrm/.
      
-3. Create a link to the conf directory if it doesn't already exist.
+4. Create a link to the conf directory if it doesn't already exist.
 
         cd /opt/cato/services
         sudo ln -s /opt/cato/conf conf
 
-4. Ensure that cron is installed and enabled for the user. If using sudo to start the services, 
+5. Ensure that cron is installed and enabled for the user. If using sudo to start the services, 
 enable cron for root.
 
-5. Determine log files location.
+6. Determine log files location.
 
 The Cato services produce logfiles during the normal course of execution. The logs 
 can be used to troubleshoot and monitor the processes. The logfile location is 
@@ -324,10 +340,9 @@ Create a directory structure for the logfiles.
 
 	sudo mkdir -p /var/cato/log/ce
 
-6. Run the start_services.sh script in the services directory.
+7. Run the start_services.sh script in the services directory.
 
         cd /opt/cato
-	chmod +x services/bin/cato_*.tcl
 	sudo ./services/start_services.sh
 
 Assuming all goes well, you should see the following output
@@ -344,6 +359,8 @@ Assuming all goes well, you should see the following output
 NOTE: the start services script will register itself with the cron file for the user
 under which it is run. The script will be run once a minute to make sure the services
 processes are running, if not it will restart them.
+
+ 8. Verify services are running. 
 
 Now check to see that all processes are running:
 

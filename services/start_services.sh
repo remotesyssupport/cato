@@ -9,7 +9,7 @@ if [ -z "$CATO_HOME" ]; then
     export CATO_HOME
 fi
 CATO_LOGS=`grep "^logfiles" $CATO_HOME/conf/cato.conf | awk '{print $2}'`
-echo $CATO_LOGS
+echo "logfile location $CATO_LOGS"
 if [ -z "$CATO_LOGS" ]; then
     CATO_LOGS=$CATO_HOME/services/logfiles
 fi

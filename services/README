@@ -113,4 +113,4 @@ Installation
 It is recommended if you are planning on installing the web component of the Cato 
 application that you build it as well before performing the final application install.
 
-Refer to the INSTALL file in the services directory for the services installation.
+Refer to the INSTALL file in source base directory immediately below services.
