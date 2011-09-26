@@ -230,18 +230,18 @@ proc lookup_mimetype {filename} {
 proc send_ses {msg_to msg_subject msg_body attach_list} {
 	set proc_name send_ses
 	
-	output "in send_email, $msg_to, $msg_subject, $msg_body, $attach_list"
+	output "in send_ses, $msg_to, $msg_subject, $msg_body, $attach_list"
 	#set ::tcloud::debug 1
 
 	$::SES call_aws ses {} SendEmail [list Destination.ToAddresses.member.1 $msg_to Message.Subject.Data test Message.Body.Text.Data $msg_body Source patrick.dunnigan@centivia.com]
 }
 
-proc send_email {msg_to msg_subject msg_body attach_list} {
-	set proc_name send_email
+proc send_smtp {msg_to msg_subject msg_body attach_list} {
+	set proc_name send_smtp
 	set attach_list2 ""
 
 
-	output "in send_email, $msg_body, $attach_list"
+	output "in send_smtp, $msg_body, $attach_list"
 	if {[string match -nocase "*<html>*" $msg_body]} {
 		set body [mime::initialize -canonical text/html -string $msg_body]
 	} else {
@@ -275,7 +275,7 @@ proc send_email {msg_to msg_subject msg_body attach_list} {
 		-header [list From $::SMTP_FROM] \
 		-header [list To $msg_to] \
 		-header [list Subject $msg_subject] \
-		-debug $::DEBUG \
+		-debug 0 \
 		-queue 1]
 
 output "***********$what******"
@@ -345,7 +345,7 @@ proc  check_for_emails {} {
 		#set attaches [get_attachments $msg_id]
 		set attaches ""
 		output "Sending msg_id: $msg_id"
-		if [catch {send_ses $msg_to $msg_subject $msg_body $attaches} error_msg] {
+		if [catch {send_smtp $msg_to $msg_subject $msg_body $attaches} error_msg] {
 			output "send email error -> $error_msg" 
 			update_status $msg_id 1 $error_msg
 		} else {
@@ -385,7 +385,7 @@ proc get_settings {} {
 	set pass [lindex $row 5]
 	
 	if {"$pass" != ""} {
-		set ::SMTP_PASS [decrypt_password $pass $::SITE_KEY]
+		set ::SMTP_PASS [decrypt_string $pass $::SITE_KEY]
 	} else {
 		set ::SMTP_PASS ""
 	}
@@ -412,14 +412,13 @@ proc get_settings {} {
 }
 
 proc initialize_process {} {
-	### when smtp is supported again, we'll comment out the following lines
-	#package require mime
-	#package require smtp
-	#init_mimetypes
+	package require mime
+	package require smtp
+	init_mimetypes
 	package require base64
-	package require TclOO
-	package require tclcloud
-	set ::SES [::tclcloud::connection new $::SES_ACCESS_KEY $::SES_SECRET_KEY]
+	#package require TclOO
+	#package require tclcloud
+	#set ::SES [::tclcloud::connection new $::SES_ACCESS_KEY $::SES_SECRET_KEY]
 }
 
 proc main_process {} {

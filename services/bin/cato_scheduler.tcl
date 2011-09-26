@@ -26,13 +26,13 @@ proc check_schedules {} {
 	set sql "select ap.schedule_id, min(ap.plan_id) as plan_id, ap.task_id, 
 		ap.action_id, ap.ecosystem_id, ap.parameter_xml, ap.debug_level, min(ap.run_on_dt), e.account_id		
 		from action_plan  ap
-		join ecosystem e on e.ecosystem_id = ap.ecosystem_id
+		left outer join ecosystem e on e.ecosystem_id = ap.ecosystem_id
 		where run_on_dt < now() and schedule_id is not null group by schedule_id
 		union
 		select '', ap.plan_id, ap.task_id, ap.action_id, ap.ecosystem_id, ap.parameter_xml, 
 			ap.debug_level, ap.run_on_dt, e.account_id
 		from action_plan ap 
-		join ecosystem e on e.ecosystem_id = ap.ecosystem_id
+		left outer join ecosystem e on e.ecosystem_id = ap.ecosystem_id
 		where run_on_dt < now() and schedule_id is null"
 	set rows [::mysql::sel $::CONN $sql -list]
 	foreach row $rows {
