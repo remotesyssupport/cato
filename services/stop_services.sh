@@ -1,25 +1,23 @@
 #!/bin/bash
 date
-OWNER=`ls -l $0 | awk '{ print $3 }'`
+if [ -z "$CATO_HOME" ]; then
 
-if [ $OWNER != $LOGNAME ]; then
-    echo "$0 must be run by owner."
-    exit
+    EX_FILE=`readlink -f $0`
+    EX_HOME=${EX_FILE%/*}
+    CATO_HOME=${EX_HOME%/*}
+    echo "CATO_HOME not set, assuming $CATO_HOME"
+    export CATO_HOME
 fi
 
-. /$HOME/set_ce_env.sh
-
 # All other processes go here.  No process should be in both sections though.
-FULL_PROCS[0]="bin/tclsh poller.tcl"
-FULL_PROCS[1]="bin/tclsh bin/logserver.tcl"
-FULL_PROCS[2]="bin/tclsh scheduler.tcl"
-FULL_PROCS[3]="bin/tclsh d_checker.tcl"
-FULL_PROCS[4]="bin/tclsh messenger.tcl"
-
+FULL_PROCS[0]="$CATO_HOME/services/bin/cato_poller.tcl"
+FULL_PROCS[1]="$CATO_HOME/services/bin/cato_scheduler.tcl"
+FULL_PROCS[2]="$CATO_HOME/services/bin/cato_messenger.tcl"
+FULL_PROCS[3]="$CATO_HOME/services/bin/cato_ecosync.tcl"
 
 count=0
 while [[ $count -lt ${#FULL_PROCS[*]} ]]; do
-    PIDS=`ps -eafl -u $LOGNAME | grep "${FULL_PROCS[$count]}" | grep -v "grep" | awk '{ print \$4 }'`
+    PIDS=`ps -eafl | grep "${FULL_PROCS[$count]}" | grep -v "grep" | awk '{ print \$4 }'`
     if [ -z "$PIDS" ]; then
         echo "${FULL_PROCS[$count]} is not running"
     else
@@ -27,17 +25,16 @@ while [[ $count -lt ${#FULL_PROCS[*]} ]]; do
             echo "Shutting down $i ($PID)"
             kill -9 $PID
         done
-    fi
+    fi 
         (( count += 1 ))
 done
 
 echo "Removing startup.sh from crontab"
-        crontab -l | grep -v startup.sh > etc/crontab.backup 2>/dev/null
+        crontab -l | grep -v start_services.sh > $CATO_HOME/conf/crontab.backup 2>/dev/null
         crontab -r 2>/dev/null
-        crontab etc/crontab.backup
-        rm etc/crontab.backup
+        crontab $CATO_HOME/conf/crontab.backup
+        rm $CATO_HOME/conf/crontab.backup
 touch .shutdown
 
 echo "end"
 exit
-
