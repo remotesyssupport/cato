@@ -131,13 +131,15 @@ $(document).ready(function () {
                 var account_name = $("#ctl00_phDetail_lblAccountName").val();
                 var instance = $("#ctl00_phDetail_hidInstanceID").val();
 
-                var args = '{"task_id":"' + task_id + '", \
-                    "task_name":"' + task_name + '", \
-                    "account_id":"' + account_id + '", \
-                    "account_name":"' + account_name + '", \
-                    "ecosystem_id":"' + ecosystem_id + '", \
-                    "instance":"' + instance + '", \
-                    "asset_id":"' + asset_id + '"}';
+				var args = '{"task_id":"' + task_id + '", "task_name":"' + task_name + '"';
+        
+				if (account_id)
+					args += ', "account_id":"' + account_id + '", "account_name":"' + account_name + '"';
+				    
+			    args += ', "ecosystem_id":"' + ecosystem_id + '", "instance":"' + instance + '"';
+			    
+				args += '}';
+  
                 ShowTaskLaunchDialog(args);
 
             }

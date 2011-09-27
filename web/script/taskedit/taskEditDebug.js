@@ -61,11 +61,13 @@ $(document).ready(function () {
         var account_id = $("#ctl00_ddlCloudAccounts").val();
         var account_name = $("#ctl00_ddlCloudAccounts :selected").text();
 
-        var args = '{"task_id":"' + task_id + '", \
-            "task_name":"' + task_name + '", \
-            "account_id":"' + account_id + '", \
-            "account_name":"' + account_name + '", \
-            "asset_id":"' + asset_id + '"}';
+        var args = '{"task_id":"' + task_id + '", "task_name":"' + task_name + '"';
+        
+        if (account_id)
+        	args += ', "account_id":"' + account_id + '", "account_name":"' + account_name + '"';
+            
+        args += '}';
+            
         ShowTaskLaunchDialog(args);
     });
     $("#debug_stop_btn").click(function () {

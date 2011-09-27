@@ -113,7 +113,7 @@ function Save() {
     var strValidationError = '';
 
     //some client side validation before we attempt to save
-    if ($("#ctl00_phDetail_ddlEcotemplates").val() == "") {
+    if ($("#ctl00_phDetail_ddlEcotemplates")[0].length == 0) {
         bSave = false;
         strValidationError += 'Ecosystems must belong to an Ecosystem Template.  Create an Ecosystem Template first.';
     };
@@ -125,9 +125,9 @@ function Save() {
 
     //we will test it, but really we're not gonna use it rather we'll get it server side
     //this just traps if there isn't one.
-    if ($("#ctl00_ddlCloudAccounts").val() == "") {
+    if ($("#ctl00_ddlCloudAccounts")[0].length == 0) {
         bSave = false;
-        strValidationError += 'Error: Unable to determine Cloud Account.';
+        strValidationError += 'Ecosystems require a Cloud Account.  Create a Cloud Account first.';
     };
 
     if (bSave != true) {
