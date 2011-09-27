@@ -181,7 +181,7 @@ namespace Web.pages
                     }
                     else
                     {
-                        if (sDomainExists != null)
+                        if (!string.IsNullOrEmpty(sDomainExists))
                         {
                             return "Domain name exists, choose another name.";
                         }

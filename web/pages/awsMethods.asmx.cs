@@ -159,7 +159,7 @@ namespace Web.pages
                 return null;
             }
         }
-        public string GetCloudObjectsAsXML(string sObjectType, ref string sErr, Dictionary<string, string> sAdditionalArguments)
+        public string GetCloudObjectsAsXML(string sObjectType, ref string sErr, Dictionary<string, string> AdditionalArguments)
         {
             acUI.acUI ui = new acUI.acUI();
 
@@ -208,7 +208,7 @@ namespace Web.pages
             }
 
 
-            if (sAdditionalArguments != null)
+            if (AdditionalArguments != null)
             {
                 //we have custom arguments... use them
                 //for each... add to sortedRequestParams

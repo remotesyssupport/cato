@@ -1,4 +1,4 @@
-﻿//Copyright 2011 Cloud Sidekick
+//Copyright 2011 Cloud Sidekick
 // 
 //Licensed under the Apache License, Version 2.0 (the "License");
 //you may not use this file except in compliance with the License.
@@ -659,7 +659,7 @@ namespace acUI
  		//Checks whether the value is a 36 character GUID       
 		public bool IsGUID(string String)
         {
-            if ((String != null))
+            if (!string.IsNullOrEmpty(String))
             {
                 if (String.Length == 36)
                 {
@@ -823,7 +823,7 @@ namespace acUI
             //if it does exist:
             //for integer, return the number  - if it can't be cast as an int return -1
             //for string, return the string.
-            if (HttpContext.Current.Request.QueryString[sKey] != null)
+            if (!string.IsNullOrEmpty(HttpContext.Current.Request.QueryString[sKey]))
             {
                 string sValue = HttpContext.Current.Request.QueryString[sKey];
                 if (object.ReferenceEquals(Type, typeof(int)))
@@ -1145,7 +1145,7 @@ namespace acUI
         public void WriteObjectChangeLog(acObjectTypes oType, string sObjectID, string sLabel, string sFrom, string sTo)
         {
             string sErr = "";
-            if (sFrom != null && sTo != null)
+            if (!string.IsNullOrEmpty(sFrom) && !string.IsNullOrEmpty(sTo))
             {
                 if (sFrom != sTo)
                 {
@@ -1156,7 +1156,7 @@ namespace acUI
         public void WriteObjectChangeLog(acObjectTypes oType, string sObjectID, string sObjectName, string sLog)
         {
             string sErr = "";
-            if (sObjectID != null && sObjectName != null)
+            if (!string.IsNullOrEmpty(sObjectID) && !string.IsNullOrEmpty(sObjectName))
             {
                 string sMsg = "";
                 if (string.IsNullOrEmpty(sObjectName))
@@ -1173,7 +1173,7 @@ namespace acUI
         public void WriteObjectAddLog(acObjectTypes oType, string sObjectID, string sObjectName, string sLog = "")
         {
             string sErr = "";
-            if (sObjectID != null && sObjectName != null)
+            if (!string.IsNullOrEmpty(sObjectID) && !string.IsNullOrEmpty(sObjectName))
             {
                 if (string.IsNullOrEmpty(sLog))
                 {
@@ -1189,7 +1189,7 @@ namespace acUI
         public void WriteObjectDeleteLog(acObjectTypes oType, string sObjectID, string sObjectName, string sLog = "")
         {
             string sErr = "";
-            if (sObjectID != null && sObjectName != null)
+            if (!string.IsNullOrEmpty(sObjectID) && !string.IsNullOrEmpty(sObjectName))
             {
                 if (string.IsNullOrEmpty(sLog))
                 {

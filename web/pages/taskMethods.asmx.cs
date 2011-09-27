@@ -1374,7 +1374,12 @@ namespace ACWebMethods
                     string sInstance = "";
                     string sErr = "";
 
-                    string sSQL = "call addTaskInstance ('" + sTaskID + "','" + sUserID + "',NULL," + iDebugLevel + ",NULL,'" + sParameterXML + "','" + sEcosystemID + "','" + sAccountID + "')";
+                    string sSQL = "call addTaskInstance ('" + sTaskID + "','" + 
+						sUserID + "',NULL," + 
+						iDebugLevel + ",NULL,'" + 
+						sParameterXML + "','" + 
+						sEcosystemID + "','" + 
+						sAccountID + "')";
 
                     if (!dc.sqlGetSingleString(ref sInstance, sSQL, ref sErr))
                     {
@@ -1928,7 +1933,7 @@ namespace ACWebMethods
                         if (!dc.sqlGetSingleString(ref sValueExists, sSQL, ref sErr))
                             throw new Exception("Unable to check for existing names [" + sTaskID + "]." + sErr);
 
-                        if (sValueExists != null)
+                        if (!string.IsNullOrEmpty(sValueExists))
                             return sValue + " exists, please choose another value.";
                     }
 
