@@ -25,10 +25,10 @@ else
 	      t)  DEPLOY_DIR="$OPTARG";;
 	      \?)               # unknown flag
 		  echo >&2 \
-		  "usage: $0 [-s] [-t targetpath] [-c component (web|service|all)]"
+		  "usage: $0 [-s] [-t targetpath] [-c component (1|2|3)]"
 		  echo "        -s      silent operation" 
 		  echo "        -t      path to install to" 
-		  echo "        -c      component to install, services only, web only or both" 
+		  echo "        -c      1 = web, 2 = service, 3 = both"
 		  exit 1;;
 	    esac
 	done
