@@ -185,7 +185,7 @@ namespace Web.pages
                     string sUserName = "";
                     sUserName = ui.GetSessionUserFullName();
 
-                    if (sUsersEmail == null || sUsersEmail.Length < 5)
+                    if (string.IsNullOrEmpty(sUsersEmail) || sUsersEmail.Length < 5)
                     {
                         // all good, no email so notify user
                         return "Notification settings updated.\n\nNo email on file for user " + sUserName + ", unable to send a test message";

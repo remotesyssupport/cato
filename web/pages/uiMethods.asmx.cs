@@ -435,7 +435,7 @@ namespace ACWebMethods
                 }
                 else
                 {
-                    if (sTagExists != null)
+                    if (!string.IsNullOrEmpty(sTagExists))
                     {
                         return "Tag exists - choose another name.";
                     }
@@ -490,7 +490,7 @@ namespace ACWebMethods
                         throw new Exception(sErr);
                     else
                     {
-                        if (sTagExists != null)
+                        if (!string.IsNullOrEmpty(sTagExists))
                             return "Tag [" + sNewTagName + "] exists - choose another name.";
                     }
                 }
@@ -1025,7 +1025,7 @@ namespace ACWebMethods
                         if (!dc.sqlGetSingleString(ref sValueExists, sSQL, ref sErr))
                             throw new Exception("Unable to check for existing names [" + sEcosystemID + "]." + sErr);
 
-                        if (sValueExists != null)
+                        if (!string.IsNullOrEmpty(sValueExists))
                             return sValue + " exists, please choose another value.";
                     }
 
@@ -1114,7 +1114,7 @@ namespace ACWebMethods
                 }
                 else
                 {
-                    if (sExists != null)
+                    if (!string.IsNullOrEmpty(sExists))
                     {
                         return "Ecosystem exists - choose another name.";
                     }
@@ -1262,7 +1262,7 @@ namespace ACWebMethods
                         if (!dc.sqlGetSingleString(ref sValueExists, sSQL, ref sErr))
                             throw new Exception("Unable to check for existing names [" + sEcoTemplateID + "]." + sErr);
 
-                        if (sValueExists != null)
+                        if (!string.IsNullOrEmpty(sValueExists))
                             return sValue + " exists, please choose another value.";
                     }
 
@@ -1317,7 +1317,7 @@ namespace ACWebMethods
                 }
                 else
                 {
-                    if (sExists != null)
+                    if (!string.IsNullOrEmpty(sExists))
                     {
                         return "Eco Template exists - choose another name.";
                     }
@@ -1971,7 +1971,7 @@ namespace ACWebMethods
                         if (!dc.sqlGetSingleString(ref sValueExists, sSQL, ref sErr))
                             throw new Exception("Unable to check for existing names [" + sEcoTemplateID + "]." + sErr);
 
-                        if (sValueExists != null)
+                        if (!string.IsNullOrEmpty(sValueExists))
                             return sValue + " exists, please choose another value.";
                     }
 

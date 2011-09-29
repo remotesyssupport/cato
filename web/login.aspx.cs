@@ -1,4 +1,4 @@
-﻿//Copyright 2011 Cloud Sidekick
+//Copyright 2011 Cloud Sidekick
 // 
 //Licensed under the Apache License, Version 2.0 (the "License");
 //you may not use this file except in compliance with the License.
@@ -1041,7 +1041,7 @@ namespace Web
                                 // all attempts, but there is a foreign key on user_id in the user_security_log table
                                 string sAttemptUserID = null;
                                 dc.sqlGetSingleString(ref sAttemptUserID, "Select user_id from users where username = '" + txtLoginUser.Text.Replace("'", "''").Replace(";", "") + "'", ref sErr);
-                                if (sAttemptUserID != null)
+                                if (!string.IsNullOrEmpty(sAttemptUserID))
                                 {
                                     dc.addSecurityLog(sAttemptUserID, SecurityLogTypes.Security, SecurityLogActions.UserPasswordChange, acObjectTypes.User, txtLoginUser.Text.Replace("'", "''").Replace(";", ""), "user changed password using the forgot password function.", ref sErr);
                                 }
@@ -1056,7 +1056,7 @@ namespace Web
                         // all attempts, but there is a foreign key on user_id in the user_security_log table
                         string sAttemptUserID = null;
                         dc.sqlGetSingleString(ref sAttemptUserID, "Select user_id from users where username = '" + txtLoginUser.Text.Replace("'", "''").Replace(";", "") + "'", ref sErr);
-                        if (sAttemptUserID != null)
+                        if (!string.IsNullOrEmpty(sAttemptUserID))
                         {
                             dc.addSecurityLog(sAttemptUserID, SecurityLogTypes.Security, SecurityLogActions.UserPasswordChange, acObjectTypes.User, txtLoginUser.Text.Replace("'", "''").Replace(";", ""), "Forgot password attempt, incorrect answer given.", ref sErr);
                         }
