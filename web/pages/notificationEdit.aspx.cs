@@ -180,7 +180,7 @@ namespace Web.pages
 
                     if (!dc.sqlGetSingleString(ref sUsersEmail, sSQL, ref sErr))
                     {
-                        return "Can not create test email: " + sErr;
+                        return "Unable to create test email: " + sErr;
                     }
                     string sUserName = "";
                     sUserName = ui.GetSessionUserFullName();
@@ -188,7 +188,7 @@ namespace Web.pages
                     if (string.IsNullOrEmpty(sUsersEmail) || sUsersEmail.Length < 5)
                     {
                         // all good, no email so notify user
-                        return "Notification settings updated.\n\nNo email on file for user " + sUserName + ", unable to send a test message";
+                        return "Notification settings updated.\n\nNo email on file for user " + sUserName + " - unable to send a test message";
                     }
                     else
                     {
@@ -196,14 +196,14 @@ namespace Web.pages
                         ui.SendEmailMessage(sUsersEmail, 
                             ag.APP_COMPANYNAME + " Account Management",
                             ag.APP_COMPANYNAME + " Messenger configuration change.",
-                            "<p>Dear " + sUserName + ",</p><p>This is a test mail sent to confirm if a mail is actually being sent through the smtp server that you have configured.</p><p>Feel free to delete this email.</p><p>Thanks and Regards, " + ag.APP_COMPANYNAME + " Administration team.</p>", ref sErr);
+                            "<html><head></head><body><p>" + sUserName + ",</p><p>This is a test mail to confirm the smtp server that you have configured.</p><p>Do not reply to this message, and feel free to delete it.</p><p>Regards,\n\n" + ag.APP_COMPANYNAME + " Administration team.</p></body></html>", ref sErr);
 
                         if (sErr != "")
                         {
-                            return "Update completed... Unable to create test message: " + sErr;
+                            return "Update completed.  Unable to create test message: " + sErr;
                         }
                     }
-                    return "Notification settings updated, a test email will be sent to " + sUsersEmail;
+                    return "Notification settings updated.  A test email will be sent to " + sUsersEmail + ".";
                 }
                 else
                 {
