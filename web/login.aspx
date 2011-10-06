@@ -34,7 +34,7 @@
     <form id="form1" runat="server">
     <div id="wrapper">
         <div>
-            <img width="300" height="128" alt="" src="images/login-logo.gif" />
+            <img alt="" src="images/login-logo.png" />
         </div>
         <div id="container">
             <div id="loginbox">
