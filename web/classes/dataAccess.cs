@@ -211,7 +211,7 @@ public class dataAccess
                     }
                     else
                     {
-                        if ("true,yes,on,enable,enabled".IndexOf(Convert.ToString(oObj).ToLower()) > 0)
+                        if ("true,yes,on,enable,enabled".IndexOf(Convert.ToString(oObj).ToLower()) > -1)
                             return true;
                     }
                     break;
