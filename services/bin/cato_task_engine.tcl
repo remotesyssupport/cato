@@ -95,30 +95,40 @@ proc aws_get_results {result path var_name} {
 	$root delete
 	$xmldoc delete
 }
-proc register_security_group {apply_to_group port} {
-	set proc_name register_security_group
-	package require tclcloud
-	if {"$::CLOUD_LOGIN_ID" == "" || "$::CLOUD_LOGIN_PASS" == ""} {
-		error_out "Cloud account id or password is required" 9999
-	}
-	if {![info exists ::CSK_ACCOUNT]} {
-		set sql "select value from customer_info where keyname = 'csk_account_num'"
-		$::db_query $::CONN $sql
-		set ::CSK_ACCOUNT [lindex [$::db_fetch $::CONN] 0]
-	}
-	if {![info exists ::CSK_SECURITY_GROUP]} {
-		set sql "select value from customer_info where keyname = 'csk_security_group'"
-		$::db_query $::CONN $sql
-		set ::CSK_SECURITY_GROUP [lindex [$::db_fetch $::CONN] 0]
-	}
-		
-        set x [::tclcloud::connection new $::CLOUD_LOGIN_ID $::CLOUD_LOGIN_PASS]
-        set params "GroupId $apply_to_group IpPermissions.1.Groups.1.UserId $::CSK_ACCOUNT IpPermissions.1.Groups.1.GroupId $::CSK_SECURITY_GROUP IpPermissions.1.IpProtocol tcp IpPermissions.1.FromPort $port IpPermissions.1.ToPort $port"
-        set cmd "$x  call_aws ec2 {} AuthorizeSecurityGroupIngress"
-	lappend cmd $params
-	catch {set  result [eval $cmd]} result
-	output $result
+proc get_my_ip {} {
+        set proc_name get_my_ip
+        package require http
+        set tok [::http::geturl http://169.254.169.254/latest/meta-data/local-ipv4]
+        set ip [::http::data $tok]
+        ::http::cleanup $tok
+        return $ip
 }
+proc register_security_group {apply_to_group port} {
+        set proc_name register_security_group
+        package require tclcloud
+        #if {"$::CLOUD_LOGIN_ID" == "" || "$::CLOUD_LOGIN_PASS" == ""} {
+        #       error_out "Cloud account id or password is required" 9999
+        #}
+        #if {![info exists ::CSK_ACCOUNT]} {
+        #       set sql "select value from customer_info where keyname = 'csk_account_num'"
+        #       $::db_query $::CONN $sql
+        #       set ::CSK_ACCOUNT [lindex [$::db_fetch $::CONN] 0]
+        #}
+        #if {![info exists ::CSK_SECURITY_GROUP]} {
+        #       set sql "select value from customer_info where keyname = 'csk_security_group'"
+        #       $::db_query $::CONN $sql
+        #       set ::CSK_SECURITY_GROUP [lindex [$::db_fetch $::CONN] 0]
+        #}
+
+        set x [::tclcloud::connection new $::CLOUD_LOGIN_ID $::CLOUD_LOGIN_PASS]
+        #set params "GroupId $apply_to_group IpPermissions.1.Groups.1.UserId $::CSK_ACCOUNT IpPermissions.1.Groups.1.GroupId $::CSK_SECURITY_GROUP IpPermissions.1.IpProtocol tcp IpPermissions.1.FromPort $port IpPermissions.1.ToPort $port"
+        set params "GroupId $apply_to_group IpPermissions.1.IpRanges.1.CidrIp [get_my_ip]/32 IpPermissions.1.IpProtocol tcp IpPermissions.1.FromPort $port IpPermissions.1.ToPort $port"
+        set cmd "$x  call_aws ec2 {} AuthorizeSecurityGroupIngress"
+        lappend cmd $params
+        catch {set  result [eval $cmd]} result
+        output $result
+}
+
 proc gather_account_info {account_id} {
 	set proc_name gather_account_info
 	set sql "select ca.account_name, ca.account_type, ca.login_id, ca.login_password from cloud_account ca where ca.account_id = '$account_id'"
