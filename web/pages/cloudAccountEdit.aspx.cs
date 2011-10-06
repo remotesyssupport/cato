@@ -403,8 +403,15 @@ namespace Web.pages
         [WebMethod(EnableSession = true)]
         public static string SaveKeyPair(string sKeypairID, string sAccountID, string sName, string sPK, string sPP)
         {
-            if (string.IsNullOrEmpty(sName))
+            acUI.acUI ui = new acUI.acUI();
+
+			if (string.IsNullOrEmpty(sName))
                 return "KeyPair Name is Required.";
+
+            //we encoded this in javascript before the ajax call.
+            //the safest way to unencode it is to use the same javascript lib.
+            //(sometimes the javascript and .net libs don't translate exactly, google it.)
+            sPK = ui.unpackJSON(sPK);
 
             bool bUpdatePK = false;
             if (sPK != "-----BEGIN RSA PRIVATE KEY-----\n**********\n-----END RSA PRIVATE KEY-----")

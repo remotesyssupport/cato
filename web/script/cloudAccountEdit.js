@@ -283,7 +283,8 @@ function ShowItemAdd() {
 function SaveKeyPair() {
     var kpid = $("#keypair_id").val().replace(/kp_/, "");
     var name = $("#keypair_name").val();
-    var pk = $("#keypair_private_key").val();
+	//pack up the PK field, JSON doesn't like it
+    var pk = packJSON($("#keypair_private_key").val());
     var pp = $("#keypair_passphrase").val();
     var account_id = $("#hidCurrentEditID").val();
 
