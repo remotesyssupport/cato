@@ -1375,7 +1375,7 @@ namespace ACWebMethods
 
                 if (iResults == 0)
                 {
-                    sSQL = "delete from ecotemplate_actions where ecotemplate_id in (" + sDeleteArray.ToString() + ")";
+                    sSQL = "delete from ecotemplate_action where ecotemplate_id in (" + sDeleteArray.ToString() + ")";
                     if (!dc.sqlExecuteUpdate(sSQL, ref sErr))
                         throw new Exception(sErr);
 
