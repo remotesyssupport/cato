@@ -503,9 +503,15 @@ function onStepFieldChange(ctl, step_id, xpath) {
     //Why did we use a textarea?  Because the actual 'value' may be complex
     //(sql, code, etc) with lots of chars needing escape sequences.
     //So, stick the complex value in an element that doesn't need any special handling.
-    $("#" + stepupdatefield).remove();
-    $("#step_update_array").append("<textarea id='" + stepupdatefield + "' step_id='" + step_id + "' function='" + func + "' xpath='" + xpath + "'>" + field_value + "</textarea>");
 
+	//10/7/2011 NSC - using append including the value was modifying the value if jQuery thought
+	//it might be a DOM object.
+	//so, we FIRST create the new textarea in the step_update_array
+    $("#" + stepupdatefield).remove();
+    $("#step_update_array").append("<textarea id='" + stepupdatefield + "' step_id='" + step_id + "' function='" + func + "' xpath='" + xpath + "'></textarea>");
+	//... THEN set the value of the new element.
+	$("#" + stepupdatefield).val(field_value);	
+	
     doStepDetailUpdate(stepupdatefield, step_id, func, xpath);
 
     //if reget is true, go to the db and refresh the whole step
@@ -832,8 +838,6 @@ function doStepReorder() {
 
 function doStepDetailUpdate(field, step_id, func, xpath) {
     if ($("#step_update_array").length > 0) {
-        var stuff = new Array();
-
         //get the value ready to be shipped via json
         //since some steps can have complex script or other sql, there
         //are special characters that need to be escaped for the JSON data.
