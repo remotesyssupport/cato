@@ -1367,7 +1367,10 @@ namespace ACWebMethods
                 if (!dc.sqlExecuteUpdate(sSQL, ref sErr))
                 {
                     //don't throw an error if its just a PK collision.  That just means it's already there.
-                    if (sErr.IndexOf("Duplicate entry") == 0)
+                    if (sErr.IndexOf("Duplicate entry") == 0) {
+						// do nothing
+					}
+					else
                         throw new Exception(sErr);
                 }
             }
