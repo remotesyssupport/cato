@@ -2090,39 +2090,37 @@ namespace ACWebMethods
         [WebMethod(EnableSession = true)]
         public string wmExportTasks(string sTaskArray)
         {
-            return "";
-            //dataAccess dc = new dataAccess();
-            //acUI.acUI ui = new acUI.acUI();
-            //ImportExport.ImportExportClass ie = new ImportExport.ImportExportClass();
-
-            //string sErr = "";
-
-            ////pretty much just call the ImportExport function
-            //try
-            //{
-            //    //what are we gonna call the final file?
-            //    string sUserID = ui.GetSessionUserID();
-            //    string sFileName = sUserID + "_backup";
-            //    string sPath = Server.MapPath("~/temp/");
-
-            //    if (sTaskArray.Length < 36)
-            //        return "";
-            //    sTaskArray = ui.QuoteUp(sTaskArray);
-
-            //    if (!ie.doBatchTaskExport(sPath, sTaskArray, sFileName, ref sErr))
-            //    {
-            //        throw new Exception("Unable to export Tasks." + sErr);
-            //    }
-
-            //    if (sErr == "")
-            //        return sFileName + ".zip";
-            //    else
-            //        return sErr;
-            //}
-            //catch (Exception ex)
-            //{
-            //    throw new Exception(ex.Message);
-            //}
+			acUI.acUI ui = new acUI.acUI();
+			ImportExport.ImportExportClass ie = new ImportExport.ImportExportClass();
+			
+			string sErr = "";
+			
+			//pretty much just call the ImportExport function
+			try
+			{
+				//what are we gonna call the final file?
+				string sUserID = ui.GetSessionUserID();
+				string sFileName = sUserID + "_backup";
+				string sPath = Server.MapPath("~/temp/");
+				
+				if (sTaskArray.Length < 36)
+				return "";
+				sTaskArray = ui.QuoteUp(sTaskArray);
+				
+				if (!ie.doBatchTaskExport(sPath, sTaskArray, sFileName, ref sErr))
+				{
+					throw new Exception("Unable to export Tasks." + sErr);
+				}
+				
+				if (sErr == "")
+					return sFileName + ".zip";
+				else
+					return sErr;
+			}
+			catch (Exception ex)
+			{
+				throw new Exception(ex.Message);
+			}
         }
 
         [WebMethod(EnableSession = true)]
@@ -2355,7 +2353,7 @@ namespace ACWebMethods
                 string sSQL = "select task_id, version, default_version," +
                               " case default_version when 1 then ' (default)' else '' end as is_default," +
                               " case task_status when 'Approved' then 'encrypted' else 'unlock' end as status_icon," +
-                              " created_dt as created_dt" +
+                              " date_format(created_dt, '%Y-%m-%d %T') as created_dt" +
                               " from task" +
                               " where original_task_id = " +
                               " (select original_task_id from task where task_id = '" + sTaskID + "')" +

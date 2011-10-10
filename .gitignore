@@ -22,3 +22,7 @@ web/obj/Debug/Web.csproj.FilesWrittenAbsolute.txt
 web/Web.userprefs
 
 web/bin/mysql.data.dll
+
+web/bin/ICSharpCode.SharpZipLib.dll
+
+web/temp/*

@@ -213,6 +213,187 @@ namespace ACWebMethods
             }
         }
 
+        #region "Import/Export"
+        [WebMethod(EnableSession = true)]
+        public string wmUpdateImportRow(string sObjectType, string sID, string sNewCode, string sNewName, string sVersion, string sImportMode)
+        {
+            //note not all arguments are used for all types, but are required for all
+
+            dataAccess dc = new dataAccess();
+            acUI.acUI ui = new acUI.acUI();
+            ImportExport.ImportExportClass ie = new ImportExport.ImportExportClass();
+
+            try
+            {
+                string sUserID = ui.GetSessionUserID();
+
+                if (sID != "")
+                {
+                    string sErr = "";
+                    string sSQL = "";
+
+                    //just to be safe...
+                    sObjectType = sObjectType.ToLower();
+
+                    switch (sObjectType)
+                    {
+                        case "task":
+                            switch (sImportMode)
+                            {
+                                case "New":
+                                    sSQL = "update import_task set" +
+                                        " task_code = '" + sNewCode.Replace("'", "''") + "'," +
+                                        " task_name = '" + sNewName.Replace("'", "''") + "'," +
+                                        " version = 1.000," +
+                                        " conflict = null," +
+                                        " import_mode = '" + sImportMode + "'" +
+                                        " where task_id = '" + sID + "'" +
+                                        " and user_id = '" + sUserID + "'";
+                                    break;
+                                case "New Version":
+                                    sSQL = "update import_task set" +
+                                        " task_code = src_task_code," +
+                                        " task_name = src_task_name," +
+                                        " version = '" + sVersion + "'," +
+                                        " conflict = null," +
+                                        " import_mode = '" + sImportMode + "'" +
+                                        " where task_id = '" + sID + "'" +
+                                        " and user_id = '" + sUserID + "'";
+                                    break;
+                                //case "Overwrite":
+                                //    sSQL = "update import_task set" +
+                                //        " task_code = src_task_code," +
+                                //        " task_name = src_task_name," +
+                                //        " version = src_version," +
+                                //        " conflict = null," +
+                                //        " import_mode = '" + sImportMode + "'" +
+                                //        " where task_id = '" + sID + "'" +
+                                //        " and user_id = '" + sUserID + "'";
+                                //    break;
+                                default:
+                                    break;
+                            }
+                            break;
+
+						default:
+                            break;
+                    }
+
+
+                    if (sSQL != "")
+                    {
+                        if (!dc.sqlExecuteUpdate(sSQL, ref sErr))
+                        {
+                            throw new Exception("Unable to update.<br />" + sErr);
+                        }
+                    }
+                    else
+                        throw new Exception("Update SQL not set.<br />" + sErr);
+
+                    //now, rescan for conflicts.
+                    switch (sObjectType)
+                    {
+                        case "task":
+                            if (!ie.IdentifyTaskConflicts(sUserID, sID, ref sErr))
+                                throw new Exception("Unable to scan conflicts.<br />" + sErr);
+
+                            break;
+
+						default:
+                            break;
+                    }
+
+
+                    return "";
+                }
+                else
+                {
+                    throw new Exception("Unable to update row. Missing required data. (Fields cannot be blank.)");
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [WebMethod(EnableSession = true)]
+        public string wmImportSelected(string sTaskList)
+        {
+            acUI.acUI ui = new acUI.acUI();
+            ImportExport.ImportExportClass ie = new ImportExport.ImportExportClass();
+
+            string sErr = "";
+
+            try
+            {
+                string sUserID = ui.GetSessionUserID();
+
+                if (!ie.Import(sUserID, sTaskList, ref sErr))
+                    throw new Exception("Unable to import Items.<br />" + sErr);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+
+            return sErr;
+        }
+        [WebMethod(EnableSession = true)]
+        public string wmImportDrawVersion(string sName, string sType)
+        {
+            dataAccess dc = new dataAccess();
+
+            try
+            {
+                if (sName != "")
+                {
+                    string sErr = "";
+                    string sSQL = "";
+
+                    switch (sType)
+                    {
+                        case "task":
+                            string sMaxVer = "";
+                            sSQL = "select max(version) as maxversion from task " +
+                               " where original_task_id = " +
+                               " (select original_task_id from task where task_name = '" + sName + "' limit 1)";
+
+                            if (!dc.sqlGetSingleString(ref sMaxVer, sSQL, ref sErr))
+                                throw new Exception(sErr);
+
+
+                            if (!string.IsNullOrEmpty(sMaxVer))
+                            {
+                                string sMinor = String.Format("{0:0.000}", (Convert.ToDouble(sMaxVer) + .001));
+                                string sMajor = String.Format("{0:0.000}", Math.Round((Convert.ToDouble(sMaxVer) + .5), MidpointRounding.AwayFromZero));
+                                return "&nbsp;&nbsp;<input id=\"rbMinor\" name=\"rbVersionType\" value=\"Minor\" type=\"radio\" version=\"" + sMinor + "\" />" +
+                                        "New Minor Version (" + sMinor + ")<br />" +
+                                        "&nbsp;&nbsp;<input id=\"rbMajor\" name=\"rbVersionType\" value=\"Major\" type=\"radio\" version=\"" + sMajor + "\"  />" +
+                                        "New Major Version (" + sMajor + ")";
+
+                                //return true;
+                            };
+                            break;
+                        default:
+                            break;
+                    }
+                    return "";
+                }
+                else
+                {
+                    throw new Exception("Unable to verify versions. Missing required data. (Fields cannot be blank.)");
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        #endregion
+
         #region "Tags"
         [WebMethod(EnableSession = true)]
         public string wmGetObjectsTags(string sObjectID)
