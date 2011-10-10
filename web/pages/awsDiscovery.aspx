@@ -24,8 +24,9 @@
     <div id="content">
         <div class="page_title">
             Ecosystem Discovery</div>
-        <span id="lblItemsSelected">0</span> Items Selected <a onclick="ClearSelectedRows();">
-            <img src="../images/buttons/clear_16.png" alt="" class="cancel_x" alt="" /></a>
+        <span id="lblItemsSelected">0</span> Items Selected <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only" onclick="ClearSelectedRows();">
+            <span class="ui-button-icon-primary ui-icon ui-icon-refresh"></span><span class="ui-button-text">
+                </span></a>
         <span>Select an Ecosystem:</span>
         <asp:DropDownList ID="ddlEcosystems" runat="server">
         </asp:DropDownList>

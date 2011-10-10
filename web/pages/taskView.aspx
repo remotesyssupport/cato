@@ -226,7 +226,7 @@
             criteria:</span> <span style="padding-left: 15px; padding-top: 5px;">
                 <input id="asset_search_text" class="search_text" /></span> <span style="padding-left: 15px;
                     padding-top: 5px;">
-                    <img src="../images/buttons/btnSearch.png" alt="" style="border: none; vertical-align: top;"
+                    <img src="../images/icons/btnSearch.png" alt="" style="border: none; vertical-align: top;"
                         id="asset_search_btn" class="pointer" /></span>
         <div id="asset_picker_results">
         </div>
