@@ -355,7 +355,12 @@ proc gather_aws_system_info {instance_id user_id} {
 	set ::system_arr($instance_id,priv_password) ""
 	set ::system_arr($instance_id,domain) ""
 	set ::system_arr($instance_id,conn_string) ""
-	set ::system_arr($instance_id,private_key) [decrypt_string [lindex $pk_pass 0] $::SITE_KEY]
+        set ::system_arr($instance_id,private_key_name) $keyname
+        if {"$pk_pass" > ""} {
+                set ::system_arr($instance_id,private_key) [decrypt_string [lindex $pk_pass 0] $::SITE_KEY]
+        } else {
+                set ::system_arr($instance_id,private_key) ""
+        }
 	set ::system_arr($instance_id,security_group) $security_group_id
 	unset pk_pass
 	return ""
@@ -3190,6 +3195,7 @@ proc new_connection {connection_system conn_name conn_type} {
 			error_out "The user id value is required for a connection type of ssh - ec2, example: root@$connection_system" 9999
 		}
 		for {set ii 0} {$ii < 10} {incr ii} {
+			sleep 1
 			set state [gather_aws_system_info $connection_system $user_id]
 			if {"$state" != "pending"} {
 				break
@@ -4091,6 +4097,9 @@ proc connect_system {system conn_type namespace} {
 			}
 		}
 		"ssh - ec2" {
+                        if {"$::system_arr($system,private_key)" == ""} {
+                                error_out "The private key \"$::system_arr($system,private_key_name)\" was not found. Add the private key for key name \"$::system_arr($system,private_key_name)\" to the cloud account \"$::CLOUD_NAME\"" 3000
+                        }
 			for {set ii 1} {$ii < 11} {incr ii} {
 				if {$ii == 10} {
 					set flag 2
