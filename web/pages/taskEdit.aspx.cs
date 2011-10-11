@@ -348,7 +348,7 @@ namespace Web.pages
                     //go again
                     if (!GetCodeblocks(ref sErr))
                     {
-                        sErr = "Unable to continue.  Could not retrieve Codeblocks (17). " + sErr;
+                        sErr += "Unable to continue.  Could not retrieve Codeblocks (17). " + sErr;
                         return false;
                     }
 
@@ -425,7 +425,7 @@ namespace Web.pages
                 //if the arg is empty, die.
                 if (string.IsNullOrEmpty(sCodeblockName))
                 {
-                    sErr = "Error: No Codeblock specified for GetSteps.";
+                    sErr += "Error: No Codeblock specified for GetSteps.";
                     return false;
                 }
 
@@ -434,7 +434,7 @@ namespace Web.pages
 
                 if (!BuildSteps(sCodeblockName, ref sErr))
                 {
-                    sErr = "Error building steps.<br />" + sErr;
+                    sErr += "Error building steps.<br />" + sErr;
                     return false;
                 }
 
@@ -464,7 +464,7 @@ namespace Web.pages
             DataTable dt = new DataTable();
             if (!dc.sqlGetDataTable(ref dt, sSQL, ref sErr))
             {
-                sErr = "Database Error: " + sErr;
+                sErr += "Database Error: " + sErr;
                 return false;
             }
 
