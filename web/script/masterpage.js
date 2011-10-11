@@ -22,10 +22,9 @@ $(document).ready(function () {
 
     $("#error_dialog").dialog({
         autoOpen: false,
-        draggable: false,
-        resizable: false,
         bgiframe: false,
-        modal: false,
+        modal: true,
+        width: 400,
         overlay: {
             backgroundColor: '#000',
             opacity: 0.5
@@ -49,7 +48,8 @@ $(document).ready(function () {
         draggable: false,
         resizable: false,
         bgiframe: true,
-        modal: false
+        modal: false,
+        width: 400
     });
 });
 
@@ -59,7 +59,7 @@ function showAlert(msg, info) {
     $("#error_dialog_message").html(msg);
     $("#error_dialog_info").html(info);
     $("#error_dialog").dialog('open');
-    $.blockUI({ message: null });
+    //$.blockUI({ message: null });
     //$("#fullcontent").block({ message: null });
     //$("#head").block({ message: null });
 

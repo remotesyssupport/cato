@@ -81,9 +81,6 @@ $(document).ready(function () {
 
 
     $("#add_to_ecosystem_btn").click(function () {
-        if ($("#hidSelectedArray").val() == "")
-            alert("At least one Cloud Object must be selected.");
-        else
             Save();
     });
 
@@ -137,7 +134,7 @@ $(document).ready(function () {
             });
         }, 250);
     });
-
+$("#ctl00_phDetail_ddlEcosystems").empty();
 });
 
 function pageLoad() {
@@ -163,31 +160,33 @@ function Save() {
 
     //we will test it, but really we're not gonna use it rather we'll get it server side
     //this just traps if there isn't one.
-    if ($("#ctl00_ddlCloudAccounts").val() == "") {
+    if ($("#ctl00_ddlCloudAccounts").val() == null || $("#ctl00_ddlCloudAccounts").val() == "") {
         bSave = false;
-        strValidationError += 'Error: Unable to determine Cloud Account.';
+        strValidationError += 'No Cloud Accounts are defined. An Administrator must first create at least one Cloud Account.<br /><br />';
     }
-    if ($("#ctl00_phDetail_ddlEcosystems").val() == "") {
+    
+    var ecosystem = $("#ctl00_phDetail_ddlEcosystems").val();
+    var object_type = $("#hidCloudObjectType").val();
+    var object_ids = $("#hidSelectedArray").val();
+
+    if (ecosystem == null || ecosystem == "") {
         bSave = false;
-        strValidationError += 'Error: Unable to determine Ecosystem.';
+        strValidationError += 'At least one Ecosystem is required.<br /><br /><a href="ecosystemManage.aspx">Click here</a> to manage Ecosystems.<br /><br />';
     }
-    if ($("#hidSelectedArray").val() == "") {
+    if (object_ids == null || object_ids == "") {
         bSave = false;
-        strValidationError += 'Error: At least one Cloud Object must be selected.';
+        strValidationError += 'At least one Cloud Object must be selected.<br /><br />';
     }
-    if ($("#hidCloudObjectType").val() == "") {
+    if (object_type == null || object_type == "") {
         bSave = false;
         strValidationError += 'Error: Cannot determine the Cloud Object Type.';
     }
 
     if (bSave != true) {
-        showAlert(strValidationError);
+        showInfo(strValidationError, "", true);
         return false;
     }
 
-    var ecosystem = $("#ctl00_phDetail_ddlEcosystems").val();
-    var object_type = $("#hidCloudObjectType").val();
-    var object_ids = $("#hidSelectedArray").val();
     $.ajax({
         async: false,
         type: "POST",
