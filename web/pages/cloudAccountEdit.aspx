@@ -33,7 +33,7 @@
     </div>
     <div id="left_panel">
         <div class="left_tooltip">
-            <img src="../images/manage-credentials-192x192.png" alt="" />
+            <img src="../images/manage-cld_acc-192x192.png" alt="" />
             <div id="left_tooltip_box_outer">
                 <div id="left_tooltip_box_inner">
                     <p>
