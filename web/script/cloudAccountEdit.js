@@ -141,6 +141,7 @@ function LoadEditDialog(editID) {
     FillEditForm(editID);
 
     $('#edit_dialog_tabs').tabs('select', 0);
+    $('#edit_dialog_tabs').tabs( "option", "disabled", [] );
     $("#edit_dialog").dialog("option", "title", "Modify Account");
     $("#edit_dialog").dialog('open');
 
@@ -248,18 +249,18 @@ function OnUpdateSuccess(result, userContext, methodName) {
     	var ret = eval('(' + result + ')');
     	
         if (ret) {
-            showInfo('Account Saved.');
+            //showInfo('Account Saved.');
+          	
+            $("#edit_dialog").dialog('close');
+
+            //leave any search string the user had entered, so just click the search button
+            $("[id*='btnSearch']").click();
             
             //add it to the cloud accounts dropdown
             $('#ctl00_ddlCloudAccounts').append($('<option>', { value : ret.account_id }).text(ret.account_name)); 
           	//if this was the first one, get it in the session by nudging the change event.
           	if ($("#ctl00_ddlCloudAccounts option").length == 1)
           		$("#ctl00_ddlCloudAccounts").change();
-          	
-            $("#edit_dialog").dialog('close');
-
-            //leave any search string the user had entered, so just click the search button
-            $("[id*='btnSearch']").click();
         } else {
             showAlert(result);
         }
@@ -278,6 +279,7 @@ function ShowItemAdd() {
     $("#hidMode").val("add");
 
     $('#edit_dialog_tabs').tabs('select', 0);
+    $('#edit_dialog_tabs').tabs( "option", "disabled", [1] );
     $('#edit_dialog').dialog('option', 'title', 'Create a New Account');
     $("#edit_dialog").dialog('open');
     $("#txtAccountName").focus();
