@@ -493,7 +493,7 @@ INSERT INTO `task_step` VALUES ('A7DE45BD-B612-49DB-98E0-9914B1B1CEB9','EF1BE083
 INSERT INTO `task_step` VALUES ('D8D835ED-427B-4E0E-A785-70605310BBAB','EF1BE083-2701-484A-B097-D2009D9E158B','MAIN',5,0,0,'cmd_line','<function command_type=\"cmd_line\">\n  <conn_name input_type=\"text\">CONN1</conn_name>\n  <command input_type=\"text\">df -h</command>\n  <timeout input_type=\"text\" />\n  <positive_response input_type=\"text\" />\n  <negative_response input_type=\"text\" />\n</function>','Check the file system capacities',2,0,0,NULL);
 
 
-NSERT INTO `task` VALUES ('070DFDA0-3ED2-4362-B2C2-51155B4F4D9D','070DFDA0-3ED2-4362-B2C2-51155B4F4D9D','1.000','Create and manage EC2 SDB domain with Loop','example - 002','Creates a SDB domain and adds items with attributes then loops through one of the items and prints to the log. Deletes the domain at the end.\n\nShows how to use Xpath to loop through the results of an AWS query.','Development',0,1,NULL,NULL,'2011-07-11 21:18:56','');
+INSERT INTO `task` VALUES ('070DFDA0-3ED2-4362-B2C2-51155B4F4D9D','070DFDA0-3ED2-4362-B2C2-51155B4F4D9D','1.000','Create and manage EC2 SDB domain with Loop','example - 002','Creates a SDB domain and adds items with attributes then loops through one of the items and prints to the log. Deletes the domain at the end.\n\nShows how to use Xpath to loop through the results of an AWS query.','Development',0,1,NULL,NULL,'2011-07-11 21:18:56','');
 
 INSERT INTO `task_codeblock` VALUES ('070DFDA0-3ED2-4362-B2C2-51155B4F4D9D','MAIN');
 
