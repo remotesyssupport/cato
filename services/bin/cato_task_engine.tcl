@@ -1354,6 +1354,11 @@ proc telnet_logon {address userid password top telnet_ssh attempt_num private_ke
 						}
 					}
 				}
+				-re "\\\$ $" {
+					#output "Found the dollar prompt" 3
+					set system_flag "UNIX"
+					set do_password 0
+				}
 				timeout {
 					if {$attempt_num == 1} {
 						close;wait
