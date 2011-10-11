@@ -134,7 +134,6 @@ $(document).ready(function () {
             });
         }, 250);
     });
-$("#ctl00_phDetail_ddlEcosystems").empty();
 });
 
 function pageLoad() {
@@ -143,9 +142,24 @@ function pageLoad() {
 
     //the page is ready... go populate the first tab.
     //with a delay... for some reason it wasn't firing without the delay
-    setTimeout("$('.group_tab_selected').trigger('click')", 250);
+    //BUT NOT unless there are cloud accounts and ecosystems defined.
+    setTimeout("CheckReady()", 250)
 }
 
+function CheckReady() {
+    if ($("#ctl00_ddlCloudAccounts").val() == null || $("#ctl00_phDetail_ddlEcosystems").val() == null) {
+        var msg = '';
+        if ($("#ctl00_ddlCloudAccounts").val() == null)
+        	msg += 'A Cloud Account is required to use the Discovery page.  An Administrator must first create at least one Cloud Account.<br /><br />';
+
+        if ($("#ctl00_phDetail_ddlEcosystems").val() == null)
+        	msg += 'At least one Ecosystem is required.<br /><br /><a href="ecosystemManage.aspx">Click here</a> to manage Ecosystems.<br /><br />';
+
+        showInfo("Configuration Incomplete", msg, true);
+    } else {
+    	$('.group_tab_selected').trigger('click');
+    }
+}
 function CloudAccountWasChanged() {
     location.reload();
 }

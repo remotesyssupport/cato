@@ -205,9 +205,7 @@ namespace Web.pages
                        "where account_id = '" + sAccountID + "'";
 
                 if (!dc.sqlGetSingleString(ref sOriginalName, sSql, ref sErr))
-                {
                     throw new Exception(sErr);
-                }
             }
 
             try
@@ -236,6 +234,15 @@ namespace Web.pages
                 }
                 else
                 {
+					//if there are no rows yet, make this one the default even if the box isn't checked.
+	                int iExists = -1;
+					sSql = "select count(*) from cloud_account";
+                	if (!dc.sqlGetSingleInteger(ref iExists, sSql, ref sErr))
+                    	throw new Exception(sErr);
+					
+					if (iExists == 0)
+						sIsDefault = "1";
+					
 					sAccountID = System.Guid.NewGuid().ToString();
                     sSql = "insert into cloud_account (account_id, account_name, account_number, account_type, is_default, login_id, login_password, auto_manage_security)" +
                     " values ('" + sAccountID + "'," +
