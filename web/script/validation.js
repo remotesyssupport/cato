@@ -67,9 +67,10 @@ function checkSyntax(syntax, strtocheck) {
         switch (syntax) {
             case "asset_name_or_var":
                 if (strtocheck != "") {
-                    msg = validateAssetNameOrVar(strtocheck);
-                    if (msg && msg != "")
-                        return msg;
+		    // 2011-10-11 - PMD - removing asset name check for new connection command, issue #40
+                    //msg = validateAssetNameOrVar(strtocheck);
+                    //if (msg && msg != "")
+                    //    return msg;
                 }
                 break;
             case "variable":

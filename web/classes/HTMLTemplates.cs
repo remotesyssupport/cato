@@ -1987,25 +1987,26 @@ namespace FunctionTemplates
             // get the asset name belonging to this asset_id
             // OTHERWISE
             // make the sAssetName value be what's in sAssetID (a literal value in [[variable]] format)
-            if (ui.IsGUID(sAssetID))
-            {
-                string sSQL = "select asset_name from asset where asset_id = '" + sAssetID + "'";
+	    // 2011-10-11 - PMD - removing asset table reference
+            //if (ui.IsGUID(sAssetID))
+            //{
+            //    string sSQL = "select asset_name from asset where asset_id = '" + sAssetID + "'";
 
-                if (!dc.sqlGetSingleString(ref sAssetName, sSQL, ref sErr))
-                    return "Error retrieving New Connection Asset.<br />" + sErr;
+            //    if (!dc.sqlGetSingleString(ref sAssetName, sSQL, ref sErr))
+            //        return "Error retrieving New Connection Asset.<br />" + sErr;
 
-                if (sAssetName == "")
-                {
-                    //clear the bogus value
-                    SetNodeValueinCommandXML(sStepID, "asset", "");
+            //    if (sAssetName == "")
+            //    {
+            //        //clear the bogus value
+            //        SetNodeValueinCommandXML(sStepID, "asset", "");
 
-                    //return "Unable to find Asset by ID - [" + sAssetID + "]." + sErr;
-                }
-            }
-            else
-            {
+            //        //return "Unable to find Asset by ID - [" + sAssetID + "]." + sErr;
+            //    }
+            //}
+            //else
+            //{
                 sAssetName = sAssetID;
-            }
+            //}
 
 
             sHTML += " to Asset " + Environment.NewLine;
@@ -2024,15 +2025,17 @@ namespace FunctionTemplates
                 " onchange=\"javascript:pushStepFieldChangeVia(this, '" + sElementID + "');\"" +
                 " value=\"" + sAssetName + "\" />" + Environment.NewLine;
 
-            sHTML += "<img class=\"fn_field_clear_btn pointer\" clear_id=\"fn_new_connection_assetname_" + sStepID + "\"" +
-                " style=\"width:10px; height:10px;\" src=\"../images/icons/fileclose.png\"" +
-                " alt=\"\" title=\"Clear\" />";
+	    // 2011-10-11 - PMD - remove asset search box and clear button, issue # 34
+            //sHTML += "<img class=\"fn_field_clear_btn pointer\" clear_id=\"fn_new_connection_assetname_" + sStepID + "\"" +
+            //    " style=\"width:10px; height:10px;\" src=\"../images/icons/fileclose.png\"" +
+            //    " alt=\"\" title=\"Clear\" />";
 
-            sHTML += "<img class=\"asset_picker_btn pointer\" alt=\"\"" +
-                " link_to=\"" + sElementID + "\"" +
-                " target_field_id=\"fn_new_connection_assetname_" + sStepID + "\"" +
-                " step_id=\"" + sStepID + "\"" +
-                " src=\"../images/icons/search.png\" />" + Environment.NewLine;
+	    // 2011-10-11 - PMD - remove asset search box and clear button, issue # 34
+            //sHTML += "<img class=\"asset_picker_btn pointer\" alt=\"\"" +
+            //    " link_to=\"" + sElementID + "\"" +
+            //    " target_field_id=\"fn_new_connection_assetname_" + sStepID + "\"" +
+            //    " step_id=\"" + sStepID + "\"" +
+            //    " src=\"../images/icons/search.png\" />" + Environment.NewLine;
 
             sHTML += " as " + Environment.NewLine;
             sHTML += "<input type=\"text\" " + CommonAttribs(sStepID, sFunction, true, "conn_name", "w200px") +

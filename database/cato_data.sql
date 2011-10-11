@@ -66,6 +66,16 @@ INSERT INTO `cloud_object_type_props` (`cloud_object_type`, `property_name`, `pr
 INSERT INTO `cloud_object_type_props` (`cloud_object_type`, `property_name`, `property_label`, `property_xpath`, `id_field`, `has_icon`, `short_list`, `sort_order`) VALUES ('aws_ec2_instance','Image Id',NULL,'imageId',0,0,1,10);
 INSERT INTO `cloud_object_type_props` (`cloud_object_type`, `property_name`, `property_label`, `property_xpath`, `id_field`, `has_icon`, `short_list`, `sort_order`) VALUES ('aws_ec2_instance','DNS Name',NULL,'dnsName',0,0,1,11);
 INSERT INTO `cloud_object_type_props` (`cloud_object_type`, `property_name`, `property_label`, `property_xpath`, `id_field`, `has_icon`, `short_list`, `sort_order`) VALUES ('aws_ec2_instance','Platform',NULL,'platform',0,1,1,12);
+INSERT INTO `cloud_object_type_props` (`cloud_object_type`, `property_name`, `property_xpath`, `id_field`, `has_icon`, `short_list`, `sort_order`) VALUES ('aws_ec2_keypair', 'KeyName', 'keyName', 1, 0, 1, 1);
+INSERT INTO `cloud_object_type_props` (`cloud_object_type`, `property_name`, `property_xpath`, `id_field`, `has_icon`, `short_list`, `sort_order`) VALUES ('aws_ec2_keypair', 'Fingerprint', 'keyFingerprint', 0, 0, 1, 2);
+INSERT INTO `cloud_object_type_props` (`cloud_object_type`, `property_name`, `property_xpath`, `id_field`, `has_icon`, `short_list`, `sort_order`) VALUES ('aws_ec2_security_group', 'GroupId', 'groupId', 1, 0, 1, 1);
+INSERT INTO `cloud_object_type_props` (`cloud_object_type`, `property_name`, `property_xpath`, `id_field`, `has_icon`, `short_list`, `sort_order`) VALUES ('aws_ec2_security_group', 'GroupName', 'groupName', 0, 0, 1, 2);
+INSERT INTO `cloud_object_type_props` (`cloud_object_type`, `property_name`, `property_xpath`, `id_field`, `has_icon`, `short_list`, `sort_order`) VALUES ('aws_ec2_security_group', 'Description', 'groupDescription', 0, 0, 1, 3);
+INSERT INTO `cloud_object_type_props` (`cloud_object_type`, `property_name`, `property_xpath`, `id_field`, `has_icon`, `short_list`, `sort_order`) VALUES ('aws_emr_jobflow', 'JobFlowId', 'JobFlowId', 1, 0, 1, 1);
+INSERT INTO `cloud_object_type_props` (`cloud_object_type`, `property_name`, `property_xpath`, `id_field`, `has_icon`, `short_list`, `sort_order`) VALUES ('aws_emr_jobflow', 'Name', 'Name', 0, 0, 1, 2);
+INSERT INTO `cloud_object_type_props` (`cloud_object_type`, `property_name`, `property_xpath`, `id_field`, `has_icon`, `short_list`, `sort_order`) VALUES ('aws_emr_jobflow', 'LogUri', 'LogUri', 0, 0, 1, 3);
+
+
 INSERT INTO `login_security_settings` (`id`, `pass_max_age`, `pass_max_attempts`, `pass_max_length`, `pass_min_length`, `pass_complexity`, `pass_age_warn_days`, `pass_require_initial_change`, `auto_lock_reset`, `login_message`, `auth_error_message`, `pass_history`, `page_view_logging`, `report_view_logging`, `allow_login`, `new_user_email_message`, `log_days`) VALUES (1,90,7,15,6,0,5,0,5,'New Cato Install','Login Error - Please check your user id and password.',0,0,0,1,'',90);
 INSERT INTO `logserver_settings` (`id`, `mode_off_on`, `loop_delay_sec`, `port`, `log_file_days`, `log_table_days`) VALUES (1,'on',5,4010,90,90);
 INSERT INTO `lu_task_step_function_category` (`category_name`, `category_label`, `sort_order`, `description`, `icon`) VALUES ('aws_as','AWS AS','20.00','','icons/aws_32.png');
