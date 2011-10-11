@@ -220,7 +220,7 @@ namespace Web.pages
 
                     //should we try to show an icon?
                     if (dc.ExtendedProperties["HasIcon"] != null)
-                        sHTML += "<img class=\"custom_icon\" src=\"../images/custom/" + dc.ColumnName.Replace(" ", "") + "_" + sValue.Replace(" ", "") + ".png\" alt=\"\" />";
+                        sHTML += "<img class=\"custom_icon\" src=\"../images/custom/" + dc.ColumnName.Replace(" ", "").ToLower() + "_" + sValue.Replace(" ", "").ToLower() + ".png\" alt=\"\" />";
 
                     sHTML += sValue;
                     sHTML += "</td>";
