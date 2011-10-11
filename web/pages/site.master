@@ -253,8 +253,11 @@
                             <li class="ui-widget-header"><a onclick="showPleaseWait();" href="../pages/cloudAccountEdit.aspx">
                                 <img src="../images/icons/cloud_accounts_24.png" alt="" />Cloud Accounts</a>
                             </li>
+                            <!--
+                            // 2011-10-11 - PMD - remove global registry from menu choice, issue #17
                             <li class="ui-widget-header"><a onclick="showPleaseWait();" href="../pages/globalRegistry.aspx">
                                 <img src="../images/icons/global_registry_24.png" alt="" />Global Registry</a></li>
+                            -->
                             <li class="ui-widget-header"><a onclick="showPleaseWait();" href="../pages/loginDefaultsEdit.aspx">
                                 <img src="../images/login_24.png" alt="" />Set Login Defaults</a></li>
                             <li class="ui-widget-header"><a onclick="showPleaseWait();" href="../pages/pollerSettings.aspx">
