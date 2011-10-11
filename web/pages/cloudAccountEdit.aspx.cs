@@ -266,10 +266,6 @@ namespace Web.pages
                     if (!oTrans.ExecUpdate(ref sErr))
                         throw new Exception(sErr);
                 }
-				
-				//refresh the cloud account list in the session
-                if (!ui.PutCloudAccountsInSession(ref sErr))
-					throw new Exception(sErr);
 
 				
                 oTrans.Commit();
@@ -279,9 +275,6 @@ namespace Web.pages
 
                 throw new Exception(ex.Message);
             }
-
-
-
 
             // add security log
             // since this is not handled as a page postback, theres no "Viewstate" settings
@@ -296,7 +289,10 @@ namespace Web.pages
                 ui.WriteObjectAddLog(Globals.acObjectTypes.CloudAccount, sAccountID, sAccountName, "Account Created");
             }
 
-
+			//refresh the cloud account list in the session
+            if (!ui.PutCloudAccountsInSession(ref sErr))
+				throw new Exception(sErr);
+			
             // no errors to here, so return an empty string
             return "{'account_id':'" + sAccountID + "', 'account_name':'" + sAccountName + "'}";
         }
