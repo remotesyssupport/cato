@@ -131,7 +131,7 @@ function Save() {
         dataType: "json",
         success: function (msg) {
             if (msg.d.length == 36) {
-                location.href = "ecotemplateEdit.aspx?ecotemplate_id=" + msg.d;
+                location.href = "ecoTemplateEdit.aspx?ecotemplate_id=" + msg.d;
             }
         },
         error: function (response) {

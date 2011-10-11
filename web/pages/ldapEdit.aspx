@@ -34,10 +34,10 @@
         <asp:UpdatePanel ID="uplList" runat="server" UpdateMode="Conditional">
             <ContentTemplate>
                 <span id="lblItemsSelected">0</span> Items Selected <a onclick="ClearSelectedRows();">
-                    <img src="../images/buttons/clear_16.png" alt="" class="cancel_x" /></a>
-                <img id="item_create_btn" src="../images/buttons/btnCreate.png" class="pointer btn_image"
+                    <img src="../images/icons/cancel.png" alt="" class="cancel_x" /></a>
+                <img id="item_create_btn" src="../images/icons/btnCreate.png" class="pointer btn_image"
                     alt="" />
-                <img id="item_delete_btn" src="../images/buttons/btnDelete.png" class="pointer btn_image"
+                <img id="item_delete_btn" src="../images/icons/btnDelete.png" class="pointer btn_image"
                     alt="" />
                 <asp:TextBox ID="txtSearch" class="search_text" runat="server" />
                 <span id="item_search_btn">Search</span>

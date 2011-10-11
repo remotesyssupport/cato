@@ -22,11 +22,19 @@ isiPad = navigator.userAgent.match(/iPad/i) != null;
 //used in many places where we send strings as json data, replaces the two critical json chars " and \
 //THESE CALL a jQuery plugin
 function packJSON(instr) {
+	//if it's nothing, return nothing
+	if (instr == "")
+		return instr;
+		
 	//NOTE! base64 encoding still has a couple of reserved characters so we explicitly replace them AFTER
 	var outstr = $.base64.encode(instr);
     return outstr.replace(/\//g, "%2F").replace(/\+/g, "%2B").replace(/=/g, "%3D");
 }
 function unpackJSON(instr) {
+	//if it's nothing, return nothing
+	if (outstr == "")
+		return outstr;
+		
 	//NOTE! base64 decoding still has a couple of reserved characters so we explicitly replace them BEFORE
     var outstr = instr.replace(/%2F/g, "/").replace(/%2B/g, "+").replace(/%3D/g, "=");
 	return $.base64.decode(outstr);

@@ -259,7 +259,8 @@
                                 <img src="../images/login_24.png" alt="" />Set Login Defaults</a></li>
                             <li class="ui-widget-header"><a onclick="showPleaseWait();" href="../pages/pollerSettings.aspx">
                                 <img src="../images/ldap_24.png" alt="" />Poller Settings</a> </li>
-                            <!--<li class="ui-widget-header"><a onclick="showPleaseWait();" href="../pages/ldapEdit.aspx">
+                            <li class="ui-widget-header"><a onclick="showPleaseWait();" href="../pages/importLoadFile.aspx">
+                                <img src="../images/icons/import_24.png" alt="" />Import a Backup File</a> </li>                            <!--<li class="ui-widget-header"><a onclick="showPleaseWait();" href="../pages/ldapEdit.aspx">
                                 <img src="../images/ldap_24.png" alt="" />Set LDAP Connectivity</a>
                             </li>
                             <li class="ui-widget-header"><a onclick="showPleaseWait();" href="../pages/tagEdit.aspx">

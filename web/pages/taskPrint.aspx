@@ -13,7 +13,7 @@
                 <span id="version_tag">Version:
                     <asp:Label ID="lblVersionHeader" runat="server"></asp:Label></span></h3>
         </center>
-        <asp:ImageButton ID="btnExport" Visible="false" runat="server" ImageUrl="../images/buttons/pdficon_large.gif"
+        <asp:ImageButton ID="btnExport" Visible="false" runat="server" ImageUrl="../images/icons/pdficon_large.gif"
             OnClick="btnExport_Click" />
         <asp:HiddenField ID="hidExport" runat="server" />
         <div class="codebox">
