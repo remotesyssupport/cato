@@ -122,7 +122,6 @@ namespace Web.pages
 
 
         #region "Web Methods"
-
         [WebMethod(EnableSession = true)]
         public static string DeleteAccounts(string sDeleteArray)
         {
@@ -140,23 +139,21 @@ namespace Web.pages
             // get a list of ids that will be deleted for the log
             sSql = "select account_id, account_name, account_type, login_id from cloud_account where account_id in (" + sDeleteArray + ")";
             if (!dc.sqlGetDataTable(ref dt, sSql, ref sErr))
-            {
                 throw new Exception(sErr);
-            }
-
 
             try
             {
 
                 dataAccess.acTransaction oTrans = new dataAccess.acTransaction(ref sErr);
 
-                //delete asset_credential
                 sSql = "delete from cloud_account where account_id in (" + sDeleteArray + ")";
                 oTrans.Command.CommandText = sSql;
                 if (!oTrans.ExecUpdate(ref sErr))
-                {
                     throw new Exception(sErr);
-                }
+
+				//refresh the cloud account list in the session
+                if (!ui.PutCloudAccountsInSession(ref sErr))
+					throw new Exception(sErr);
 
                 oTrans.Commit();
             }
@@ -170,7 +167,6 @@ namespace Web.pages
             {
                 ui.WriteObjectDeleteLog(Globals.acObjectTypes.CloudAccount, dr["account_id"].ToString(), dr["account_name"].ToString(), dr["account_type"].ToString() + " Account for LoginID [" + dr["login_id"].ToString() + "] Deleted");
             }
-
 
             return sErr;
         }
@@ -240,8 +236,9 @@ namespace Web.pages
                 }
                 else
                 {
+					sAccountID = System.Guid.NewGuid().ToString();
                     sSql = "insert into cloud_account (account_id, account_name, account_number, account_type, is_default, login_id, login_password, auto_manage_security)" +
-                    " values ('" + System.Guid.NewGuid().ToString() + "'," +
+                    " values ('" + sAccountID + "'," +
                     "'" + sAccountName + "'," +
                     "'" + sAccountNumber + "'," +
                     "'" + sAccountType + "'," +
@@ -262,7 +259,12 @@ namespace Web.pages
                     if (!oTrans.ExecUpdate(ref sErr))
                         throw new Exception(sErr);
                 }
+				
+				//refresh the cloud account list in the session
+                if (!ui.PutCloudAccountsInSession(ref sErr))
+					throw new Exception(sErr);
 
+				
                 oTrans.Commit();
             }
             catch (Exception ex)
@@ -289,7 +291,7 @@ namespace Web.pages
 
 
             // no errors to here, so return an empty string
-            return "";
+            return "{'account_id':'" + sAccountID + "', 'account_name':'" + sAccountName + "'}";
         }
 
         [WebMethod(EnableSession = true)]

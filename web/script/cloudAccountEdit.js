@@ -244,27 +244,30 @@ function SaveItem() {
 
 // Callback function invoked on successful completion of the MS AJAX page method.
 function OnUpdateSuccess(result, userContext, methodName) {
-    //alert('success');
     if (methodName == "SaveAccount") {
-        if (result.length == 0) {
+    	var ret = eval('(' + result + ')');
+    	
+        if (ret) {
             showInfo('Account Saved.');
+            
+            //add it to the cloud accounts dropdown
+            $('#ctl00_ddlCloudAccounts').append($('<option>', { value : ret.account_id }).text(ret.account_name)); 
+          	//if this was the first one, get it in the session by nudging the change event.
+          	if ($("#ctl00_ddlCloudAccounts option").length == 1)
+          		$("#ctl00_ddlCloudAccounts").change();
+          	
             $("#edit_dialog").dialog('close');
 
             //leave any search string the user had entered, so just click the search button
             $("[id*='btnSearch']").click();
-
-
         } else {
             showAlert(result);
         }
-
     }
-
 }
 
 // Callback function invoked on failure of the MS AJAX page method.
 function OnUpdateFailure(error, userContext, methodName) {
-    //alert('failure');
     if (error !== null) {
         showAlert(error.get_message());
     }
@@ -335,11 +338,25 @@ function DeleteItems() {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (msg) {
+        	var do_refresh = false;
+        	
+        	//remove the selected ones from the cloud account dropdown
+			myArray = $("#hidSelectedArray").val().split(',');
+			$.each(myArray, function(name, value) {
+				//first, which one is selected?
+				var current = $("#mySelect option:selected").val();
+				//whack it
+				$('#ctl00_ddlCloudAccounts [value="' + value + '"]').remove();
+				//if we whacked what was selected, flag for change push
+				if (value == current)
+					do_refresh = true;
+			});
+            
+            if (do_refresh)
+            	$('#ctl00_ddlCloudAccounts').change();
+            
             //update the list in the dialog
-            var myArray = new Array();
-            var myArray = msg.d.split(',');
             if (msg.d.length == 0) {
-
                 $("#hidSelectedArray").val("");
                 $("#delete_dialog").dialog('close');
 
@@ -348,10 +365,8 @@ function DeleteItems() {
                 $("[id*='btnSearch']").click();
 
                 $("#update_success_msg").text("Delete Successful").show().fadeOut(2000);
-
             } else {
                 showAlert(msg.d);
-
             }
         },
         error: function (response) {
