@@ -2016,21 +2016,20 @@ namespace FunctionTemplates
                 + Environment.NewLine;
             sHTML += "<input type=\"text\"" +
                 " help=\"Select an Asset or enter a variable.\"" +
-                (!ui.IsGUID(sAssetID) ? " syntax=\"variable\"" : "") +
                 " step_id=\"" + sStepID + "\"" +
-                " class=\"code w300px\"" +
+                " class=\"code w400px\"" +
                 " is_required=\"true\"" +
                 " id=\"fn_new_connection_assetname_" + sStepID + "\"" +
-                (ui.IsGUID(sAssetID) ? " disabled=\"disabled\"" : "") +
                 " onchange=\"javascript:pushStepFieldChangeVia(this, '" + sElementID + "');\"" +
                 " value=\"" + sAssetName + "\" />" + Environment.NewLine;
 
-	    // 2011-10-11 - PMD - remove asset search box and clear button, issue # 34
+			
+			// 2011-10-11 - PMD - remove asset search box and clear button, issue # 34
             //sHTML += "<img class=\"fn_field_clear_btn pointer\" clear_id=\"fn_new_connection_assetname_" + sStepID + "\"" +
             //    " style=\"width:10px; height:10px;\" src=\"../images/icons/fileclose.png\"" +
             //    " alt=\"\" title=\"Clear\" />";
 
-	    // 2011-10-11 - PMD - remove asset search box and clear button, issue # 34
+	    	// 2011-10-11 - PMD - remove asset search box and clear button, issue # 34
             //sHTML += "<img class=\"asset_picker_btn pointer\" alt=\"\"" +
             //    " link_to=\"" + sElementID + "\"" +
             //    " target_field_id=\"fn_new_connection_assetname_" + sStepID + "\"" +
