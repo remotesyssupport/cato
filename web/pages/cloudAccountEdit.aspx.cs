@@ -30,35 +30,28 @@ namespace Web.pages
         dataAccess dc = new dataAccess();
         acUI.acUI ui = new acUI.acUI();
 
-        int iPageSize;
-
-        string sSQL = "";
-        string sErr = "";
-
         protected void Page_Load(object sender, EventArgs e)
         {
-            iPageSize = 50;
-
             if (!Page.IsPostBack)
             {
-                BindList();
+				Literal lt = new Literal();
+				lt.Text = GetAccounts("");
+				phAccounts.Controls.Add(lt);
             }
         }
 
+		public string GetAccounts(string sSearch) {
+            string sSQL = "";
+            string sErr = "";
+			string sWhereString = "";
 
-        private void BindList()
-        {
-
-            string sWhereString = "";
-
-            if (txtSearch.Text.Length > 0)
+            if (sSearch.Length > 0)
             {
                 //split on spaces
                 int i = 0;
-                string[] aSearchTerms = txtSearch.Text.Split(' ');
+                string[] aSearchTerms = sSearch.Split(' ');
                 for (i = 0; i <= aSearchTerms.Length - 1; i++)
                 {
-
                     //if the value is a guid, it's an existing task.
                     //otherwise it's a new task.
                     if (aSearchTerms[i].Length > 0)
@@ -77,51 +70,65 @@ namespace Web.pages
                 " where 1=1 " + sWhereString +
                 " order by is_default desc, account_name";
 
-
-
             DataTable dt = new DataTable();
             if (!dc.sqlGetDataTable(ref dt, sSQL, ref sErr))
             {
                 ui.RaiseError(Page, sErr, true, "");
             }
+			
+            string sHTML = "";
 
-            ui.SetSessionObject("CloudAccountList", dt, "SelectorListTables");
+            //the first DataColumn is the "id"
+            // string sIDColumnName = sDataColumns[0];
 
-            //now, actually get the data from the session table and display it
-            GetAccounts();
-        }
-        private void GetAccounts()
-        {
-            //here's how the paging works
-            //you can get at the data by explicit ranges, or by pages
-            //where pages are defined by properties
+            //buld the table
+            sHTML += "<table class=\"jtable\" cellspacing=\"1\" cellpadding=\"1\" width=\"99%\">";
+            sHTML += "<tr>";
+            sHTML += "<th class=\"chkboxcolumn\">";
+            sHTML += "<input type=\"checkbox\" class=\"chkbox\" id=\"chkAll\" />";
+            sHTML += "</th>";
 
-            //could come from a field on the page
-            int iStart = 0;
-            int iEnd = 0;
+            sHTML += "<th sortcolumn=\"account_name\">Account Name</th>";
+            sHTML += "<th sortcolumn=\"account_number\">Account Number</th>";
+            sHTML += "<th sortcolumn=\"account_type\">Type</th>";
+            sHTML += "<th sortcolumn=\"login_id\">Login ID</th>";
+            sHTML += "<th sortcolumn=\"is_default\">Default?</th>";
 
-            //this is the page number you want
-            int iPageNum = (string.IsNullOrEmpty(hidPage.Value) ? 1 : Convert.ToInt32(hidPage.Value));
-            DataTable dtTotal = (DataTable)ui.GetSessionObject("CloudAccountList", "SelectorListTables");
-            dtTotal.TableName = "CloudAccountList";
-            DataTable dt = ui.GetPageFromSessionTable(dtTotal, iPageSize, iPageNum, iStart, iEnd, hidSortColumn.Value, "");
+            sHTML += "</tr>";
 
-            rptAccounts.DataSource = dt;
-            rptAccounts.DataBind();
-
-            if ((dt != null))
+            //loop rows
+            foreach (DataRow dr in dt.Rows)
             {
-                if ((dtTotal.Rows.Count > iPageSize))
-                {
-                    Literal lt = new Literal();
-                    lt.Text = ui.DrawPager(dtTotal.Rows.Count, iPageSize, iPageNum);
-                    phPager.Controls.Add(lt);
-                }
-            }
-        }
+                sHTML += "<tr account_id=\"" + dr["account_id"].ToString() + "\">";
+                sHTML += "<td class=\"chkboxcolumn\">";
+                sHTML += "<input type=\"checkbox\" class=\"chkbox\"" +
+                    " id=\"chk_" + dr[0].ToString() + "\"" +
+                    " object_id=\"" + dr[0].ToString() + "\"" +
+                    " tag=\"chk\" />";
+                sHTML += "</td>";
 
+                sHTML += "<td tag=\"selectable\">" + dr["account_name"].ToString() +  "</td>";
+                sHTML += "<td tag=\"selectable\">" + dr["account_number"].ToString() +  "</td>";
+                sHTML += "<td tag=\"selectable\">" + dr["account_type"].ToString() +  "</td>";
+                sHTML += "<td tag=\"selectable\">" + dr["login_id"].ToString() +  "</td>";
+                sHTML += "<td tag=\"selectable\">" + dr["is_default"].ToString() +  "</td>";
+
+                sHTML += "</tr>";
+            }
+
+            sHTML += "</table>";
+			
+			return sHTML;
+		}
 
         #region "Web Methods"
+        [WebMethod(EnableSession = true)]
+        public static string wmGetAccounts(string sSearch)
+        {
+			cloudAccountEdit ca = new cloudAccountEdit();
+            return ca.GetAccounts(sSearch);
+        }
+	
         [WebMethod(EnableSession = true)]
         public static string DeleteAccounts(string sDeleteArray)
         {
@@ -172,23 +179,9 @@ namespace Web.pages
         }
 
         [WebMethod(EnableSession = true)]
-        public static string SaveAccount(object[] o)
+        public static string SaveAccount(string sMode, string sAccountID, string sAccountName, string sAccountNumber, string sAccountType, 
+			string sLoginID, string sLoginPassword, string sLoginPasswordConfirm, string sIsDefault, string sAutoManageSecurity)
         {
-
-            // we are passing in 16 elements, if we have 16 go
-            if (o.Length != 10) return "Incorrect list of attributes:" + o.Length.ToString();
-
-            string sAccountID = o[0].ToString();
-            string sAccountName = o[1].ToString().Replace("'", "''");
-            string sAccountNumber = o[2].ToString().Replace("'", "''");
-            string sAccountType = o[3].ToString();
-            string sLoginID = o[4].ToString();
-            string sLoginPassword = o[5].ToString();
-            //string sLoginPasswordConfirm = o[6].ToString();
-            string sIsDefault = o[7].ToString();
-            string sMode = o[8].ToString();
-            string sAutoManage = o[9].ToString();
-
             // for logging
             string sOriginalName = null;
 
@@ -227,7 +220,7 @@ namespace Web.pages
                         " account_number = '" + sAccountNumber + "'," +
                         " account_type = '" + sAccountType + "'," +
                         " is_default = '" + sIsDefault + "'," +
-                        " auto_manage_security = '" + sAutoManage + "'," +
+                        " auto_manage_security = '" + sAutoManageSecurity + "'," +
                         " login_id = '" + sLoginID + "'" +
                         sNewPassword +
                         " where account_id = '" + sAccountID + "'";
@@ -252,7 +245,7 @@ namespace Web.pages
                     "'" + sIsDefault + "'," +
                     "'" + sLoginID + "'," +
                     "'" + dc.EnCrypt(sLoginPassword) + "'," +
-                    "'" + sAutoManage + "')";
+                    "'" + sAutoManageSecurity + "')";
                 }
 
                 oTrans.Command.CommandText = sSql;
@@ -294,7 +287,7 @@ namespace Web.pages
 				throw new Exception(sErr);
 			
             // no errors to here, so return an empty string
-            return "{'account_id':'" + sAccountID + "', 'account_name':'" + sAccountName + "'}";
+            return "{'account_id':'" + sAccountID + "', 'account_name':'" + sAccountName + "', 'account_type':'" + sAccountType + "'}";
         }
 
         [WebMethod(EnableSession = true)]
@@ -543,22 +536,5 @@ namespace Web.pages
             return "";
         }
         #endregion
-
-        #region "Buttons"
-
-        protected void btnGetPage_Click(object sender, System.EventArgs e)
-        {
-            GetAccounts();
-        }
-        protected void btnSearch_Click(object sender, EventArgs e)
-        {
-            // we are searching so clear out the page value
-            hidPage.Value = "1";
-            BindList();
-        }
-
-
-        #endregion
-
     }
 }

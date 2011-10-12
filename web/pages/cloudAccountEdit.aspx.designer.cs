@@ -21,16 +21,8 @@ namespace Web.pages {
 		
 		protected System.Web.UI.WebControls.HiddenField hidPage;
 		
-		protected System.Web.UI.UpdatePanel uplList;
-		
 		protected System.Web.UI.WebControls.TextBox txtSearch;
 		
-		protected System.Web.UI.WebControls.ImageButton btnSearch;
-		
-		protected System.Web.UI.WebControls.Repeater rptAccounts;
-		
-		protected System.Web.UI.WebControls.PlaceHolder phPager;
-		
-		protected System.Web.UI.WebControls.Button btnGetPage;
+		protected System.Web.UI.WebControls.PlaceHolder phAccounts;
 	}
 }

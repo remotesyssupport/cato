@@ -47,67 +47,13 @@
         </div>
     </div>
     <div id="content">
-        <asp:UpdatePanel ID="uplList" runat="server" UpdateMode="Conditional">
-            <ContentTemplate>
-                <span id="lblItemsSelected">0</span> Items Selected <span id="clear_selected_btn">
-                </span><span id="item_create_btn">Create</span><span id="item_delete_btn">Delete</span>
-                <asp:TextBox ID="txtSearch" runat="server" class="search_text" />
-                <span id="item_search_btn">Search</span>
-                <asp:ImageButton ID="btnSearch" class="hidden" OnClick="btnSearch_Click" runat="server" />
-                <table class="jtable" cellspacing="1" cellpadding="1" width="99%">
-                    <asp:Repeater ID="rptAccounts" runat="server">
-                        <HeaderTemplate>
-                            <tr>
-                                <th class="chkboxcolumn">
-                                </th>
-                                <th sortcolumn="account_name">
-                                    Account Name
-                                </th>
-                                <th sortcolumn="account_number">
-                                    Account Number
-                                </th>
-                                <th sortcolumn="account_type">
-                                    Type
-                                </th>
-                                <th sortcolumn="login_id">
-                                    Login ID
-                                </th>
-                                <th sortcolumn="is_default">
-                                    Default?
-                                </th>
-                            </tr>
-                        </HeaderTemplate>
-                        <ItemTemplate>
-                            <tr account_id="<%# (((System.Data.DataRowView)Container.DataItem)["account_id"]) %>">
-                                <td class="chkboxcolumn" id="<%# (((System.Data.DataRowView)Container.DataItem)["account_id"]) %>">
-                                    <input type="checkbox" class="chkbox" id="chk_<%# (((System.Data.DataRowView)Container.DataItem)["account_id"]) %>"
-                                        account_id="<%# (((System.Data.DataRowView)Container.DataItem)["account_id"]) %>"
-                                        tag="chk" />
-                                </td>
-                                <td tag="selectable">
-                                    <%# (((System.Data.DataRowView)Container.DataItem)["account_name"]) %>
-                                </td>
-                                <td tag="selectable">
-                                    <%# (((System.Data.DataRowView)Container.DataItem)["account_number"]) %>
-                                </td>
-                                <td tag="selectable">
-                                    <%# (((System.Data.DataRowView)Container.DataItem)["account_type"]) %>
-                                </td>
-                                <td tag="selectable">
-                                    <%# (((System.Data.DataRowView)Container.DataItem)["login_id"]) %>
-                                </td>
-                                <td tag="selectable">
-                                    <%# (((System.Data.DataRowView)Container.DataItem)["is_default"]) %>
-                                </td>
-                            </tr>
-                        </ItemTemplate>
-                    </asp:Repeater>
-                </table>
-                <asp:PlaceHolder ID="phPager" runat="server"></asp:PlaceHolder>
-                <div class="hidden">
-                    <asp:Button ID="btnGetPage" runat="server" OnClick="btnGetPage_Click" /></div>
-            </ContentTemplate>
-        </asp:UpdatePanel>
+        <span id="lblItemsSelected">0</span> Items Selected <span id="clear_selected_btn">
+        </span><span id="item_create_btn">Create</span><span id="item_delete_btn">Delete</span>
+        <asp:TextBox ID="txtSearch" runat="server" class="search_text" />
+        <span id="item_search_btn">Search</span>
+		<div id="accounts">
+			<asp:PlaceHolder id="phAccounts" runat="server"></asp:PlaceHolder>
+		</div>
     </div>
     <div id="edit_dialog" class="hidden" title="Create Account">
         <div id="edit_dialog_tabs">
@@ -249,8 +195,5 @@
     </div>
     <div id="delete_dialog" class="hidden" title="Delete Account">
         Are you sure you want to delete these Accounts?
-    </div>
-    <div style="display: none;">
-        Anything you want to hide goes in here.
     </div>
 </asp:Content>

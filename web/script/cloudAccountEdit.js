@@ -125,12 +125,37 @@ $(document).ready(function () {
         $("#keypair_dialog").dialog('open');
     });
 
+
+	//override the search click button as defined on managepagecommon.js, because this page is now ajax!
+	$("#item_search_btn").die();
+	//and rebind it
+	$("#item_search_btn").live("click", function () {
+        GetAccounts();
+    });
 });
 
 function pageLoad() {
     ManagePageLoad();
 }
 
+function GetAccounts() {
+    $.ajax({
+        type: "POST",
+        async: false,
+        url: "cloudAccountEdit.aspx/wmGetAccounts",
+        data: '{"sSearch":"' + $("#ctl00_phDetail_txtSearch").val() + '"}',
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
+            $('#accounts').html(response.d);
+            //gotta restripe the table
+            initJtable(true, true);
+        },
+        error: function (response) {
+            showAlert(response.responseText);
+        }
+    });
+}
 
 function LoadEditDialog(editID) {
     clearEditDialog();
@@ -224,54 +249,49 @@ function SaveItem() {
         return false;
     }
 
-    var stuff = new Array();
-    stuff[0] = sAccountID;
-    stuff[1] = sAccountName;
-    stuff[2] = $("#txtAccountNumber").val();
-    stuff[3] = $("#ddlAccountType").val();
-    stuff[4] = $("#txtLoginID").val();
-    stuff[5] = $("#txtLoginPassword").val();
-    stuff[6] = $("#txtLoginPasswordConfirm").val();
-    stuff[7] = ($("#chkDefault").attr("checked") ? "1" : "0");
-    stuff[8] = $("#hidMode").val();
-    stuff[9] = ($("#chkAutoMamangeSecurity").attr("checked") ? "1" : "0");
+    var args = '{"sMode":"' + $("#hidMode").val() + '", \
+    	"sAccountID":"' + sAccountID + '", \
+        "sAccountName":"' + sAccountName + '", \
+        "sAccountNumber":"' + $("#txtAccountNumber").val() + '", \
+        "sAccountType":"' + $("#ddlAccountType").val() + '", \
+        "sLoginID":"' + $("#txtLoginID").val() + '", \
+        "sLoginPassword":"' + $("#txtLoginPassword").val() + '", \
+        "sLoginPasswordConfirm":"' + $("#txtLoginPasswordConfirm").val() + '", \
+        "sIsDefault":"' + ($("#chkDefault").attr("checked") ? "1" : "0") + '", \
+        "sAutoManageSecurity":"' + ($("#chkAutoManageSecurity").attr("checked") ? "1" : "0") + '"}';
 
-    if (stuff.length > 0) {
-        PageMethods.SaveAccount(stuff, OnUpdateSuccess, OnUpdateFailure);
-    } else {
-        showAlert('incorrect list of update attributes:' + stuff.length.toString());
-    }
-}
 
-// Callback function invoked on successful completion of the MS AJAX page method.
-function OnUpdateSuccess(result, userContext, methodName) {
-    if (methodName == "SaveAccount") {
-    	var ret = eval('(' + result + ')');
-    	
-        if (ret) {
-            //showInfo('Account Saved.');
-          	
-            $("#edit_dialog").dialog('close');
-
-            //leave any search string the user had entered, so just click the search button
-            $("[id*='btnSearch']").click();
-            
-            //add it to the cloud accounts dropdown
-            $('#ctl00_ddlCloudAccounts').append($('<option>', { value : ret.account_id }).text(ret.account_name)); 
-          	//if this was the first one, get it in the session by nudging the change event.
-          	if ($("#ctl00_ddlCloudAccounts option").length == 1)
-          		$("#ctl00_ddlCloudAccounts").change();
-        } else {
-            showAlert(result);
+	$.ajax({
+        type: "POST",
+        async: false,
+        url: "cloudAccountEdit.aspx/SaveAccount",
+        data: args,
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
+            var ret = eval('(' + response.d + ')');
+	        if (ret) {
+                // clear the search field and fire a search click, should reload the grid
+                $("[id*='txtSearch']").val("");
+				GetAccounts();
+	            
+	            $("#edit_dialog").dialog('close');
+	
+				//if we are adding a new one, add it to the dropdown too
+				if ($("#hidMode").val() == "add") {
+		            $('#ctl00_ddlCloudAccounts').append($('<option>', { value : ret.account_id }).text(ret.account_name + ' (' + ret.account_type + ')')); 
+		          	//if this was the first one, get it in the session by nudging the change event.
+		          	if ($("#ctl00_ddlCloudAccounts option").length == 1)
+		          		$("#ctl00_ddlCloudAccounts").change();
+          		}
+	        } else {
+	            showAlert(response.d);
+	        }
+        },
+        error: function (response) {
+            showAlert(response.responseText);
         }
-    }
-}
-
-// Callback function invoked on failure of the MS AJAX page method.
-function OnUpdateFailure(error, userContext, methodName) {
-    if (error !== null) {
-        showAlert(error.get_message());
-    }
+    });
 }
 
 function ShowItemAdd() {
@@ -364,7 +384,7 @@ function DeleteItems() {
 
                 // clear the search field and fire a search click, should reload the grid
                 $("[id*='txtSearch']").val("");
-                $("[id*='btnSearch']").click();
+				GetAccounts();
 
                 $("#update_success_msg").text("Delete Successful").show().fadeOut(2000);
             } else {

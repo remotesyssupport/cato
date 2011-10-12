@@ -96,6 +96,7 @@ $(document).ready(function () {
     });
     $("#item_search_btn").live("click", function () {
         //until we redo this all as ajax, our pretty button clicks the hidden ugly one
+        //NOTE: the cloud account edit page now uses ajax!  It's a template for fixing the others.
         $("#ctl00_phDetail_btnSearch").click();
     });
     
@@ -120,7 +121,7 @@ $(document).ready(function () {
     });
 
     //check/uncheck all checkboxes
-    $("#chkAll").click(function () {
+    $("#chkAll").live("click", function () {
         if (this.checked) {
             this.checked = true;
             $("[tag='chk']").attr("checked", true);
