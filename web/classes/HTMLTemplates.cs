@@ -519,9 +519,6 @@ namespace FunctionTemplates
                 case "substring":
                     sHTML = Substring(sStepID, sFunction, xd);
                     break;
-                case "send_email":
-                    sHTML = SendEmail(sStepID, sFunction, xd);
-                    break;
                 case "transfer":
                     sHTML = Transfer(sStepID, sFunction, xd);
                     break;
@@ -1816,73 +1813,6 @@ namespace FunctionTemplates
 
             return sHTML;
         }
-        public string SendEmail(string sStepID, string sFunction, XDocument xd)
-        {
-            XElement xTo = xd.XPathSelectElement("//to");
-            if (xTo == null) return "Error: XML does not contain to.";
-            XElement xSubject = xd.XPathSelectElement("//subject");
-            if (xSubject == null) return "Error: XML does not contain subject.";
-            XElement xBody = xd.XPathSelectElement("//body");
-            if (xBody == null) return "Error: XML does not contain body.";
-            XElement xAttach = xd.XPathSelectElement("//attachment");
-            if (xAttach == null) return "Error: XML does not contain attachment.";
-            XElement xAttachData = xd.XPathSelectElement("//attachment_data");
-            if (xAttachData == null) return "Error: XML does not contain attachment_data.";
-
-            string sTo = xTo.Value;
-            string sSubject = ui.SafeHTML(xSubject.Value);
-            string sBody = xBody.Value;
-            string sAttach = xAttach.Value;
-            string sAttachData = xAttachData.Value;
-            string sFieldID = "";
-            string sHTML = "";
-
-            sHTML += "<table width=\"99%\" border=\"0\">" + Environment.NewLine;
-
-            sHTML += "<tr><td class=\"w1pct\">To:&nbsp;&nbsp;</td>" + Environment.NewLine;
-            sHTML += "<td><input type=\"text\" " + CommonAttribs(sStepID, sFunction, true, "to", "w99pct") +
-                " help=\"Enter one or more valid email addresses, separated by comma.\"" +
-                " value=\"" + sTo + "\" /></td></tr>" + Environment.NewLine;
-
-            sHTML += "<tr><td class=\"w1pct\">Subject:&nbsp;&nbsp;</td>" + Environment.NewLine;
-            sHTML += "<td><input type=\"text\" " + CommonAttribs(sStepID, sFunction, true, "subject", "w99pct") +
-                " help=\"Enter a Subject for this message.\"" +
-                " value=\"" + sSubject + "\" /></td></tr>" + Environment.NewLine;
-
-            sHTML += "<tr><td class=\"w1pct\">Attach&nbsp;File:&nbsp;&nbsp;</td>" + Environment.NewLine;
-            sHTML += "<td><input type=\"text\" " + CommonAttribs(sStepID, sFunction, false, "attachment", "w99pct") +
-                " help=\"Enter a path/file to attach to this message.\"" +
-                " value=\"" + sAttach + "\" /></td></tr>" + Environment.NewLine;
-
-            // two text areas!  we gotta get the field id first, but don't show the textarea until after
-            string sCommonAttribs = CommonAttribs(sStepID, sFunction, false, "attachment_data", ref sFieldID, "");
-
-            sHTML += "<tr><td colspan=\"2\">Attach&nbsp;Data: " + Environment.NewLine;
-            //big box button
-            sHTML += "<img class=\"big_box_btn pointer\" alt=\"\"" +
-                " src=\"../images/icons/edit_16.png\"" +
-                " link_to=\"" + sFieldID + "\" /></td></tr>" + Environment.NewLine;
-            sHTML += "<tr><td>&nbsp;</td><td><textarea rows=\"2\" " + sCommonAttribs +
-                " help=\"Enter data that will (optionally) become the attachment file.\"" +
-                ">" + sAttachData + "</textarea></td></tr>" + Environment.NewLine;
-
-
-            //second textarea
-            sCommonAttribs = CommonAttribs(sStepID, sFunction, true, "body", ref sFieldID, "");
-
-            sHTML += "<tr><td colspan=\"2\">Message: " + Environment.NewLine;
-            //big box button
-            sHTML += "<img class=\"big_box_btn pointer\" alt=\"\"" +
-                " src=\"../images/icons/edit_16.png\"" +
-                " link_to=\"" + sFieldID + "\" /></td></tr>" + Environment.NewLine;
-            sHTML += "<tr><td>&nbsp;</td><td><textarea rows=\"2\" " + sCommonAttribs +
-                " help=\"Enter the body text of this message.\"" +
-                ">" + sBody + "</textarea></td></tr>" + Environment.NewLine;
-
-            sHTML += "</table>" + Environment.NewLine;
-
-            return sHTML;
-        }
         public string Question(string sStepID, string sFunction, XDocument xd)
         {
             XElement xInstructions = xd.XPathSelectElement("//instructions");
@@ -3125,9 +3055,6 @@ namespace FunctionTemplates
                 case "substring":
                     sHTML = Substring_View(sStepID, sFunction, xd);
                     break;
-                case "send_email":
-                    sHTML = SendEmail_View(sStepID, sFunction, xd);
-                    break;
                 case "transfer":
                     sHTML = Transfer_View(sStepID, sFunction, xd);
                     break;
@@ -3844,47 +3771,6 @@ namespace FunctionTemplates
             sOptionHTML += "Timeout: <span class=\"code\">" + sTimeout + "</span><br />";
             sOptionHTML += "Positive Response: <span class=\"code\">" + sPos + "</span><br />";
             sOptionHTML += "Negative Response: <span class=\"code\">" + sNeg + "</span>";
-
-            return sHTML;
-        }
-        public string SendEmail_View(string sStepID, string sFunction, XDocument xd)
-        {
-            XElement xTo = xd.XPathSelectElement("//to");
-            if (xTo == null) return "Error: XML does not contain to.";
-            XElement xSubject = xd.XPathSelectElement("//subject");
-            if (xSubject == null) return "Error: XML does not contain subject.";
-            XElement xBody = xd.XPathSelectElement("//body");
-            if (xBody == null) return "Error: XML does not contain body.";
-            XElement xAttach = xd.XPathSelectElement("//attachment");
-            if (xAttach == null) return "Error: XML does not contain attachment.";
-            XElement xAttachData = xd.XPathSelectElement("//attachment_data");
-            if (xAttachData == null) return "Error: XML does not contain attachment_data.";
-
-            string sTo = ui.SafeHTML(xTo.Value);
-            string sSubject = ui.SafeHTML(xSubject.Value);
-            string sBody = ui.SafeHTML(xBody.Value);
-            string sAttach = xAttach.Value;
-            string sAttachData = xAttachData.Value;
-            string sHTML = "";
-
-            sHTML += "<table width=\"98%\" border=\"0\">" + Environment.NewLine;
-
-            sHTML += "<tr><td class=\"w1pct\">To: </td>" + Environment.NewLine;
-            sHTML += "<td><span class=\"code\">" + sTo + "</span></td></tr>" + Environment.NewLine;
-
-            sHTML += "<tr><td class=\"w1pct\">Subject: </td>" + Environment.NewLine;
-            sHTML += "<td><span class=\"code\">" + sSubject + "</span></td></tr>" + Environment.NewLine;
-
-            sHTML += "<tr><td class=\"w1pct\">Attach File: </td>" + Environment.NewLine;
-            sHTML += "<td><span class=\"code\">" + sAttach + "</span></td></tr>" + Environment.NewLine;
-
-            sHTML += "<tr><td class=\"w1pct\">Attach Data: </td>" + Environment.NewLine;
-            sHTML += "<td><span class=\"code\">" + sAttachData + "</span></td></tr>" + Environment.NewLine;
-
-            sHTML += "<tr><td class=\"w1pct\">Message: </td>" + Environment.NewLine;
-            sHTML += "<td><div class=\"codebox\">" + sBody + "</div></td></tr>" + Environment.NewLine;
-
-            sHTML += "</table>" + Environment.NewLine;
 
             return sHTML;
         }
@@ -5227,7 +5113,11 @@ namespace FunctionTemplates
             string sNodeValue = xe.Value;
             string sNodeLabel = (xe.Attribute("label") == null ? xe.Name.ToString() : xe.Attribute("label").Value);
 
-            string sBreakAfter = (xe.Attribute("break_after") == null ? "" : xe.Attribute("break_after").Value);
+ 			string sLabelClasses = (xe.Attribute("label_class") == null ? "" : xe.Attribute("label_class").Value);
+			string sLabelStyle = (xe.Attribute("label_style") == null ? "" : xe.Attribute("label_style").Value);
+           	sNodeLabel = "<span class=\"" + sLabelClasses + "\" style=\"" + sLabelStyle + "\">" + sNodeLabel + ": </span>";
+			
+			string sBreakAfter = (xe.Attribute("break_after") == null ? "" : xe.Attribute("break_after").Value);
             string sHRAfter = (xe.Attribute("hr_after") == null ? "" : xe.Attribute("hr_after").Value);
             string sHelp = (xe.Attribute("help") == null ? "" : xe.Attribute("help").Value);
             string sCSSClasses = (xe.Attribute("class") == null ? "" : xe.Attribute("class").Value);
@@ -5244,7 +5134,7 @@ namespace FunctionTemplates
                 string sRows = (xe.Attribute("rows") == null ? "2" : xe.Attribute("rows").Value);
 
                 string sTextareaID = "";
-                sHTML += sNodeLabel + ": <textarea rows=\"" + sRows + "\"" +
+                sHTML += sNodeLabel + " <textarea rows=\"" + sRows + "\"" +
                     CommonAttribs(sStepID, sFunction, bRequired, sXPath, ref sTextareaID, sCSSClasses) +
                     " style=\"" + sStyle + "\"" +
                     " help=\"" + sHelp + "\"" +
@@ -5263,7 +5153,7 @@ namespace FunctionTemplates
                 string sDatasource = (xe.Attribute("datasource") == null ? "" : xe.Attribute("datasource").Value);
                 string sDataSet = (xe.Attribute("dataset") == null ? "" : xe.Attribute("dataset").Value);
 
-                sHTML += sNodeLabel + ": <select " + CommonAttribs(sStepID, sFunction, false, sXPath, "") + ">" + Environment.NewLine;
+                sHTML += sNodeLabel + " <select " + CommonAttribs(sStepID, sFunction, false, sXPath, "") + ">" + Environment.NewLine;
                 
                 //empty one
                 sHTML += "<option " + SetOption("", sNodeValue) + " value=\"\"></option>" + Environment.NewLine;
@@ -5315,7 +5205,7 @@ namespace FunctionTemplates
             }
             else //input is the default
             {
-                sHTML += sNodeLabel + ": <input type=\"text\" " +
+                sHTML += sNodeLabel + " <input type=\"text\" " +
                     CommonAttribs(sStepID, sFunction, bRequired, sXPath, sCSSClasses) +
                     " style=\"" + sStyle + "\"" +
                     " help=\"" + sHelp + "\"" +
