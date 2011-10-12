@@ -124,12 +124,12 @@ namespace ImportExport
 	                    if (!doLoadTasks(sPath + xFile.Value, sUserID, ref sErr)) return false;
 	                    continue;
 	                }
-	                if (xFile.Value.IndexOf("task_codeblocks") > -1)
+	                if (xFile.Value.IndexOf("codeblocks") > -1)
 	                {
 	                    if (!doLoadTaskCodeblocks(sPath + xFile.Value, sUserID, ref sErr)) return false;
 	                    continue;
 	                }
-	                if (xFile.Value.IndexOf("task_steps") > -1)
+	                if (xFile.Value.IndexOf("steps") > -1)
 	                {
 	                    if (!doLoadTaskSteps(sPath + xFile.Value, sUserID, ref sErr)) return false;
 	                    continue;
@@ -175,6 +175,10 @@ namespace ImportExport
             //THIS IS NOT DYNAMIC
             //sure, I could read the XML and create the tables based on the data, but why?
             XElement xe = xDoc.XPathSelectElement("tasks");
+			if (xe == null) {
+				sErr = "Tasks: Unable to continue - xml does not contain any records.";
+                return false;
+			}
             foreach (XElement xTask in xe.XPathSelectElements("task"))
             {
                 //gotta handle nulls for the XML fields
@@ -182,7 +186,7 @@ namespace ImportExport
                 if (xTask.Element("parameter_xml").FirstNode != null)
                     sParameterXML = xTask.Element("parameter_xml").FirstNode.ToString().Replace("'", "''");
 
-                sSQL += "insert into import_task " +
+                sSQL = "insert into import_task " +
                     "(user_id, task_id, original_task_id, version, task_code, task_name, task_desc, task_status," +
                     " use_connector_system, default_version, concurrent_instances, queue_depth," +
                     " parameter_xml, created_dt, src_task_code, src_task_name, src_version)" +
@@ -205,21 +209,15 @@ namespace ImportExport
                     "'" + xTask.Element("task_name").Value.Replace("'", "''") + "'," +
                     "'" + xTask.Element("version").Value.Replace("'", "''") + "'" +
                     ")";
-            }
-            if (sSQL.Length > 0)
-            {
-                if (!dc.sqlExecuteUpdate(sSQL, ref sErr))
-                    return false;
-
-                //scan the import table for any issues and update messages
-                if (!IdentifyTaskConflicts(sUserID, "", ref sErr))
+            	
+				if (!dc.sqlExecuteUpdate(sSQL, ref sErr))
                     return false;
             }
-            else
-            {
-                sErr = "Tasks: Unable to continue - xml does not contain any records.";
+            
+			//scan the import table for any issues and update messages
+            if (!IdentifyTaskConflicts(sUserID, "", ref sErr))
                 return false;
-            }
+            
             return true;
         }
         private bool doLoadTaskCodeblocks(string sXMLFile, string sUserID, ref string sErr)
@@ -234,25 +232,21 @@ namespace ImportExport
             }
 
             XElement xe = xDoc.XPathSelectElement("codeblocks");
+			if (xe == null) {
+				sErr = "Codeblocks: Unable to continue - xml does not contain any records.";
+                return false;
+			}
             foreach (XElement xCB in xe.XPathSelectElements("codeblock"))
             {
-                sSQL += "insert into import_task_codeblock " +
+                sSQL = "insert into import_task_codeblock " +
                     "(user_id, task_id, codeblock_name)" +
                     " values (" +
                     "'" + sUserID + "'," +
                     "'" + xCB.Element("task_id").Value.Replace("'", "''") + "'," +
                     "'" + xCB.Element("codeblock_name").Value.Replace("'", "''") + "'" +
                     ");" + Environment.NewLine;
-            }
-            if (sSQL.Length > 0)
-            {
                 if (!dc.sqlExecuteUpdate(sSQL, ref sErr))
                     return false;
-            }
-            else
-            {
-                sErr = "Codeblocks: Unable to continue - xml does not contain any records.";
-                return false;
             }
 
             return true;
@@ -266,6 +260,10 @@ namespace ImportExport
                 sErr = "XML data for task_step is empty.";
 
             XElement xe = xDoc.XPathSelectElement("steps");
+			if (xe == null) {
+				sErr = "Steps: Unable to continue - xml does not contain any records.";
+                return false;
+			}
             foreach (XElement xStep in xe.XPathSelectElements("step"))
             {
                 //since we have stored XML in XML, we have to get the "first node" of any of our XML fields.
@@ -274,7 +272,7 @@ namespace ImportExport
                     sVariableXML = xStep.Element("variable_xml").FirstNode.ToString().Replace("'", "''");
 
 
-                sSQL += "insert into import_task_step " +
+                sSQL = "insert into import_task_step " +
                     "(user_id, step_id, task_id, codeblock_name, step_order, commented, locked, function_name, function_xml, step_desc, output_parse_type, output_row_delimiter, output_column_delimiter, variable_xml)" +
                     " values (" +
                     "'" + sUserID + "'," +
@@ -292,16 +290,8 @@ namespace ImportExport
                     "'" + xStep.Element("output_column_delimiter").Value.Replace("'", "''") + "'," +
                     "'" + sVariableXML + "'" +
                     ");" + Environment.NewLine;
-            }
-            if (sSQL.Length > 0)
-            {
                 if (!dc.sqlExecuteUpdate(sSQL, ref sErr))
                     return false;
-            }
-            else
-            {
-                sErr = "Steps: Unable to continue - xml does not contain any records.";
-                return false;
             }
 
             return true;
@@ -936,54 +926,21 @@ namespace ImportExport
                     string sNewStepID = Guid.NewGuid().ToString();
 
 
-                    //this will return a datatable of xml sections that contain 
-                    // the guid of this step
+                    //this will update any references in function_xml with 
+                    // the new guid of this step
 
-                    //WE ARE DOING THIS only to get the node name
-                    //since different step types might have the value in a 
-                    //different node name
-                    oTrans.Command.CommandText = "select function_xml.query" +
-                        "('(//*[. = ''" + sOrigStepID + "''])[1]') as fxml" +
-                        " from import_task_step" +
-                        " where ifnull(function_xml.value" +
-                        " ('(//*[. = ''" + sOrigStepID + "''])[1]', 'varchar(36)'),'') <> ''";
-
-                    DataTable dtNodes = new DataTable();
-                    if (!oTrans.ExecGetDataTable(ref dtNodes, ref sErr))
+                    oTrans.Command.CommandText = "update import_task_step" +
+                        " set function_xml = replace(function_xml, '" + sOrigStepID + "', '" + sNewStepID + "')" +
+                        " where ifnull(ExtractValue(function_xml, '(//*[. = ''" + sOrigStepID + "''])'), '') <> ''";
+                    if (!oTrans.ExecUpdate(ref sErr))
                         throw new Exception(sErr);
 
-
-                    if (dtNodes.Rows.Count > 0)
-                    {
-                        //then for each of these results, we will update the function_xml
-                        //with the new id
-                        foreach (DataRow drNodes in dtNodes.Rows)
-                        {
-                            //what is the name of the node?
-                            XDocument xD = XDocument.Parse(drNodes["fxml"].ToString());
-                            if (xD == null)
-                                throw new Exception("XML piece for step [" + sOrigStepID + "] is invalid.");
-
-                            string sNode = ((XElement)(xD.FirstNode)).Name.LocalName;
-
-                            oTrans.Command.CommandText = "update import_task_step" +
-                                " set function_xml.modify(" +
-                                "'replace value of (//" + sNode + "/text())[1] with \"" + sNewStepID + "\"'" +
-                                ")" +
-                                " where ifnull(function_xml.value" +
-                                " ('(//" + sNode + "[. = ''" + sOrigStepID + "''])[1]', 'varchar(36)'),'') <> ''";
-                            if (!oTrans.ExecUpdate(ref sErr))
-                                throw new Exception(sErr);
-                        }
-                    }
-
-                    //then finally, we will update the actual step row with the new id
+                    //then finally, we will update the actual step rows with the new id
                     oTrans.Command.CommandText = "update import_task_step" +
                         " set step_id = '" + sNewStepID + "'" +
                         " where step_id = '" + sOrigStepID + "'";
                     if (!oTrans.ExecUpdate(ref sErr))
                         throw new Exception(sErr);
-
 
                 }
             }

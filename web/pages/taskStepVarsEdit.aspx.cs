@@ -13,6 +13,7 @@
 //limitations under the License.
 //
 using System;
+using System.Collections;
 using System.Data;
 using System.Linq;
 using System.Web.Services;
@@ -142,7 +143,7 @@ namespace Web.pages
             {
                 //[0 - var type], [1 - var_name], [2 - left property], [3 - right property]
 
-                object[] oVar = (object[])oVarArray[i];
+                ArrayList oVar = (ArrayList)oVarArray[i];
 
                 //I'm just declaring named variable here for readability
                 string sVarName = oVar[0].ToString();  //no case conversion

@@ -609,7 +609,6 @@ tr.row_header td
 	font-weight: bold;
 	color: #2c2c2c;
 	padding: 2px 4px 3px 4px;
-	background: url( 'images/variables_bg.png' ) repeat-x scroll;
 }
 
 .variable_name

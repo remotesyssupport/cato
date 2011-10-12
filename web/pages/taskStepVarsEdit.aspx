@@ -4,10 +4,6 @@
 <asp:Content ID="cHead" ContentPlaceHolderID="phHead" runat="server">
     <link type="text/css" href="../style/taskEdit.css" rel="stylesheet" />
     <link type="text/css" href="../style/taskSteps.css" rel="stylesheet" />
-    <script type="text/javascript" src="../script/jquery/jquery-1.6.1.js"></script>
-    <script type="text/javascript" src="../script/jquery/jquery-ui-1.8.12.js"></script>
-    <script type="text/javascript" src="../script/MainScript.js"></script>
-    <script type="text/javascript" src="../script/validation.js"></script>
     <script type="text/javascript" src="../script/taskedit/taskStepVarsEdit.js"></script>
 <style type="text/css">
         .delimiter_label

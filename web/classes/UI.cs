@@ -539,7 +539,7 @@ namespace acUI
                 }
             }
 
-            return sReturn;
+            return SafeHTML(sReturn);
         }
         public string SafeHTML(string sInput)
         {

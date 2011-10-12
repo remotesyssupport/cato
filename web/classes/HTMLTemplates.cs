@@ -5313,7 +5313,7 @@ namespace FunctionTemplates
             string sHRAfter = (xe.Attribute("hr_after") == null ? "" : xe.Attribute("hr_after").Value);
             
 			//use input_type at some future point if needed
-			string sInputType = (xe.Attribute("input_type") == null ? "" : xe.Attribute("input_type").Value);
+			//string sInputType = (xe.Attribute("input_type") == null ? "" : xe.Attribute("input_type").Value);
 
             sHTML += sNodeLabel + ": " + "<span class=\"code\">" + sNodeValue + "</span>" + Environment.NewLine;
 
