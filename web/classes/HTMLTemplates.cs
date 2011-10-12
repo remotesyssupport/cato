@@ -2896,11 +2896,11 @@ namespace FunctionTemplates
             sHTML += "</select>" + Environment.NewLine;
             //" + SetOption(dr["connection_type"].ToString(), sConnType) + "
             //            sHTML += "Compare To: " + Environment.NewLine;
-            sHTML += "<input type=\"text\" " + CommonAttribs(sStepID, sFunction, true, "compare_to", "w200px") +
+            sHTML += "<input type=\"text\" " + CommonAttribs(sStepID, sFunction, true, "compare_to", "w400px") +
                 " help=\"Loop until variable compared with this value becomes 'false'.\" value=\"" + sCompareTo + "\" />" + Environment.NewLine;
 
 
-            sHTML += " or " + Environment.NewLine;
+            sHTML += "<br /> or " + Environment.NewLine;
             sHTML += "<input type=\"text\" " + CommonAttribs(sStepID, sFunction, false, "max", "w50px") +
                 " help=\"For safety, enter a maximum number of times to loop before aborting.\" value=\"" + sMax + "\" /> loops have occured." + Environment.NewLine;
 
@@ -5051,7 +5051,18 @@ namespace FunctionTemplates
 
         private string DrawReadOnlyStepFromXMLDocument(ref XDocument xd, string sStepID, string sFunction)
         {
-            return "Read only dynamic steps not yet implemented.";
+            string sHTML = "";
+            if (xd.XPathSelectElement("//function") != null)
+            {
+                foreach (XElement xe in xd.XPathSelectElement("//function").Nodes())
+                {
+                    sHTML += DrawReadOnlyNode(xe, xe.Name.ToString(), sStepID, sFunction);
+                }
+            }
+
+            if (sHTML.Length == 0)
+                sHTML = "Error: Unable to identify any input fields in the XML for this command.";
+            return sHTML;
         }
 
         private string DrawStepFromXMLDocument(ref XDocument xd, string sStepID, string sFunction)
@@ -5079,8 +5090,6 @@ namespace FunctionTemplates
                 sHTML = "Error: Unable to identify any input fields in the XML for this command.";
             return sHTML;
         }
-
-
         private string DrawNode(XElement xeNode, string sXPath, string sStepID, string sFunction)
         {
             string sHTML = "";
@@ -5211,7 +5220,6 @@ namespace FunctionTemplates
 
             return sHTML;
         }
-
         private string DrawField(XElement xe, string sXPath, string sStepID, string sFunction)
         {
             string sHTML = "";
@@ -5322,6 +5330,113 @@ namespace FunctionTemplates
 
             return sHTML;
         }
+		
+        private string DrawReadOnlyNode(XElement xeNode, string sXPath, string sStepID, string sFunction)
+        {
+            string sHTML = "";
+
+            string sNodeName = xeNode.Name.ToString();
+            string sNodeLabel = (xeNode.Attribute("label") == null ? xeNode.Name.ToString() : xeNode.Attribute("label").Value);
+
+            IDictionary<string, int> dictNodes = new Dictionary<string, int>();
+
+            string sIsEditable = (xeNode.Attribute("is_array") == null ? "" : xeNode.Attribute("is_array").Value);
+            bool bIsEditable = dc.IsTrue(sIsEditable);
+
+            //if a node has children we'll draw it with some hierarchical styling.
+            //AND ALSO if it's editable, even if it has no children, we'll still draw it as a container.
+            if (xeNode.HasElements || bIsEditable)
+            {
+                //if there is only one child, AND it's not part of an array
+                //don't draw the header or the bounding box, just a composite field label.
+                if (xeNode.Nodes().Count() == 1 && !bIsEditable)
+                {
+                    //get the first (and only) node
+                    XElement xeOnlyChild = xeNode.XPathSelectElement("*[1]");
+                    //call DrawNode just on the off chance it actually has children
+                    string sChildXPath = sXPath + "/" + xeOnlyChild.Name.ToString();
+                    sHTML += sNodeName + "." + DrawReadOnlyNode(xeOnlyChild, sChildXPath, sStepID, sFunction);
+                }
+                else //there is more than one child... business as usual
+                {
+                    sHTML += "<div class=\"ui-widget-content ui-corner-bottom step_group\">"; //this section
+
+                    sHTML += "  <div class=\"ui-state-default step_group_header\">"; //header
+                    sHTML += "      <div class=\"step_header_title\">" + sNodeLabel + "</div>";
+
+                    sHTML += "  </div>"; //end header
+
+                    foreach (XElement xeChildNode in xeNode.Nodes())
+                    {
+                        string sChildNodeName = xeChildNode.Name.ToString();
+                        string sChildXPath = sXPath + "/" + xeChildNode.Name.ToString();
+
+                        //here's the magic... are there any children nodes here with the SAME NAME?
+                        //if so they need an index on the xpath
+                        if (xeNode.XPathSelectElements(sChildNodeName).Count() > 1)
+                        {
+                            //since the document won't necessarily be in perfect order,
+                            //we need to keep track of same named nodes and their indexes.
+                            //so, stick each array node up in a lookup table.
+
+                            //is it already in my lookup table?
+                            int iLastIndex = 0;
+                            dictNodes.TryGetValue(sChildNodeName, out iLastIndex);
+                            if (iLastIndex == 0)
+                            {
+                                //not there, add it
+                                iLastIndex = 1;
+                                dictNodes.Add(sChildNodeName, iLastIndex);
+                            }
+                            else
+                            {
+                                //there, increment it and set it
+                                iLastIndex++;
+                                dictNodes[sChildNodeName] = iLastIndex;
+                            }
+
+                            sChildXPath = sChildXPath + "[" + iLastIndex.ToString() + "]";
+                        }
+
+                        sHTML += DrawReadOnlyNode(xeChildNode, sChildXPath, sStepID, sFunction);
+
+                    }
+
+                    sHTML += "</div>"; //end section
+                }
+            }
+            else
+            {
+                sHTML += DrawReadOnlyField(xeNode, sXPath, sStepID, sFunction);
+            }
+
+            return sHTML;
+        }
+        private string DrawReadOnlyField(XElement xe, string sXPath, string sStepID, string sFunction)
+        {
+            string sHTML = "";
+
+            string sNodeValue = xe.Value;
+            string sNodeLabel = (xe.Attribute("label") == null ? xe.Name.ToString() : xe.Attribute("label").Value);
+
+            string sBreakAfter = (xe.Attribute("break_after") == null ? "" : xe.Attribute("break_after").Value);
+            string sHRAfter = (xe.Attribute("hr_after") == null ? "" : xe.Attribute("hr_after").Value);
+            
+			//use input_type at some future point if needed
+			string sInputType = (xe.Attribute("input_type") == null ? "" : xe.Attribute("input_type").Value);
+
+            sHTML += sNodeLabel + ": " + "<span class=\"code\">" + sNodeValue + "</span>" + Environment.NewLine;
+
+			//some final layout possibilities
+            if (sBreakAfter == "true")
+                sHTML += "<br />";
+            if (sHRAfter == "true")
+                sHTML += "<hr />";
+
+            return sHTML;
+        }
+		
+
 
         #region "Command XML Helper Functions"
         public void AddToCommandXML(string sStepID, string sXPath, string sXMLToAdd)

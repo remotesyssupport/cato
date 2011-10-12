@@ -232,7 +232,7 @@ function doDetailFieldUpdate(ctl) {
                     $("#update_success_msg").text("Update Successful").fadeOut(2000);
 
                     // bugzilla 1037 Change the name in the header
-                    if (column == "task_name") { $("#ctl00_phDetail_lblTaskNameHeader").html(unescape(value)); };
+                    if (column == "task_name") { $("#ctl00_phDetail_lblTaskNameHeader").html(unpackJSON(value)); };
                 }
 
 
