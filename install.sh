@@ -67,6 +67,9 @@ then
 	#just the dll's not the extras
 	rsync -q web/bin/*.dll $DEPLOY_DIR/web/bin/
 
+	#the temp directory
+	mkdir -p $DEPLOY_DIR/web/temp
+
 	#explicit local files
 	rsync -q web/*.aspx $DEPLOY_DIR/web/
 	rsync -q web/*.htm $DEPLOY_DIR/web/
