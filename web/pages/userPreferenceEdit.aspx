@@ -3,13 +3,6 @@
 
 
 <asp:Content ID="Content1" ContentPlaceHolderID="phDetail" runat="server">
-
-    <script type="text/javascript">
-        function pageLoad() {
-            $("#left_tooltip_box_inner").corner("round 8px").parent().css('padding', '2px').corner("round 10px");
-        }
-    </script>
-
     <asp:UpdatePanel ID="udpUserPreferences" runat="server">
         <ContentTemplate>
             <div id="left_panel">

@@ -18,11 +18,6 @@ $(document).ready(function () {
     //used a lot
     g_task_id = $("[id$='hidTaskID']").val();
 
-    // Round the corners of all the pill buttons in the task edit panel
-    //    $('.command_item').corner("round 4px");
-    //    $('.version').corner("round 4px");
-    //    $('.codeblock').corner("round 4px");
-
     //fix certain ui elements to not have selectable text
     $("#toolbox .toolbox_tab").disableSelection();
     $("#toolbox .codeblock").disableSelection();

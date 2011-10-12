@@ -29,7 +29,6 @@
     <!--jQuery -->
     <script type="text/javascript" src="../script/jquery/jquery-1.6.1.js"></script>
     <script type="text/javascript" src="../script/jquery/jquery-ui-1.8.12.js"></script>
-    <script type="text/javascript" src="../script/jquery/jquery.corner.js"></script>
     <!-- Plugins -->
     <script type="text/javascript" src="../script/jquery/jquery.blockUI.js"></script>
     <script type="text/javascript" src="../script/jquery/jquery.textarea.js"></script>

@@ -215,13 +215,13 @@ body
 {
 	margin-top: 10px;
 	margin-left: 10px;
-	background: #111;
 }
 
 #left_tooltip_box_inner
 {
 	background: #eee3d0;
 	padding: 8px 6px 18px 8px;
+	border-radius: 10px;
 }
 
 #left_tooltip_box_inner p

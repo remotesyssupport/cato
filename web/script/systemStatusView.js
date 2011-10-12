@@ -14,10 +14,6 @@
 //
 
 $(document).ready(function () {
-
-    $("#left_tooltip_box_inner").corner("round 8px").parent().css('padding', '2px').corner("round 10px");
-
-
     initJtable();
 
     //the hook for the 'show log' link

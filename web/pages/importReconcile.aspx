@@ -20,7 +20,6 @@
 
     <script type="text/javascript">
         $(document).ready(function() {
-            $("#left_tooltip_box_inner").corner("round 8px").parent().css('padding', '2px').corner("round 10px");
             // clear the edit array
             $("#hidTaskArray").val("");
 

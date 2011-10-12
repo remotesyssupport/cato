@@ -58,8 +58,6 @@ $(document).ready(function() {
 
 
 
-    $("#left_tooltip_box_inner").corner("round 8px").parent().css('padding', '2px').corner("round 10px");
-
     // where to go when you click on an automated task row
     $("[tag='selectAutoTask']").live("click", function() {
         location.href = 'taskActivityLog.aspx?status=' + $(this).attr("status");

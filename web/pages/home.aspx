@@ -21,7 +21,4 @@
     </div>
     <div id="multi_asset_picker_dialog" class="hidden" title="Search for Assets">
     </div>
-    <script type="text/javascript">
-        $("#left_tooltip_box_inner").corner("round 8px").parent().css('padding', '2px').corner("round 10px"); 
-    </script>
 </asp:Content>

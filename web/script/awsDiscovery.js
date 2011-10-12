@@ -18,8 +18,6 @@
 
 //only fires on initial load of the page.
 $(document).ready(function () {
-    $("#left_tooltip_box_inner").corner("round 8px").parent().css('padding', '2px').corner("round 10px");
-
     // nice, clear all checkboxes selected in a single line!
     $(':input', (".jtable")).attr('checked', false);
 
