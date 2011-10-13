@@ -339,6 +339,10 @@ function ShowTaskLaunchDialog(jsonargs) {
     if (args.action_id)
         $("#task_launch_dialog_action_id").val(args.action_id);
 
+	//if a debug level was passed, set it
+	if (args.debug_level && args.debug_level != "")
+		$('#task_launch_dialog_debug_level option[value=' + args.debug_level + ']').attr('selected', 'selected');
+
 
     //ALL DONE WITH Arguments... now let's build out the dialog...
 

@@ -134,6 +134,7 @@ namespace Web.pages
 
                     hidTaskID.Value = dr["task_id"].ToString();
                     hidAssetID.Value = dr["asset_id"].Equals(System.DBNull.Value) ? "" : dr["asset_id"].ToString();
+                    hidDebugLevel.Value = dr["debug_level"].Equals(System.DBNull.Value) ? "" : dr["debug_level"].ToString();
 
                     lblTaskInstance.Text = dr["task_instance"].ToString();
                     lblTaskName.Text = dr["task_name"].ToString() + " - Version " + dr["version"].ToString();

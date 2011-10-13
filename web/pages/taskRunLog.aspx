@@ -153,4 +153,5 @@
     <asp:HiddenField ID="hidSubmittedByInstance" runat="server" Value="" />
     <asp:HiddenField ID="hidRows" runat="server" Value="100" />
     <asp:HiddenField ID="hidCELogFile" runat="server" />
+    <asp:HiddenField ID="hidDebugLevel" runat="server" />
 </asp:Content>

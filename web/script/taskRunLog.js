@@ -130,8 +130,9 @@ $(document).ready(function () {
                 var account_id = $("#ctl00_phDetail_hidAccountID").val();
                 var account_name = $("#ctl00_phDetail_lblAccountName").val();
                 var instance = $("#ctl00_phDetail_hidInstanceID").val();
+                var debug_level = $("#ctl00_phDetail_hidDebugLevel").val();
 
-				var args = '{"task_id":"' + task_id + '", "task_name":"' + task_name + '"';
+				var args = '{"task_id":"' + task_id + '", "task_name":"' + task_name + '", "debug_level":"' + debug_level + '"';
         
 				if (account_id)
 					args += ', "account_id":"' + account_id + '", "account_name":"' + account_name + '"';

@@ -72,5 +72,7 @@ namespace Web.pages {
 		protected System.Web.UI.WebControls.HiddenField hidRows;
 		
 		protected System.Web.UI.WebControls.HiddenField hidCELogFile;
+		
+		protected System.Web.UI.WebControls.HiddenField hidDebugLevel;
 	}
 }

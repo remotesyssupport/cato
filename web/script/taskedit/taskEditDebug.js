@@ -61,7 +61,7 @@ $(document).ready(function () {
         var account_id = $("#ctl00_ddlCloudAccounts").val();
         var account_name = $("#ctl00_ddlCloudAccounts :selected").text();
 
-        var args = '{"task_id":"' + task_id + '", "task_name":"' + task_name + '"';
+        var args = '{"task_id":"' + task_id + '", "task_name":"' + task_name + '", "debug_level":"4"';
         
         if (account_id)
         	args += ', "account_id":"' + account_id + '", "account_name":"' + account_name + '"';
