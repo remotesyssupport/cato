@@ -573,7 +573,12 @@ function RunRepeatedly() {
     var ttarr = ReadTimetable();
     var tt = jQuery.parseJSON(ttarr);
 
-
+    if (tt.months == "" || tt.days == "" || tt.hrs == "" || tt.mins == "" || tt.dorw == "")
+    {
+        showInfo("Please select a complete schedule - at least one item from each section.");
+		return;
+	}
+	
     //build the XML from the dialog
     var parameter_xml = packJSON(buildXMLToSubmit());
 
