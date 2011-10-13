@@ -55,9 +55,22 @@ $(document).ready(function () {
 
 //This function shows the error dialog.
 function showAlert(msg, info) {
+	var trace = '';
+	
+	// in many cases, the "msg" will be a json object with a stack trace
+	//see if it is...
+	var o = eval('(' + msg + ')');
+	
+	if (o.Message) 
+ 	{
+ 		msg = o.Message;
+		var trace = o.StackTrace;
+	}
+	
     hidePleaseWait();
     $("#error_dialog_message").html(msg);
     $("#error_dialog_info").html(info);
+    $("#error_dialog_trace").html(trace);
     $("#error_dialog").dialog('open');
     //$.blockUI({ message: null });
     //$("#fullcontent").block({ message: null });

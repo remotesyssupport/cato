@@ -312,6 +312,10 @@
             <p>
                 <span id="error_dialog_info"></span>
             </p>
+            <p class="ui-widget-content ui-corner-bottom ui-state-error" style="overflow: auto; padding: 4px; font-size: .7em; margin-top:10px;">
+                Stack Trace: <br />
+				<span id="error_dialog_trace"></span>
+            </p>
         </div>
         <!-- End popup error message dialog template.  -->
         <!-- This is the slide up informational message template. -->

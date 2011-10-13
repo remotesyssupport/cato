@@ -587,28 +587,6 @@ function doUpdate() {
 
 }
 
-//This function shows the error dialog.
-function showAlert(msg, info) {
-    $("#error_dialog_message").html(msg);
-    $("#error_dialog_info").html(info);
-    $("#error_dialog").dialog("open");
-}
-
-//This function shows the info dialog.
-function showInfo(msg, info) {
-    $("#info_dialog_message").html(msg);
-    $("#info_dialog_info").html(info);
-    $("#info_dialog").dialog("open");
-
-    //set it to auto close after 1 seconds
-    setTimeout('hideInfo()', 1000);
-}
-
-//This function hides the info dialog.
-function hideInfo() {
-    $("#info_dialog").dialog('close');
-}
-
 function OnSuccess(result, userContext, methodName) {
     step_id = $("#ctl00_phDetail_hidStepID").val();
     self.opener.getStep(step_id, step_id, true);

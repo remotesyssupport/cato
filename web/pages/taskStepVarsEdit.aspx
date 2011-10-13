@@ -71,31 +71,6 @@
         <asp:HiddenField ID="hidColDelimiter" runat="server" />
         <input type="hidden" id="delimiter_picker_target" />
     </div>
-    <!-- jQuery Popups. -->
-    <!-- This is the popup error message dialog template.  -->
-    <div class="hidden">
-        <div id="error_dialog" title="Error" class="ui-state-error">
-            <p>
-                <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 50px 0;"></span>
-                <span id="error_dialog_message"></span>
-            </p>
-            <p>
-                <span id="error_dialog_info"></span>
-            </p>
-        </div>
-        <!-- End popup error message dialog template.  -->
-        <!-- This is the slide up informational message template. -->
-        <div id="info_dialog" title="Info" class="ui-state-highlight">
-            <p>
-                <span class="ui-icon ui-icon-info" style="float: left; margin: 0 7px 50px 0;"></span>
-                <span id="info_dialog_message"></span>
-            </p>
-            <p>
-                <span id="info_dialog_info"></span>
-            </p>
-        </div>
-        <!-- End slide up informational message template. -->
-    </div>
     <div id="delimiter_picker_dialog" title="Select a Delimiter">
         <ol id="ol_delimiters">
             <li id="d_9" class="delimiter" val="9">TAB</li>

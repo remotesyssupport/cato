@@ -2946,7 +2946,11 @@ namespace ACWebMethods
         [WebMethod(EnableSession = true)]
         public string wmGetRecurringPlan(string sScheduleID)
         {
-            dataAccess dc = new dataAccess();
+			//tracing this backwards, if the action_plan table has a row marked "schedule" but no schedule_id, problem.
+            if (string.IsNullOrEmpty(sScheduleID))
+            	throw new Exception("Unable to retrieve Reccuring Plan - schedule id argument not provided.");
+			
+			dataAccess dc = new dataAccess();
             string sSQL = null;
             string sErr = null;
 

@@ -684,7 +684,7 @@ function SaveRecurringPlan() {
             $("#update_success_msg").text("Update Successful").fadeOut(2000);
 
             //change to the "Plan" tab so the user knows something happened
-            getPlans();
+            getPlans();  //this refreshes the plans tabs because labels have changed.
             $('#task_launch_dialog_schedule').tabs('select', 3);
         },
         error: function (response) {
@@ -712,6 +712,7 @@ function SavePlan() {
             $("#update_success_msg").text("Update Successful").fadeOut(2000);
 
             //change to the "Plan" tab so the user knows something happened
+            //unlike SaveRecurringPlan - no need to refresh the plan tab here
             $('#task_launch_dialog_schedule').tabs('select', 3);
         },
         error: function (response) {
