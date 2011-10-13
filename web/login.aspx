@@ -67,9 +67,9 @@
                             </td>
                         </tr>
                     </table>
-                    <div class="loginforgot">
+                    <div>
                         <a class="pointer" onclick="$('#btnForgotPassword').click();">Forgot password?
-                            <img src="images/icons/password.png" alt="" style="border: none; position: absolute;" />
+                            <img src="images/icons/password.png" alt="" style="vertical-align: top;" />
                         </a>
                         <div style="display: none;">
                             <asp:Button ID="btnForgotPassword" runat="server" Text="testlogout" OnClick="ForgotPassword_Click" /></div>
