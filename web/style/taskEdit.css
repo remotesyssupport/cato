@@ -580,19 +580,10 @@ textarea
 tr.row td
 {
 	padding: 1px 1px 1px 3px;
-	border: 1px solid #C5DBEC;
+	border: 1px solid #c5dbec;
+	background: #fcfdfd;
 }
-tr.row_alt td
-{
-	background: #dddddd;
-}
-tr.row_header td
-{
-	background: #C5DBEC;
-	font-weight: bold;
-	padding: 0px 0px 0px 4px;
-	border: 1px solid #C5DBEC;
-}
+
 
 
 

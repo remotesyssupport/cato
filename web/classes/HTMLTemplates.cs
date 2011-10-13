@@ -4555,8 +4555,8 @@ namespace FunctionTemplates
                         string sName = ui.SafeHTML(xVar.Element("name").Value);
                         string sType = xVar.Element("type").Value.ToLower();
 
-                        sHTML += "<tr class=\"row\">";
-                        sHTML += "<td><span class=\"code\">" + sName + "</span></td>";
+                        sHTML += "<tr>";
+                        sHTML += "<td class=\"row\"><span class=\"code\">" + sName + "</span></td>";
 
                         switch (sType)
                         {
@@ -4591,20 +4591,20 @@ namespace FunctionTemplates
 
 
 
-                                sHTML += "<td>Characters in Range:</td><td><span class=\"code\">" + ui.SafeHTML(sLProp) + " - " + ui.SafeHTML(sRProp) + "</span></td>";
+                                sHTML += "<td class=\"row\">Characters in Range:</td><td class=\"row\"><span class=\"code\">" + ui.SafeHTML(sLProp) + " - " + ui.SafeHTML(sRProp) + "</span></td>";
                                 break;
 
 
                             case "delimited":
-                                sHTML += "<td>Value at Index Position:</td><td><span class=\"code\">" + ui.SafeHTML(xVar.Element("position").Value) + "</span></td>";
+                                sHTML += "<td class=\"row\">Value at Index Position:</td><td class=\"row\"><span class=\"code\">" + ui.SafeHTML(xVar.Element("position").Value) + "</span></td>";
                                 break;
 
 
                             case "regex":
-                                sHTML += "<td>Regular Expression:</td><td><span class=\"code\">" + ui.SafeHTML(xVar.Element("regex").Value) + "</span></td>";
+                                sHTML += "<td class=\"row\">Regular Expression:</td><td class=\"row\"><span class=\"code\">" + ui.SafeHTML(xVar.Element("regex").Value) + "</span></td>";
                                 break;
                             case "xpath":
-                                sHTML += "<td>Xpath:</td><td><span class=\"code\">" + ui.SafeHTML(xVar.Element("xpath").Value) + "</span></td>";
+                                sHTML += "<td class=\"row\">Xpath:</td><td class=\"row\"><span class=\"code\">" + ui.SafeHTML(xVar.Element("xpath").Value) + "</span></td>";
                                 break;
                             default:
                                 sHTML += "INVALID TYPE";

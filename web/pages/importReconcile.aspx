@@ -140,10 +140,8 @@
 
         }
         function pageLoad() {
-
-            $('#tblList tr').addClass('row');
-            $('#tblList tr:even').addClass('row_alt');
-
+			initJtable(true, true);
+		
             //this spins thru the check boxes on the page and builds the array.
             //yes it rebuilds the list on every selection, but it's fast.
             $("[tag='task_chk']").change(function() {
@@ -317,26 +315,28 @@
                 edit conflicts.)
                 <hr />
                 <input type="checkbox" class="chkbox" id="task_chkAll" /><b>TASKS:</b>
-                <table id="tblList" cellspacing="1" cellpadding="1" width="99%">
-                    <tr class="row_header">
-                        <td class="chkboxcolumn">
-                        </td>
-                        <td class="col_header" sortcolumn="task_code">
-                            Task Code
-                        </td>
-                        <td class="col_header" sortcolumn="task_name">
-                            Task Name
-                        </td>
-                        <td class="col_header" sortcolumn="version">
-                            Version
-                        </td>
-                        <td class="col_header">
-                            Conflict
-                        </td>
-                        <td class="col_header">
-                            Import As
-                        </td>
-                    </tr>
+                <table class="jtable" cellspacing="1" cellpadding="1" width="99%">
+                    <thead>
+						<tr>
+	                        <th class="chkboxcolumn">
+	                        </th>
+	                        <th>
+	                            Task Code
+	                        </th>
+	                        <th>
+	                            Task Name
+	                        </th>
+	                        <th>
+	                            Version
+	                        </th>
+	                        <th>
+	                            Conflict
+	                        </th>
+	                        <th>
+	                            Import As
+	                        </th>
+	                    </tr>
+					</thead>
 	                <asp:Repeater ID="rpTasks" runat="server">
 	                    <ItemTemplate>
 	                        <tr class="row" task_id="<%#Eval("task_id")%>" task_code="<%#Eval("task_code")%>"
@@ -365,7 +365,6 @@
                 </table>
 				<hr />
                 <asp:Button ID="btnReload" OnClick="btnReload_Click" runat="server" CssClass="hidden" />
-                <hr />
                 Import the selected items.
                 <input type="button" id="btn_import" value="Import" />
             </ContentTemplate>

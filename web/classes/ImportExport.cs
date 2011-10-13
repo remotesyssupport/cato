@@ -377,33 +377,30 @@ namespace ImportExport
         }
         private void GetEmbeddedTasks(ref string sOriginalTaskIDs, ref string sErr)
         {
-//            //this is recursive, but the SQL excludes any tasks already in the list
-//            //so it should never spin out of control.
-//            string sSQL = "";
-//
-//            sSQL = "select ts.function_xml.value" +
-//                    "('(//original_task_id)[1]', 'varchar(36)')" +
-//                " from task_step ts" +
-//                " join task t on ts.task_id = t.task_id" +
-//                " where t.original_task_id in (" + sOriginalTaskIDs + ")" +
-//                    " and t.default_version = 1" +
-//                " and ts.function_name in ('subtask','run_task')" +
-//                " and ifnull(ts.function_xml.value" +
-//                    "('(//original_task_id)[1]', 'varchar(36)'),'') <> ''" +
-//                " and ts.function_xml.value" +
-//                    "('(//original_task_id)[1]', 'varchar(36)') not in (" + sOriginalTaskIDs + ")";
-//
-//            string sMoreIDs = "";
-//            if (!dc.csvGetList(ref sMoreIDs, sSQL, ref sErr, true))
-//                throw new Exception(sErr);
-//
-//            if (sMoreIDs.Length > 0)
-//            {
-//                //this is recursive... if there are more id's, we need to check them as well
-//                sOriginalTaskIDs += "," + sMoreIDs;
-//
-//                GetEmbeddedTasks(ref sOriginalTaskIDs, ref sErr);
-//            }
+            //this is recursive, but the SQL excludes any tasks already in the list
+            //so it should never spin out of control.
+            string sSQL = "";
+
+            sSQL = "select ExtractValue(function_xml, '(//original_task_id)')" +
+                " from task_step ts" +
+                " join task t on ts.task_id = t.task_id" +
+                " where t.original_task_id in (" + sOriginalTaskIDs + ")" +
+                    " and t.default_version = 1" +
+                " and ts.function_name in ('subtask','run_task')" +
+                " and ifnull(ExtractValue(function_xml, '(//original_task_id)'), '') <> ''" +
+                " and ExtractValue(function_xml, '(//original_task_id)') not in (" + sOriginalTaskIDs + ")";
+
+            string sMoreIDs = "";
+            if (!dc.csvGetList(ref sMoreIDs, sSQL, ref sErr, true))
+                throw new Exception(sErr);
+
+            if (sMoreIDs.Length > 0)
+            {
+                //this is recursive... if there are more id's, we need to check them as well
+                sOriginalTaskIDs += "," + sMoreIDs;
+
+                GetEmbeddedTasks(ref sOriginalTaskIDs, ref sErr);
+            }
         }
         private bool writeXMLFile(string sPath, string sFileName, string sType, string sSQL, ref string sErr)
         {

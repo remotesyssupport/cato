@@ -17,10 +17,6 @@ $(document).ready(function() {
 
 });
 function pageLoad() {
-    $('#tblList tr').addClass('row');
-    $('#tblList tr:even').addClass('row_alt');
-
-
     //what happens when you click a row
     $("[tag='selectable']").click(function() {
         showPleaseWait();

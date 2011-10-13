@@ -304,19 +304,6 @@ body
 	border: 1px solid #cccccc;
 }
 
-/* System Status*/
-
-.row_header td h4
-{
-	color: #202020; /*background: url( 'images/item_bg_alt.png' ) repeat-x scroll;*/
-	border-bottom: 1px solid #aaa;
-}
-
-.row_header
-{
-	background: #202020;
-}
-
 /* Search Picker Dialogs */
 .search_dialog_value
 {
@@ -459,11 +446,7 @@ td.row_over
 	background: #bcd4ec;
 	cursor: pointer;
 }
-/*tr.row_header td
-{
-	background: #cccccc;
-	font-weight: bold;
-}*/
+
 .pager_button
 {
 	padding: 0px 4px 0px 4px;
