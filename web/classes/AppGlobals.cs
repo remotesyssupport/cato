@@ -26,7 +26,6 @@ namespace acUI
         public string APP_COPYRIGHT = "Copyright © Cloud Sidekick " + DateTime.Today.Year + ". All Rights Reserved.";
         public string APP_WEB = "http://www.cloudsidekick.com";
         public string APP_SUPPORT_EMAIL = "support@cloudsidekick.com";
-        public string APP_VERSION = "4.5.0";        
-		public string APP_REVISION = "200";
+        public string APP_VERSION = "1.0.2";        
     }
 }

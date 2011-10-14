@@ -23,8 +23,6 @@
             <br />
             <b>Version: </b>
             <asp:Label runat="server" ID="lblVersion"></asp:Label><br />
-            <b>Build: </b>
-            <asp:Label runat="server" ID="lblBuild"></asp:Label><br />
             <br />
             <p>
                 To report an issue or enhancement request, send an email to

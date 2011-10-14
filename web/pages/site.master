@@ -24,7 +24,7 @@
     <title>Cloud Sidekick</title>
     <link rel="icon" href="../images/favicon.png" />
     <!-- Imp CSS -->
-    <link type="text/css" href="<%= "../style/main.css?v=" + ag.APP_REVISION %>" rel="stylesheet" />
+    <link type="text/css" href="../style/main.css" rel="stylesheet" />
     <link type="text/css" href="../style/ui.tabs.css" rel="stylesheet" />
     <link type="text/css" href="../style/superfish/superfish.css" rel="stylesheet" />
     <link type="text/css" href="../style/tipTip.css" rel="stylesheet" />
@@ -43,9 +43,9 @@
     <script type="text/javascript" src="../script/jquery/jquery.timepicker.js"></script>    
 	<script type="text/javascript" src="../script/jquery/jquery.base64.js"></script>
     <!-- JavaScript -->
-    <script type="text/javascript" src="../script/masterpage.js?v=<%= ag.APP_REVISION %>"></script>
-    <script type="text/javascript" src="../script/MainScript.js?v=<%= ag.APP_REVISION %>"></script>
-    <script type="text/javascript" src="../script/validation.js?v=<%= ag.APP_REVISION %>"></script>
+    <script type="text/javascript" src="../script/masterpage.js"></script>
+    <script type="text/javascript" src="../script/MainScript.js"></script>
+    <script type="text/javascript" src="../script/validation.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
             //NOTE: this is the main jQuery function that will execute

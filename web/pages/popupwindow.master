@@ -24,7 +24,7 @@
     <meta http-equiv="content-style-type" content="text/css" />
     <title>Cloud Sidekick</title>
     <link rel="icon" href="../images/favicon.png" />
-    <link type="text/css" href="<%= "../style/main.css?v=" + ag.APP_REVISION %>" rel="stylesheet" />
+    <link type="text/css" href="../style/main.css" rel="stylesheet" />
     <link type="text/css" href="../style/tipTip.css" rel="stylesheet" />
     <!--jQuery -->
     <script type="text/javascript" src="../script/jquery/jquery-1.6.1.js"></script>
@@ -37,9 +37,9 @@
     <script type="text/javascript" src="../script/jquery/jquery.timepicker.js"></script>
 	<script type="text/javascript" src="../script/jquery/jquery.base64.js"></script>
 	<!-- JavaScript -->
-    <script type="text/javascript" src="../script/masterpage.js?v=<%= ag.APP_REVISION %>"></script>
-    <script type="text/javascript" src="../script/MainScript.js?v=<%= ag.APP_REVISION %>"></script>
-    <script type="text/javascript" src="../script/validation.js?v=<%= ag.APP_REVISION %>"></script>
+    <script type="text/javascript" src="../script/masterpage.js"></script>
+    <script type="text/javascript" src="../script/MainScript.js"></script>
+    <script type="text/javascript" src="../script/validation.js"></script>
     <asp:ContentPlaceHolder ID="phHead" runat="server">
     </asp:ContentPlaceHolder>
 </head>

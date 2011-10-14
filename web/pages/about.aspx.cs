@@ -40,7 +40,6 @@ namespace Web.pages
             lblEnv.Text = Server.MachineName.ToString();
 
             lblVersion.Text = ag.APP_VERSION;
-            lblBuild.Text = ag.APP_REVISION;
 
             lblDatabaseAddress.Text = DatabaseSettings.DatabaseAddress.ToString();
             lblDatabaseName.Text = DatabaseSettings.DatabaseName.ToString();
