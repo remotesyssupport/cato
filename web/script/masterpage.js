@@ -59,26 +59,35 @@ function showAlert(msg, info) {
 	
 	// in many cases, the "msg" will be a json object with a stack trace
 	//see if it is...
-	var o = eval('(' + msg + ')');
-	
-	if (o.Message) 
- 	{
- 		msg = o.Message;
-		var trace = o.StackTrace;
+	try
+	{
+		var o = eval('(' + msg + ')');
+		if (o.Message) 
+	 	{
+	 		msg = o.Message;
+			trace = o.StackTrace;
+		}
 	}
+	catch(err)
+	{
+		//nothing to catch, just will display the original message since we couldn't parse it.
+	}
+	
 	
     hidePleaseWait();
     $("#error_dialog_message").html(msg);
     $("#error_dialog_info").html(info);
-    $("#error_dialog_trace").html(trace);
+    if (trace != null && trace != '') {
+    	$("#error_dialog_trace").html(trace);
+    	$("#error_dialog_trace").parent().show();
+    } else {
+    	$("#error_dialog_trace").parent().hide();
+    }
+    
     $("#error_dialog").dialog('open');
-    //$.blockUI({ message: null });
-    //$("#fullcontent").block({ message: null });
-    //$("#head").block({ message: null });
 
     //send this message via email
-
-    var msgtogo = escape(msg + '\n' + info);
+    var msgtogo = escape(msg + '\n' + info + '\n' + trace);
     var pagedetails = window.location.pathname;
 
     $.post("uiMethods.asmx/wmSendErrorReport", { "sMessage": msgtogo, "sPageDetails": pagedetails });
