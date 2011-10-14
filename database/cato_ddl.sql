@@ -272,12 +272,12 @@ CREATE TABLE `import_task` (
   `src_task_code` varchar(32) DEFAULT NULL,
   `src_task_name` varchar(255) DEFAULT NULL,
   `src_version` decimal(18,3) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8$$
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE `import_task_codeblock` (
   `user_id` char(36) NOT NULL DEFAULT '',
   `task_id` char(36) NOT NULL DEFAULT '',
   `codeblock_name` varchar(32) NOT NULL DEFAULT ''
-) ENGINE=InnoDB DEFAULT CHARSET=utf8$$
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE `import_task_step` (
   `user_id` char(36) NOT NULL DEFAULT '',
   `step_id` char(36) NOT NULL DEFAULT '',
@@ -293,7 +293,7 @@ CREATE TABLE `import_task_step` (
   `output_row_delimiter` int(11) NOT NULL DEFAULT '0',
   `output_column_delimiter` int(11) NOT NULL DEFAULT '0',
   `variable_xml` text
-) ENGINE=InnoDB DEFAULT CHARSET=utf8$$
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE `ldap_domain` (
   `ldap_domain` varchar(255) NOT NULL DEFAULT '',
   `address` varchar(255) NOT NULL DEFAULT '',
