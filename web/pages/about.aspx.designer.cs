@@ -29,8 +29,6 @@ namespace Web.pages {
 		
 		protected System.Web.UI.WebControls.Label lblVersion;
 		
-		protected System.Web.UI.WebControls.Label lblBuild;
-		
 		protected System.Web.UI.WebControls.HyperLink lnkEmail;
 	}
 }
