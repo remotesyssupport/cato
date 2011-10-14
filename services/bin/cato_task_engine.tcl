@@ -322,8 +322,8 @@ proc gather_aws_system_info {instance_id user_id} {
         #       return ""
         #}
         set state [[[$root selectNodes {//instancesSet/item/instanceState/name}] childNode] data]
-	if {"$state" == "pending"} {
-		return pending
+	if {"$state" != "running"} {
+		return $state
 	}
 	
         set keyname [[[$root selectNodes {//instancesSet/item/keyName}] childNode] data]
@@ -363,7 +363,7 @@ proc gather_aws_system_info {instance_id user_id} {
         }
 	set ::system_arr($instance_id,security_group) $security_group_id
 	unset pk_pass
-	return ""
+	return $state
 }
 
 ### END OF SITE SPECIFIC CODE
@@ -553,7 +553,7 @@ proc initialize {} {
 	set ::MY_PID [pid]
 	set ::handle_names ""
 	set ::BREAK 0
-	set ::SENSITIVE c4t4lyss
+	set ::SENSITIVE ""
 
 	#set ::FILTER_BUFFER 0
 	#set ::TIMEOUT_CODEBLOCK "" 
@@ -3202,10 +3202,13 @@ proc new_connection {connection_system conn_name conn_type} {
 		for {set ii 0} {$ii < 10} {incr ii} {
 			sleep 1
 			set state [gather_aws_system_info $connection_system $user_id]
-			if {"$state" != "pending"} {
+			if {"$state" == "running"} {
 				break
+			} elseif {"$state" == "pending"} {
+				sleep 10
+			} else {
+				error_out "The instance $connection_system is not in a running or pending state. Current state is $state. Cannot connect" 9999
 			}
-			sleep 10
 		}
 		register_security_group $::system_arr($connection_system,security_group) 22
 	}	
@@ -3386,10 +3389,7 @@ proc http_command {command} {
 			}
 			if {"$query" > ""} {
 				set query [string range $query 1 end]
-			#	#set query [::http::formatQuery $post_string]
-			#	set query [::http::formatQuery weblog_title HelloWorld user_name admin admin_password c4t4lyss admin_password2 c4t4lyss admin_email x@x.com]
 			}
-output $query
 			catch {set token [::http::geturl $url -timeout [expr 60 * 1000] -query $query]} error_code
 		}
 		#"HEAD" {
