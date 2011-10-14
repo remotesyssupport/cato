@@ -231,7 +231,7 @@ namespace Web.pages
 	                int iExists = -1;
 					sSql = "select count(*) from cloud_account";
                 	if (!dc.sqlGetSingleInteger(ref iExists, sSql, ref sErr))
-                    	throw new Exception(sErr);
+                    	throw new Exception("Unable to count Cloud Accounts: " + sErr);
 					
 					if (iExists == 0)
 						sIsDefault = "1";
@@ -250,41 +250,40 @@ namespace Web.pages
 
                 oTrans.Command.CommandText = sSql;
                 if (!oTrans.ExecUpdate(ref sErr))
-                    throw new Exception(sErr);
+                    throw new Exception("Error creating account: " + sErr);
 
                 //if "default" was selected, unset all the others
                 if (dc.IsTrue(sIsDefault))
                 {
                     oTrans.Command.CommandText = "update cloud_account set is_default = 0 where account_id <> '" + sAccountID + "'";
                     if (!oTrans.ExecUpdate(ref sErr))
-                        throw new Exception(sErr);
+                        throw new Exception("Error updating defaults: " + sErr);
                 }
 
 				
                 oTrans.Commit();
-            }
+	 
+	            // add security log
+	            // since this is not handled as a page postback, theres no "Viewstate" settings
+	            // so 2 options either we keep an original setting for each value in hid values, or just get them from the db as part of the 
+	            // update above, since we are already passing in 15 or so fields, lets just get the values at the start and reference them here
+	            if (sMode == "edit")
+	            {
+	                ui.WriteObjectChangeLog(Globals.acObjectTypes.CloudAccount, sAccountID, sAccountName, sOriginalName, sAccountName);
+	            }
+	            else
+	            {
+	                ui.WriteObjectAddLog(Globals.acObjectTypes.CloudAccount, sAccountID, sAccountName, "Account Created");
+	            }
+	
+				//refresh the cloud account list in the session
+	            if (!ui.PutCloudAccountsInSession(ref sErr))
+					throw new Exception("Error refreshing accounts in session: " + sErr);
+           }
             catch (Exception ex)
             {
-
-                throw new Exception(ex.Message);
+                throw new Exception("Error: General Exception: " + ex.Message);
             }
-
-            // add security log
-            // since this is not handled as a page postback, theres no "Viewstate" settings
-            // so 2 options either we keep an original setting for each value in hid values, or just get them from the db as part of the 
-            // update above, since we are already passing in 15 or so fields, lets just get the values at the start and reference them here
-            if (sMode == "edit")
-            {
-                ui.WriteObjectChangeLog(Globals.acObjectTypes.CloudAccount, sAccountID, sAccountName, sOriginalName, sAccountName);
-            }
-            else
-            {
-                ui.WriteObjectAddLog(Globals.acObjectTypes.CloudAccount, sAccountID, sAccountName, "Account Created");
-            }
-
-			//refresh the cloud account list in the session
-            if (!ui.PutCloudAccountsInSession(ref sErr))
-				throw new Exception(sErr);
 			
             // no errors to here, so return an empty string
             return "{'account_id':'" + sAccountID + "', 'account_name':'" + sAccountName + "', 'account_type':'" + sAccountType + "'}";

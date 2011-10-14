@@ -87,7 +87,7 @@ namespace Web
 			//now, for some reason we were having issues with the initial startup of apache
 			//not able to perform the very first database hit.
 			//this line serves as an inital db hit, but we aren't trapping it
-            sSQL = "select 'Database Test Successful'";
+            string sSQL = "select 'Database Test Successful'";
 			string sTestResult = "";
             if (!dc.sqlGetSingleString(ref sTestResult, sSQL, ref sErr))
             {
@@ -95,7 +95,7 @@ namespace Web
 
 
 
-            string sSQL = "select login_message, page_view_logging, report_view_logging, log_days" +
+            sSQL = "select login_message, page_view_logging, report_view_logging, log_days" +
 				" from login_security_settings where id = 1";
             DataRow dr = null;
             if (!dc.sqlGetDataRow(ref dr, sSQL, ref sErr))
