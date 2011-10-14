@@ -219,17 +219,18 @@ namespace Web.pages
 
 
             // check the number of properties
-            if (oUser.Length != 9) return "Incorrect list of user properties";
+            if (oUser.Length != 10) return "Incorrect list of user properties";
 
             string sLoginID = oUser[0].ToString();
             string sFullName = oUser[1].ToString();
             string sAuthType = oUser[2].ToString();
             string sUserPassword = oUser[3].ToString();
-            string sForcePasswordChange = oUser[4].ToString();
-            string sUserRole = oUser[5].ToString();
-            string sEmail = oUser[6].ToString();
-            string sStatus = oUser[7].ToString();
-            string sGroupArray = oUser[8].ToString();
+            string sGeneratePW = oUser[4].ToString();
+            string sForcePasswordChange = oUser[5].ToString();
+            string sUserRole = oUser[6].ToString();
+            string sEmail = oUser[7].ToString();
+            string sStatus = oUser[8].ToString();
+            string sGroupArray = oUser[9].ToString();
 
 
             // checks that cant be done on the client side
@@ -251,8 +252,8 @@ namespace Web.pages
             string sPassword = null;
             if (sAuthType == "local")
             {
-                //generate an initial strong password
-                sUserPassword = dc.GenerateNewPassword();
+                if (sGeneratePW == "1") //generate an initial strong password
+                	sUserPassword = dc.GenerateNewPassword();
 
                 sPassword = "'" + dc.EnCrypt(sUserPassword) + "'";
             }

@@ -54,6 +54,15 @@ $(document).ready(function () {
         }
     });
 
+    $("#chkGeneratePW").click(function () {
+        //in 'add' mode the controls may be hidden based on the checkbox
+        if (this.checked) {
+			$(".password_entry").hide();
+		} else {
+			$(".password_entry").show();
+		}
+    });
+
 });
 function pageLoad() {
     ManagePageLoad();
@@ -72,16 +81,19 @@ function pageLoad() {
 }
 
 function SetPasswordControls() {
-    if ($("#ddlUserAuthType").val() == "local") {
-        $(".password_row").removeClass("hidden");
-
-        if ($("#hidMode").val() == 'add') {
-            //in 'add' mode do not show the password controls... 
-            //a random password will be generated and emailed out
-            $(".password_row").addClass("hidden");
+	if ($("#ddlUserAuthType").val() == "local") {
+		if ($("#hidMode").val() == 'add') {
+        	$(".password_checkbox").show();
+	        $(".password_edit").hide();
+        } else {
+        	$(".password_checkbox").hide();
+	        $(".password_entry").show();
+	        $(".password_edit").show();
         }
-    } else {
-        $(".password_row").addClass("hidden");
+    } else { //ldap mode you can never edit it
+        $(".password_entry ").hide();
+        $(".password_checkbox").hide();
+        $(".password_edit").hide();
     }
 }
 
@@ -405,6 +417,20 @@ function SaveNewUser() {
         var sStatus = $("#ddlUserStatus").val();
     }
 
+	//passwords must match, unless the check box is checked
+    var sUserPassword = $("#txtUserPassword").val();
+    var sGeneratePW = ($("#chkGeneratePW").attr("checked") == "checked" ? 1 : 0);
+    if (sGeneratePW == 0) {
+        if ($("#txtUserPassword").val() == '') {
+            bSave = false;
+            strValidationError += 'Password required.<br />';
+        };
+        if ($("#txtUserPassword").val() != $("#txtUserPasswordConfirm").val()) {
+            bSave = false;
+            strValidationError += 'Passwords do not match!<br />';
+        };
+    }
+
     if (bSave != true) {
         showAlert(strValidationError);
         return false;
@@ -426,15 +452,14 @@ function SaveNewUser() {
     stuff[1] = sFullName;
     stuff[2] = sAuthType;
     stuff[3] = sNewUserPassword;
-    stuff[4] = sForcePasswordChange;
-    stuff[5] = sUserRole;
-    stuff[6] = sEmail;
-    stuff[7] = sStatus;
-    stuff[8] = sGroups;
+    stuff[4] = sGeneratePW;
+    stuff[5] = sForcePasswordChange;
+    stuff[6] = sUserRole;
+    stuff[7] = sEmail;
+    stuff[8] = sStatus;
+    stuff[9] = sGroups;
 
     if (stuff.length > 0) {
-        //Doing the Microsoft ajax call because the jQuery one doesn't work.
-        //alert('run page method');
         PageMethods.SaveNewUser(stuff, OnUpdateSuccess, OnUpdateFailure);
     }
 

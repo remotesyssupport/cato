@@ -190,7 +190,15 @@
                                 <input id="txtUserEmail" style="width: 90%;" type="text" maxlength="1024" name="txtUserEmail" />
                             </td>
                         </tr>
-                        <tr class="password_row">
+                        <tr class="password_checkbox">
+                            <td>
+                                Generate Random Password?:
+                            </td>
+                            <td>
+                                <input type="checkbox" id="chkGeneratePW" name="chkGeneratePW" />
+                            </td>
+                        </tr>
+                        <tr class="password_entry">
                             <td>
                                 Password:
                             </td>
@@ -198,7 +206,7 @@
                                 <input id="txtUserPassword" style="width: 90%;" type="password" name="txtUserPassword" />
                             </td>
                         </tr>
-                        <tr class="password_row">
+                        <tr class="password_entry">
                             <td>
                                 Confirm Password:
                             </td>
@@ -206,7 +214,7 @@
                                 <input id="txtUserPasswordConfirm" style="width: 90%;" type="password" name="txtUserPasswordConfirm" />
                             </td>
                         </tr>
-                        <tr class="password_row">
+                        <tr class="password_edit">
                             <td>
                                 Force Password Change?
                             </td>
@@ -214,7 +222,7 @@
                                 <input id="cbNewUserForcePasswordChange" type="checkbox" name="cbNewUserForcePasswordChange" />
                             </td>
                         </tr>
-                        <tr class="password_row" id="trFailedLoginAttempts">
+                        <tr class="password_edit" id="trFailedLoginAttempts">
                             <td style="padding-top: 10px;">
                                 Failed Login Attempts:
                             </td>
@@ -222,7 +230,7 @@
                                 <span id="lblFailedLoginAttempts"></span>&nbsp;<span id="clear_failed_btn"></span>
                             </td>
                         </tr>
-                        <tr class="password_row">
+                        <tr class="password_edit">
                             <td style="padding-top: 10px;">
                                 Password Reset:
                             </td>
