@@ -90,15 +90,16 @@ namespace Web
             DataRow dr = null;
             if (!dc.sqlGetDataRow(ref dr, sSQL, ref sErr))
             {
-                lblErrorMessage.Text = sErr;
+                lblErrorMessage.Text = "Error: Unable to connect to the database.<br /><br />" + sErr;
                 return;
             }
             if (dr != null)
             {
                 //login message
-                lblMessage.Text = dr["login_message"].ToString();
+				string sLoginMessage = object.ReferenceEquals(dr["login_message"], DBNull.Value) ? "Welcome to Cato" : dr["login_message"].ToString();
+                lblMessage.Text = sLoginMessage;
 				//put it in the global
-                DatabaseSettings.AppInstance = dr["login_message"].ToString();
+                DatabaseSettings.AppInstance = sLoginMessage;
 				
                 //page view settings
                 //global_view_logging
@@ -118,8 +119,11 @@ namespace Web
                     ui.SetSessionObject("log_days", dr["log_days"].ToString(), "Security");
                 else
                     ui.SetSessionObject("log_days", "90", "Security");
-
             }
+			else {
+				//this should never happen, if it does we weren't able to connect to the db but didn't have an error above?
+				lblErrorMessage.Text = "Warning: Unable to read the login settings table.";
+			}
             //}
         }
 
