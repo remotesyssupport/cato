@@ -194,11 +194,6 @@ namespace Web.pages
             //if we are editing get the original values
             if (sMode == "edit")
             {
-                sSql = "select account_name from cloud_account " +
-                       "where account_id = '" + sAccountID + "'";
-
-                if (!dc.sqlGetSingleString(ref sOriginalName, sSql, ref sErr))
-                    throw new Exception(sErr);
             }
 
             try
@@ -208,7 +203,12 @@ namespace Web.pages
                 // update the user fields.
                 if (sMode == "edit")
                 {
-                    // only update the passwword if it has changed
+	                sSql = "select account_name from cloud_account " +
+	                       "where account_id = '" + sAccountID + "'";
+	                if (!dc.sqlGetSingleString(ref sOriginalName, sSql, ref sErr))
+	                    throw new Exception("Error getting original account name:" + sErr);
+	
+					// only update the passwword if it has changed
                     string sNewPassword = "";
                     if (sLoginPassword != "($%#d@x!&")
                     {
@@ -224,7 +224,12 @@ namespace Web.pages
                         " login_id = '" + sLoginID + "'" +
                         sNewPassword +
                         " where account_id = '" + sAccountID + "'";
-                }
+
+	                oTrans.Command.CommandText = sSql;
+	                if (!oTrans.ExecUpdate(ref sErr))
+	                    throw new Exception("Error updating account: " + sErr);
+                	                
+					ui.WriteObjectChangeLog(Globals.acObjectTypes.CloudAccount, sAccountID, sAccountName, sOriginalName, sAccountName);}
                 else
                 {
 					//if there are no rows yet, make this one the default even if the box isn't checked.
@@ -246,11 +251,13 @@ namespace Web.pages
                     "'" + sLoginID + "'," +
                     "'" + dc.EnCrypt(sLoginPassword) + "'," +
                     "'" + sAutoManageSecurity + "')";
-                }
-
-                oTrans.Command.CommandText = sSql;
-                if (!oTrans.ExecUpdate(ref sErr))
-                    throw new Exception("Error creating account: " + sErr);
+	
+	                oTrans.Command.CommandText = sSql;
+	                if (!oTrans.ExecUpdate(ref sErr))
+	                    throw new Exception("Error creating account: " + sErr);
+	                
+					ui.WriteObjectAddLog(Globals.acObjectTypes.CloudAccount, sAccountID, sAccountName, "Account Created");                
+				}
 
                 //if "default" was selected, unset all the others
                 if (dc.IsTrue(sIsDefault))
@@ -259,23 +266,9 @@ namespace Web.pages
                     if (!oTrans.ExecUpdate(ref sErr))
                         throw new Exception("Error updating defaults: " + sErr);
                 }
-
-				
+		
                 oTrans.Commit();
 	 
-	            // add security log
-	            // since this is not handled as a page postback, theres no "Viewstate" settings
-	            // so 2 options either we keep an original setting for each value in hid values, or just get them from the db as part of the 
-	            // update above, since we are already passing in 15 or so fields, lets just get the values at the start and reference them here
-	            if (sMode == "edit")
-	            {
-	                ui.WriteObjectChangeLog(Globals.acObjectTypes.CloudAccount, sAccountID, sAccountName, sOriginalName, sAccountName);
-	            }
-	            else
-	            {
-	                ui.WriteObjectAddLog(Globals.acObjectTypes.CloudAccount, sAccountID, sAccountName, "Account Created");
-	            }
-	
 				//refresh the cloud account list in the session
 	            if (!ui.PutCloudAccountsInSession(ref sErr))
 					throw new Exception("Error refreshing accounts in session: " + sErr);

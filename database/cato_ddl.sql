@@ -191,81 +191,6 @@ CREATE TABLE `customer_info` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `dash` (
-  `dash_id` varchar(36) NOT NULL,
-  `dash_name` varchar(255) NOT NULL,
-  `dash_group` varchar(64) DEFAULT NULL,
-  `session` varchar(32) NOT NULL,
-  `session_clear` int(11) NOT NULL,
-  `descr` varchar(2048) DEFAULT NULL,
-  `options` varchar(2048) DEFAULT NULL,
-  `style` varchar(2048) DEFAULT NULL,
-  `is_delivered_content` int(11) NOT NULL,
-  `last_update_dt` datetime NOT NULL,
-  `dash_code` varchar(16) DEFAULT NULL,
-  `is_public` int(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`dash_id`),
-  UNIQUE KEY `IX_dash_name` (`dash_name`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `dash_layout` (
-  `dash_id` varchar(36) NOT NULL,
-  `element_order` int(11) NOT NULL,
-  `element_label` varchar(255) DEFAULT NULL,
-  `element_loop` varchar(32) DEFAULT NULL,
-  `element_value` text,
-  `element_display` int(11) NOT NULL DEFAULT '1',
-  `element_display_clause` varchar(255) DEFAULT NULL,
-  `last_update_dt` datetime NOT NULL,
-  `element_descr` varchar(2048) DEFAULT NULL,
-  PRIMARY KEY (`dash_id`,`element_order`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `dash_widget` (
-  `widget_id` varchar(36) NOT NULL,
-  `widget_name` varchar(256) NOT NULL,
-  `widget_code` varchar(16) DEFAULT NULL,
-  `widget_group` varchar(64) DEFAULT NULL,
-  `widget_descr` varchar(1024) DEFAULT NULL,
-  `widget_type` varchar(32) NOT NULL,
-  `code` text,
-  `datasource` varchar(32) DEFAULT NULL,
-  `chart_file` varchar(256) DEFAULT NULL,
-  `onclick` varchar(1024) DEFAULT NULL,
-  `options` varchar(1024) DEFAULT NULL,
-  `style` varchar(2048) DEFAULT NULL,
-  `dataset_name` varchar(32) DEFAULT NULL,
-  `is_delivered_content` int(11) NOT NULL,
-  `last_update_dt` datetime NOT NULL,
-  `is_public` int(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`widget_id`),
-  UNIQUE KEY `IX_widget_name` (`widget_name`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `datasources` (
-  `ds_id` varchar(36) NOT NULL,
-  `ds_name` varchar(64) NOT NULL,
-  `ds_descr` varchar(255) DEFAULT NULL,
-  `status` varchar(16) NOT NULL,
-  `db_type` varchar(32) NOT NULL,
-  `db_server` varchar(128) DEFAULT NULL,
-  `db_name` varchar(50) DEFAULT NULL,
-  `db_port` varchar(32) DEFAULT NULL,
-  `user_id` varchar(32) NOT NULL,
-  `password` varchar(512) DEFAULT NULL,
-  `is_default` int(11) NOT NULL,
-  `conn_string` varchar(2048) DEFAULT NULL,
-  PRIMARY KEY (`ds_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `ecosystem` (
   `ecosystem_id` varchar(36) NOT NULL,
   `ecosystem_name` varchar(64) NOT NULL,
@@ -327,6 +252,48 @@ CREATE TABLE `global_registry` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `import_task` (
+  `user_id` char(36) NOT NULL DEFAULT '',
+  `task_id` char(36) NOT NULL DEFAULT '',
+  `original_task_id` char(36) NOT NULL DEFAULT '',
+  `version` decimal(18,3) NOT NULL,
+  `task_name` varchar(255) NOT NULL DEFAULT '',
+  `task_code` varchar(32) DEFAULT NULL,
+  `task_desc` varchar(255) DEFAULT '',
+  `task_status` varchar(32) NOT NULL DEFAULT 'Development',
+  `use_connector_system` int(11) NOT NULL DEFAULT '0',
+  `default_version` int(11) NOT NULL,
+  `concurrent_instances` int(11) DEFAULT NULL,
+  `queue_depth` int(11) DEFAULT NULL,
+  `created_dt` datetime NOT NULL,
+  `parameter_xml` text NOT NULL,
+  `import_mode` varchar(16) DEFAULT NULL,
+  `conflict` varchar(255) DEFAULT NULL,
+  `src_task_code` varchar(32) DEFAULT NULL,
+  `src_task_name` varchar(255) DEFAULT NULL,
+  `src_version` decimal(18,3) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8$$
+CREATE TABLE `import_task_codeblock` (
+  `user_id` char(36) NOT NULL DEFAULT '',
+  `task_id` char(36) NOT NULL DEFAULT '',
+  `codeblock_name` varchar(32) NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8$$
+CREATE TABLE `import_task_step` (
+  `user_id` char(36) NOT NULL DEFAULT '',
+  `step_id` char(36) NOT NULL DEFAULT '',
+  `task_id` char(36) NOT NULL DEFAULT '',
+  `codeblock_name` varchar(36) NOT NULL DEFAULT '',
+  `step_order` int(11) NOT NULL,
+  `commented` int(11) NOT NULL DEFAULT '0',
+  `locked` int(11) NOT NULL DEFAULT '0',
+  `function_name` varchar(64) NOT NULL,
+  `function_xml` text NOT NULL,
+  `step_desc` varchar(255) DEFAULT '',
+  `output_parse_type` int(11) NOT NULL,
+  `output_row_delimiter` int(11) NOT NULL DEFAULT '0',
+  `output_column_delimiter` int(11) NOT NULL DEFAULT '0',
+  `variable_xml` text
+) ENGINE=InnoDB DEFAULT CHARSET=utf8$$
 CREATE TABLE `ldap_domain` (
   `ldap_domain` varchar(255) NOT NULL DEFAULT '',
   `address` varchar(255) NOT NULL DEFAULT '',
