@@ -695,7 +695,7 @@ public class dataAccess
             "'" + LogType.ToString() + "'," +
             "'" + Action.ToString() + "'," +
             "'" + sUserID + "'," +
-            "{ fn Now() }," + Convert.ToString((ObjectType == acObjectTypes.None ? "NULL" : ObjectType.ToString())) + "," +
+            "now()," + Convert.ToString((ObjectType == acObjectTypes.None ? "NULL" : ((int)ObjectType).ToString())) + "," +
             Convert.ToString((string.IsNullOrEmpty(ObjectID) ? "NULL" : "'" + ObjectID + "'")) + "," +
             "'" + sTrimmedLog + "'" +
             ")";
@@ -728,7 +728,7 @@ public class dataAccess
             "'" + LogType.ToString() + "'," +
             "'" + Action.ToString() + "'," +
             "'" + sUserID + "'," +
-            "{ fn Now() }," + Convert.ToString((ObjectType == acObjectTypes.None ? "NULL" : ObjectType.ToString())) + "," +
+            "now()," + Convert.ToString((ObjectType == acObjectTypes.None ? "NULL" : ((int)ObjectType).ToString())) + "," +
             Convert.ToString((string.IsNullOrEmpty(ObjectID) ? "NULL" : "'" + ObjectID + "'")) + "," +
             "'" + sTrimmedLog + "'" +
             ")";
