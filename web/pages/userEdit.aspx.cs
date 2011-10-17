@@ -101,20 +101,21 @@ namespace Web.pages
              * 
              * Only "Administrators" can create any type of user.
              */
-
-            if (ui.UserIsInRole("Administrator"))
-            {
-                ddlUserRole.Items.Add("Administrator");
-                ddlUserRole.Items.Add("Developer");
-                ddlUserRole.Items.Add("Application Manager");
-                ddlUserRole.Items.Add("Security Manager");
-                ddlUserRole.Items.Add("User");
-            }
-            else
-            {
-                ddlUserRole.Items.Add("Security Manager");
-                ddlUserRole.Items.Add("User");
-            }
+			
+			//temporarily commenting out the notion of an "security manager"
+//            if (ui.UserIsInRole("Administrator"))
+//            {
+            ddlUserRole.Items.Add("Administrator");
+            ddlUserRole.Items.Add("Developer");
+//            ddlUserRole.Items.Add("Application Manager");
+//            ddlUserRole.Items.Add("Security Manager");
+            ddlUserRole.Items.Add("User");
+//            }
+//            else
+//            {
+//                ddlUserRole.Items.Add("Security Manager");
+//                ddlUserRole.Items.Add("User");
+//            }
         }
         private void BindList()
         {
