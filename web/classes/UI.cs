@@ -940,49 +940,6 @@ namespace acUI
                 return;
             }
         }
-        public int LaunchTask(string sTaskID, string sAssetID, string sUserID, string sParameterXML, int iDebug = 4)
-        {
-
-            string sErr = "";
-            string sSQL = "";
-
-            //create a new task instance
-            //if we don't have all if the variables needed end here
-            if (string.IsNullOrEmpty(sTaskID))
-            {
-                HttpContext.Current.Response.Write("Error in LaunchTask: Unable to determine Task ID.");
-                HttpContext.Current.Response.End();
-            }
-
-            //here is where we will construct the addTaskInstance call
-
-            try
-            {
-                int iTaskInstance = 0;
-
-                sSQL = "exec addTaskInstance" + " @task_id='" + sTaskID + "'," + " @user_id='" + sUserID + "'," + " @schedule_instance_id = null, " + " @debug_level = " + iDebug + ", " + " @submitted_by_instance = null, " + " @parameter_xml = '" + sParameterXML + "'";
-
-                if (!dc.sqlGetSingleInteger(ref iTaskInstance, sSQL, ref sErr))
-                {
-                    HttpContext.Current.Response.Write("Unable to Run Task [Task: " + sTaskID + " on Asset: " + sAssetID + "]<br />" + sErr);
-                }
-
-                return iTaskInstance;
-
-            }
-            catch (Exception ex)
-            {
-                HttpContext.Current.Response.Write("The Task was not launched.<br /><br />");
-                HttpContext.Current.Response.Write("Common causes:<br /><br />");
-                HttpContext.Current.Response.Write("*) Invalid required parameters (Task, Version, Asset)<br />");
-                HttpContext.Current.Response.Write("*) Instances may already be running and Concurrent/Queued rules are in effect.<br />");
-                HttpContext.Current.Response.Write("Please reload the page and try again.  If this problem persists, contact an Administrator.<br /><br />");
-                HttpContext.Current.Response.Write(ex.Message);
-                return -1;
-            }
-
-
-        }
         #endregion
         #region "Cloud Functions"
         public bool SetActiveCloudAccount(string sAccountID, ref string sErr)

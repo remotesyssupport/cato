@@ -34,7 +34,7 @@ namespace Web.pages
             if (!Page.IsPostBack)
             {
                 string sErr = "";
-                string sSQL = "select mode_off_on, loop_delay_sec, retry_delay_min, retry_max_attempts, refresh_min," +
+                string sSQL = "select mode_off_on, loop_delay_sec, retry_delay_min, retry_max_attempts," +
                     " smtp_server_addr, smtp_server_user, smtp_server_password, smtp_server_port, from_email, from_name, admin_email" +
                     " from messenger_settings" +
                     " where id = 1";
@@ -55,8 +55,6 @@ namespace Web.pages
                     txtRetryDelay.Text = dr["retry_delay_min"].ToString();
 
                     txtRetryMaxAttempts.Text = dr["retry_max_attempts"].ToString();
-
-                    txtRefreshMinutes.Text = dr["refresh_min"].ToString();
 
                     txtSMTPServerAddress.Text = dr["smtp_server_addr"].ToString();
 
@@ -92,21 +90,19 @@ namespace Web.pages
             string sPollLoop = oAsset[1].ToString();
             string sRetryDelay = oAsset[2].ToString();
             string sRetryMaxAttempts = oAsset[3].ToString();
-            string sRefreshMinutes = oAsset[4].ToString();
-            string sSMTPServerAddress = oAsset[5].ToString().Replace("'", "''");
-            string sSMTPUserAccount = oAsset[6].ToString().Replace("'", "''");
-            string sSMTPUserPassword = oAsset[7].ToString();
-            string sSMTPServerPort = oAsset[8].ToString();
-            string sFromEmail = oAsset[9].ToString().Replace("'", "''");
-            string sFromName = oAsset[10].ToString().Replace("'", "''");
-            string sAdminEmail = oAsset[11].ToString().Replace("'", "''");
+            string sSMTPServerAddress = oAsset[4].ToString().Replace("'", "''");
+            string sSMTPUserAccount = oAsset[5].ToString().Replace("'", "''");
+            string sSMTPUserPassword = oAsset[6].ToString();
+            string sSMTPServerPort = oAsset[7].ToString();
+            string sFromEmail = oAsset[8].ToString().Replace("'", "''");
+            string sFromName = oAsset[9].ToString().Replace("'", "''");
+            string sAdminEmail = oAsset[10].ToString().Replace("'", "''");
 
             // get the current settings for the logging
             string sOrigMessengerOnOff = "";
             string sOrigPollLoop = "";
             string sOrigRetryDelay = "";
             string sOrigRetryMaxAttempts = "";
-            string sOrigRefreshMinutes = "";
             string sOrigSMTPServerAddress = "";
             string sOrigSMTPUserAccount = "";
             string sOrigSMTPServerPort = "";
@@ -115,7 +111,7 @@ namespace Web.pages
             string sOrigAdminEmail = "";
 
 
-            string sSQL = "select mode_off_on, loop_delay_sec, retry_delay_min, retry_max_attempts, refresh_min," +
+            string sSQL = "select mode_off_on, loop_delay_sec, retry_delay_min, retry_max_attempts," +
                     " smtp_server_addr, smtp_server_user, smtp_server_password, smtp_server_port, from_email, from_name, admin_email" +
                     " from messenger_settings" +
                     " where id = 1";
@@ -132,7 +128,6 @@ namespace Web.pages
                 sOrigPollLoop = dr["loop_delay_sec"].ToString();
                 sOrigRetryDelay = dr["retry_delay_min"].ToString();
                 sOrigRetryMaxAttempts = dr["retry_max_attempts"].ToString();
-                sOrigRefreshMinutes = dr["refresh_min"].ToString();
                 sOrigSMTPServerAddress = dr["smtp_server_addr"].ToString();
                 sOrigSMTPUserAccount = dr["smtp_server_user"].ToString();
                 sOrigSMTPServerPort = dr["smtp_server_port"].ToString();
@@ -141,14 +136,14 @@ namespace Web.pages
                 sOrigAdminEmail = dr["admin_email"].ToString();
             }
 
-            sSQL = "update messenger_settings set mode_off_on='{0}', loop_delay_sec={1}, retry_delay_min={2}, retry_max_attempts={3}, refresh_min={4}, smtp_server_addr='{5}', smtp_server_user='{6}', smtp_server_port={7}, from_email='{8}', from_name='{9}', admin_email='{10}'";
+            sSQL = "update messenger_settings set mode_off_on='{0}', loop_delay_sec={1}, retry_delay_min={2}, retry_max_attempts={3}, smtp_server_addr='{4}', smtp_server_user='{5}', smtp_server_port={6}, from_email='{7}', from_name='{8}', admin_email='{9}'";
             //only update password if it has been changed.
             string sPasswordFiller = "($%#d@x!&";
             if (sSMTPUserPassword != sPasswordFiller)
             {
-                sSQL += ",smtp_server_password='{11}'";
+                sSQL += ",smtp_server_password='{10}'";
             }
-            sSQL = string.Format(sSQL, sMessengerOnOff, sPollLoop, sRetryDelay, sRetryMaxAttempts, sRefreshMinutes, sSMTPServerAddress, sSMTPUserAccount, sSMTPServerPort, sFromEmail, sFromName, sAdminEmail, dc.EnCrypt(sSMTPUserPassword));
+            sSQL = string.Format(sSQL, sMessengerOnOff, sPollLoop, sRetryDelay, sRetryMaxAttempts, sSMTPServerAddress, sSMTPUserAccount, sSMTPServerPort, sFromEmail, sFromName, sAdminEmail, dc.EnCrypt(sSMTPUserPassword));
 
             if (!dc.sqlExecuteUpdate(sSQL, ref sErr))
             {
@@ -162,7 +157,6 @@ namespace Web.pages
                 ui.WriteObjectChangeLog(acObjectTypes.None, sLogObject, "Poll Loop", sOrigPollLoop, sPollLoop);
                 ui.WriteObjectChangeLog(acObjectTypes.None, sLogObject, "Retry Delay", sOrigRetryDelay, sRetryDelay);
                 ui.WriteObjectChangeLog(acObjectTypes.None, sLogObject, "Retry Max Attempts", sOrigRetryMaxAttempts, sRetryMaxAttempts);
-                ui.WriteObjectChangeLog(acObjectTypes.None, sLogObject, "Refresh Minutes", sOrigRefreshMinutes, sRefreshMinutes);
                 ui.WriteObjectChangeLog(acObjectTypes.None, sLogObject, "SMTP Server Address", sOrigSMTPServerAddress, sSMTPServerAddress);
                 ui.WriteObjectChangeLog(acObjectTypes.None, sLogObject, "SMTP User Account", sOrigSMTPUserAccount, sSMTPUserAccount);
                 ui.WriteObjectChangeLog(acObjectTypes.None, sLogObject, "SMTP Server Port", sOrigSMTPServerPort, sSMTPServerPort);

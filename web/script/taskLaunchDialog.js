@@ -322,6 +322,11 @@ function ShowTaskLaunchDialog(jsonargs) {
     $("#task_launch_dialog_task_id").val(args.task_id);
     $("#task_launch_dialog_task_name").html(args.task_name);
 
+	//we will always pass over an account_id, but it could vary depending on *where* the launch request originated.
+	//1) from task edit it uses the global setting
+	//2) from ecosystems it uses the global setting (which happens to be associated with that ecosystem)
+	//3) from the "Run Log" it will use the same as the previous instance being viewed in the log
+	//NOTE: if no args are passed to this function we will use the global setting
     if (!args.account_id || args.account_id == "") {
         args.account_id = $("#ctl00_ddlCloudAccounts").val();
         $("#task_launch_dialog_account_id").val($("#ctl00_ddlCloudAccounts").val());

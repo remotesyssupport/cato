@@ -23,8 +23,6 @@ namespace Web.pages {
 		
 		protected System.Web.UI.WebControls.TextBox txtRetryMaxAttempts;
 		
-		protected System.Web.UI.WebControls.TextBox txtRefreshMinutes;
-		
 		protected System.Web.UI.WebControls.TextBox txtSMTPServerAddress;
 		
 		protected System.Web.UI.WebControls.TextBox txtSMTPUserAccount;

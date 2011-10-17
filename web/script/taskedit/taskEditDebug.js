@@ -58,16 +58,10 @@ $(document).ready(function () {
         var task_id = $("#ctl00_phDetail_hidTaskID").val();
         var task_name = $("#ctl00_phDetail_lblTaskNameHeader").html();
         var asset_id = $("#ctl00_phDetail_txtTestAsset").attr("asset_id");
-        var account_id = $("#ctl00_ddlCloudAccounts").val();
-        var account_name = $("#ctl00_ddlCloudAccounts :selected").text();
 
-        var args = '{"task_id":"' + task_id + '", "task_name":"' + task_name + '", "debug_level":"4"';
-        
-        if (account_id)
-        	args += ', "account_id":"' + account_id + '", "account_name":"' + account_name + '"';
+        var args = '{"task_id":"' + task_id + '", "task_name":"' + task_name + '", "debug_level":"4"}';
             
-        args += '}';
-            
+        //note: we are not passing the account_id - the dialog will use the default
         ShowTaskLaunchDialog(args);
     });
     $("#debug_stop_btn").click(function () {

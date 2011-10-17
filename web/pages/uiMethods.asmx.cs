@@ -2762,6 +2762,8 @@ namespace ACWebMethods
 
             try
             {
+				string sCloudAccountID = ui.GetCloudAccountID();
+				
                 if (sTaskID.Length == 0 || sMonths.Length == 0 || sDays.Length == 0 || sHours.Length == 0 || sMinutes.Length == 0 || sDaysOrWeeks.Length == 0)
                     throw new Exception("Missing or invalid Schedule timing or Task ID.");
 
@@ -2778,21 +2780,23 @@ namespace ACWebMethods
                 string sDesc = "";
                 string sLabel = wmGenerateScheduleLabel(sMonths, sDays, sHours, sMinutes, sDaysOrWeeks, ref sDesc);
 
-                sSQL = "insert into action_schedule (schedule_id, task_id, action_id, ecosystem_id, months, days, hours, minutes, days_or_weeks, label, descr, parameter_xml, debug_level)" +
-                   " values (uuid(), " +
-                   " '" + sTaskID + "'," +
-                   (!string.IsNullOrEmpty(sActionID) ? " '" + sActionID + "'" : "''") + "," +
-                   (!string.IsNullOrEmpty(sEcosystemID) ? " '" + sEcosystemID + "'" : "''") + "," +
-                   " '" + sMonths + "'," +
-                   " '" + sDays + "'," +
-                   " '" + sHours + "'," +
-                   " '" + sMinutes + "'," +
-                   " '" + sDaysOrWeeks + "'," +
-                   (!string.IsNullOrEmpty(sLabel) ? " '" + sLabel + "'" : "null") + "," +
-                   (!string.IsNullOrEmpty(sDesc) ? " '" + sDesc + "'" : "null") + "," +
-                   (!string.IsNullOrEmpty(sParameterXML) ? " '" + sParameterXML + "'" : "null") + "," +
-                   (iDebugLevel > -1 ? iDebugLevel.ToString() : "null") +
-                   ")";
+                sSQL = "insert into action_schedule (schedule_id, task_id, action_id, ecosystem_id, account_id," +
+					" months, days, hours, minutes, days_or_weeks, label, descr, parameter_xml, debug_level)" +
+                   	" values (uuid(), " +
+					" '" + sTaskID + "'," +
+					(!string.IsNullOrEmpty(sActionID) ? " '" + sActionID + "'" : "''") + "," +
+					(!string.IsNullOrEmpty(sEcosystemID) ? " '" + sEcosystemID + "'" : "''") + "," +
+					(!string.IsNullOrEmpty(sCloudAccountID) ? " '" + sCloudAccountID + "'" : "''") + "," +
+					" '" + sMonths + "'," +
+					" '" + sDays + "'," +
+					" '" + sHours + "'," +
+					" '" + sMinutes + "'," +
+					" '" + sDaysOrWeeks + "'," +
+					(!string.IsNullOrEmpty(sLabel) ? " '" + sLabel + "'" : "null") + "," +
+					(!string.IsNullOrEmpty(sDesc) ? " '" + sDesc + "'" : "null") + "," +
+					(!string.IsNullOrEmpty(sParameterXML) ? " '" + sParameterXML + "'" : "null") + "," +
+					(iDebugLevel > -1 ? iDebugLevel.ToString() : "null") +
+					")";
 
                 if (!dc.sqlExecuteUpdate(sSQL, ref sErr)) { throw new Exception(sErr); }
             }
@@ -2808,7 +2812,9 @@ namespace ACWebMethods
             
             try
             {
-                if (sTaskID.Length == 0 || sRunOn.Length == 0)
+ 				string sCloudAccountID = ui.GetCloudAccountID();
+				
+				if (sTaskID.Length == 0 || sRunOn.Length == 0)
                     throw new Exception("Missing Action Plan date or Task ID.");
 
                 //we encoded this in javascript before the ajax call.
@@ -2820,16 +2826,18 @@ namespace ACWebMethods
                 string sSQL = null;
                 string sErr = null;
 
-                sSQL = "insert into action_plan (task_id, action_id, ecosystem_id, run_on_dt, parameter_xml, debug_level, source)" +
-                   " values (" +
-                   " '" + sTaskID + "'," +
-                   (!string.IsNullOrEmpty(sActionID) ? " '" + sActionID + "'" : "''") + "," +
-                   (!string.IsNullOrEmpty(sEcosystemID) ? " '" + sEcosystemID + "'" : "''") + "," +
-                   " str_to_date('" + sRunOn + "', '%m/%d/%Y %H:%i')," +
-                   (!string.IsNullOrEmpty(sParameterXML) ? " '" + sParameterXML + "'" : "null") + "," +
-                   (iDebugLevel > -1 ? iDebugLevel.ToString() : "null") + "," +
-                   " 'manual'" +
-                   ")";
+                sSQL = "insert into action_plan (task_id, action_id, ecosystem_id, account_id," +
+					" run_on_dt, parameter_xml, debug_level, source)" +
+					" values (" +
+					" '" + sTaskID + "'," +
+					(!string.IsNullOrEmpty(sActionID) ? " '" + sActionID + "'" : "''") + "," +
+					(!string.IsNullOrEmpty(sEcosystemID) ? " '" + sEcosystemID + "'" : "''") + "," +
+					(!string.IsNullOrEmpty(sCloudAccountID) ? " '" + sCloudAccountID + "'" : "''") + "," +
+					" str_to_date('" + sRunOn + "', '%m/%d/%Y %H:%i')," +
+					(!string.IsNullOrEmpty(sParameterXML) ? " '" + sParameterXML + "'" : "null") + "," +
+					(iDebugLevel > -1 ? iDebugLevel.ToString() : "null") + "," +
+					" 'manual'" +
+					")";
 
                 if (!dc.sqlExecuteUpdate(sSQL, ref sErr)) { throw new Exception(sErr); }
             }

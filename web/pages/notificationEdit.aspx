@@ -66,67 +66,59 @@
                     </tr>
                     <tr>
                         <td class="row_odd">
-                            Refresh Minutes
-                        </td>
-                        <td class="row_odd">
-                            <asp:TextBox ID="txtRefreshMinutes" CssClass="usertextbox" runat="server" MaxLength="5" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="row_even">
                             SMTP Server Address
                         </td>
-                        <td class="row_even">
+                        <td class="row_odd">
                             <asp:TextBox ID="txtSMTPServerAddress" CssClass="usertextbox" runat="server" MaxLength="256" />
                         </td>
                     </tr>
                     <tr>
-                        <td class="row_odd">
+                        <td class="row_even">
                             SMTP User Account
                         </td>
-                        <td class="row_odd">
+                        <td class="row_even">
                             <asp:TextBox ID="txtSMTPUserAccount" CssClass="usertextbox" runat="server" MaxLength="256" />
                         </td>
                     </tr>
                     <tr>
-                        <td class="row_even">
+                        <td class="row_odd">
                             SMTP User Password
                         </td>
-                        <td class="row_even">
+                        <td class="row_odd">
                             <asp:TextBox ID="txtSMTPUserPassword" CssClass="usertextbox" runat="server" value="($%#d@x!&"
                                 MaxLength="512" TextMode="Password" />
                         </td>
                     </tr>
                     <tr>
-                        <td class="row_odd">
+                        <td class="row_even">
                             SMTP Password Confirm
                         </td>
-                        <td class="row_odd">
+                        <td class="row_even">
                             <asp:TextBox ID="txtSMTPPasswordConfirm" CssClass="usertextbox" runat="server" value="($%#d@x!&"
                                 MaxLength="512" TextMode="Password" />
                         </td>
                     </tr>
                     <tr>
-                        <td class="row_even">
+                        <td class="row_odd">
                             SMTP Server Port
                         </td>
-                        <td class="row_even">
+                        <td class="row_odd">
                             <asp:TextBox ID="txtSMTPServerPort" CssClass="usertextbox" runat="server" MaxLength="5" />
                         </td>
                     </tr>
                     <tr>
-                        <td class="row_odd">
+                        <td class="row_even">
                             From Email
                         </td>
-                        <td class="row_odd">
+                        <td class="row_even">
                             <asp:TextBox ID="txtFromEmail" CssClass="usertextbox" runat="server" MaxLength="256" />
                         </td>
                     </tr>
                     <tr>
-                        <td class="row_even">
+                        <td class="row_odd">
                             From Name
                         </td>
-                        <td class="row_even">
+                        <td class="row_odd">
                             <asp:TextBox ID="txtFromName" CssClass="usertextbox" runat="server" MaxLength="256" />
                         </td>
                     </tr>

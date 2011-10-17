@@ -141,6 +141,8 @@ $(document).ready(function () {
 			    
 				args += '}';
   
+                //NOTE: we *ARE* passing the account_id - we don't want the dialog to use the default
+                //this is a previous instance's log and we wanna use the same account as it did.
                 ShowTaskLaunchDialog(args);
 
             }

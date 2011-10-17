@@ -52,15 +52,6 @@ function ValidateValues() {
         strError += "Retry Attempts must be between 0 and 9999<br />";
     }
 
-    //txtRefreshMinutes
-    if (!isNumeric($("#ctl00_phDetail_txtRefreshMinutes").val())) {
-        bValid = false;
-        strError += "Refresh Minutes must be between 0 and 9999<br />";
-    } else if ($("#ctl00_phDetail_txtRefreshMinutes").val() < 0 || $("#ctl00_phDetail_txtRefreshMinutes").val() > 9999) {
-        bValid = false;
-        strError += "Refresh Minutes must be between 0 and 9999<br />";
-    }
-
     //txtSMTPServerPort
     if (!isNumeric($("#ctl00_phDetail_txtSMTPServerPort").val())) {
         bValid = false;
@@ -94,14 +85,13 @@ function SaveNotificationSettings() {
     stuff[1] = $("#ctl00_phDetail_txtPollLoop").val();
     stuff[2] = $("#ctl00_phDetail_txtRetryDelay").val();
     stuff[3] = $("#ctl00_phDetail_txtRetryMaxAttempts").val();
-    stuff[4] = $("#ctl00_phDetail_txtRefreshMinutes").val();
-    stuff[5] = $("#ctl00_phDetail_txtSMTPServerAddress").val();
-    stuff[6] = $("#ctl00_phDetail_txtSMTPUserAccount").val();
-    stuff[7] = $("#ctl00_phDetail_txtSMTPUserPassword").val();
-    stuff[8] = $("#ctl00_phDetail_txtSMTPServerPort").val();
-    stuff[9] = $("#ctl00_phDetail_txtFromEmail").val();
-    stuff[10] = $("#ctl00_phDetail_txtFromName").val();
-    stuff[11] = $("#ctl00_phDetail_txtAdminEmail").val();
+    stuff[4] = $("#ctl00_phDetail_txtSMTPServerAddress").val();
+    stuff[5] = $("#ctl00_phDetail_txtSMTPUserAccount").val();
+    stuff[6] = $("#ctl00_phDetail_txtSMTPUserPassword").val();
+    stuff[7] = $("#ctl00_phDetail_txtSMTPServerPort").val();
+    stuff[8] = $("#ctl00_phDetail_txtFromEmail").val();
+    stuff[9] = $("#ctl00_phDetail_txtFromName").val();
+    stuff[10] = $("#ctl00_phDetail_txtAdminEmail").val();
 
     if (stuff.length > 0) {
         PageMethods.SaveNotifications(stuff, OnUpdateSuccess, OnUpdateFailure);

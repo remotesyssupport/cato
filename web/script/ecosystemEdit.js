@@ -76,18 +76,15 @@ $(document).ready(function () {
         var action_id = $(this).attr("id");
         var task_id = $(this).attr("task_id").replace(/t_/, "");
         var task_name = $(this).attr("task_name")
-        var account_id = $("#ctl00_ddlCloudAccounts").val();
-        var account_name = $("#ctl00_ddlCloudAccounts :selected").text();
 
         //since this is an "action", we'll pass the action name AND the task name, rather than bother with 
         //another goofy argument.
         task_name = $(this).attr("action") + " : (" + task_name + ")";
 
         //show the dialog
+        //note: we are not passing account_id - the dialog will pick the default
         var args = '{"task_id":"' + task_id + '", \
             "task_name":"' + task_name + '", \
-            "account_id":"' + account_id + '", \
-            "account_name":"' + account_name + '", \
             "ecosystem_id":"' + g_eco_id + '", \
             "action_id":"' + action_id + '"}';
 
