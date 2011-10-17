@@ -24,16 +24,10 @@ read_config
 proc check_schedules {} {
 	set proc_name check_schedules
 	set sql "select ap.schedule_id, min(ap.plan_id) as plan_id, ap.task_id, 
-		ap.action_id, ap.ecosystem_id, ap.parameter_xml, ap.debug_level, min(ap.run_on_dt), e.account_id		
+		ap.action_id, ap.ecosystem_id, ap.parameter_xml, ap.debug_level, min(ap.run_on_dt), ap.account_id
 		from action_plan  ap
-		left outer join ecosystem e on e.ecosystem_id = ap.ecosystem_id
-		where run_on_dt < now() and schedule_id is not null group by schedule_id
-		union
-		select '', ap.plan_id, ap.task_id, ap.action_id, ap.ecosystem_id, ap.parameter_xml, 
-			ap.debug_level, ap.run_on_dt, e.account_id
-		from action_plan ap 
-		left outer join ecosystem e on e.ecosystem_id = ap.ecosystem_id
-		where run_on_dt < now() and schedule_id is null"
+		where run_on_dt < now() group by schedule_id
+
 	set rows [::mysql::sel $::CONN $sql -list]
 	foreach row $rows {
 		run_schedule_instance $row
@@ -67,6 +61,7 @@ proc expand_this_schedule {sched_row} {
 	set parameter_xml [lindex $sched_row 11]
 	set debug_level [lindex $sched_row 12]
 	set start_instances [lindex $sched_row 13]
+	set account_id [lindex $sched_row 14]
 	#output "sched row is $sched_row"
 
         #set top_run_dt [::mysql::fetch $::CONN]
@@ -166,8 +161,8 @@ proc expand_this_schedule {sched_row} {
 	#output "There are [llength $the_dates] dates"
 	foreach date $the_dates {
 		set date [clock format $date -format "%Y-%m-%d %H:%M:%S"]
-		set sql "insert into action_plan (task_id,run_on_dt,action_id,ecosystem_id,parameter_xml,debug_level,source,schedule_id)
-			values ('$task_id', '$date', '$action_id', '$ecosystem_id', '$parameter_xml', '$debug_level', 'schedule', '$id')"
+		set sql "insert into action_plan (task_id,run_on_dt,action_id,ecosystem_id,parameter_xml,debug_level,source,schedule_id, account_id)
+			values ('$task_id', '$date', '$action_id', '$ecosystem_id', '$parameter_xml', '$debug_level', 'schedule', '$id', '$account_id')"
 		::mysql::exec $::CONN $sql
 	}	
 }
@@ -190,8 +185,8 @@ proc run_schedule_instance {instance_row} {
 #output $sql
 	set ti [::mysql::sel $::CONN $sql -list]
 	output "Started task instance $ti for schedule id $schedule_id and plan id $plan_id"
-	set sql "insert into action_plan_history (plan_id, task_id, run_on_dt, action_id, ecosystem_id, parameter_xml, debug_level, source, schedule_id, task_instance)
-		values ('$plan_id', '$task_id', '$run_on_dt', '$action_id', '$ecosystem_id', '$parameter_xml', '$debug_level', 'schedule', '$schedule_id', '$ti')"
+	set sql "insert into action_plan_history (plan_id, task_id, run_on_dt, action_id, ecosystem_id, parameter_xml, debug_level, source, schedule_id, task_instance, account_id)
+		values ('$plan_id', '$task_id', '$run_on_dt', '$action_id', '$ecosystem_id', '$parameter_xml', '$debug_level', 'schedule', '$schedule_id', '$ti', '$account_id')"
 	::mysql::exec $::CONN $sql
 	set sql "delete from action_plan where plan_id = '$plan_id'"
 	::mysql::exec $::CONN $sql
@@ -206,7 +201,7 @@ proc expand_schedules {} {
 	set proc_name expand_schedules
 	set sql "select distinct(a.schedule_id), unix_timestamp() as now, a.months, a.days_or_weeks, a.days, 
 		a.hours, a.minutes, max(unix_timestamp(ap.run_on_dt)), a.task_id, a.action_id, a.ecosystem_id,
-		a.parameter_xml, a.debug_level, $::MIN_DEPTH - count(ap.schedule_id) as num_to_start
+		a.parameter_xml, a.debug_level, $::MIN_DEPTH - count(ap.schedule_id) as num_to_start, a.account_id
 		from action_schedule a
 		left outer join action_plan ap on ap.schedule_id = a.schedule_id
 		group by a.schedule_id
