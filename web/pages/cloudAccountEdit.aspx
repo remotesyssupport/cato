@@ -86,8 +86,6 @@
                         <td>
                             <select id="ddlAccountType">
                                 <option value="Amazon AWS">Amazon AWS</option>
-                                <option value="VMWare vCloud">VMWare vCloud</option>
-                                <option value="Rackspace">Rackspace</option>
                             </select>
                         </td>
                     </tr>
