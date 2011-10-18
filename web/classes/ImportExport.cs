@@ -204,7 +204,7 @@ namespace ImportExport
                     "'" + xTask.Element("concurrent_instances").Value.Replace("'", "''") + "'," +
                     "'" + xTask.Element("queue_depth").Value.Replace("'", "''") + "'," +
                     "'" + sParameterXML + "'," +
-                    "str_to_date('" + xTask.Element("created_dt").Value.Replace("'", "''") + "','%m/%d/%Y %r')," +
+                    "str_to_date('" + xTask.Element("created_dt").Value.Replace("'", "''") + "','%m/%d/%Y %T')," +
                     "'" + xTask.Element("task_code").Value.Replace("'", "''") + "'," +
                     "'" + xTask.Element("task_name").Value.Replace("'", "''") + "'," +
                     "'" + xTask.Element("version").Value.Replace("'", "''") + "'" +
