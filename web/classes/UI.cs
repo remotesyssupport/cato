@@ -573,7 +573,7 @@ namespace acUI
                 sAdditionalInformation = sAdditionalInformation.Replace("'", "").Replace("\\", "").Replace("\\r\\n", "\\n").Replace("\\r", "\\n").Replace(Environment.NewLine, "\\n");
 
                 sMsg = "setTimeout(\"showAlert('" + sMsg + "', '" + sAdditionalInformation + "');\",500);";
-                ScriptManager.RegisterStartupScript(oPage, typeof(string), Guid.NewGuid().ToString(), sMsg, true);
+                ScriptManager.RegisterStartupScript(oPage, typeof(string), NewGUID(), sMsg, true);
             }
         }
 
@@ -586,7 +586,7 @@ namespace acUI
                 sAdditionalInformation = sAdditionalInformation.Replace("'", "").Replace("\\", "").Replace("\\r\\n", "\\n").Replace("\\r", "\\n").Replace(Environment.NewLine, "\\n");
 
                 sMsg = "showInfo('" + sMsg + "', '" + sAdditionalInformation + "');";
-                ScriptManager.RegisterStartupScript(oPage, typeof(string), Guid.NewGuid().ToString(), sMsg, true);
+                ScriptManager.RegisterStartupScript(oPage, typeof(string), NewGUID(), sMsg, true);
             }
         }
         public bool SendEmailMessage(string sTo, string sFrom, string sSubject, string sBody, ref string sErr)
@@ -664,7 +664,12 @@ namespace acUI
             }
 
             return false;
-        }        
+        }   
+		//we would like all new guids to be lower case, so a wrapper function is used.
+		public string NewGUID()
+		{
+			return Guid.NewGuid().ToString().ToLower();
+		}
 		public string GetPageURL()
         {
             string sURL = "";

@@ -368,7 +368,7 @@ namespace ACWebMethods
                 else
                 {
                     //add a new command
-                    sNewStepID = System.Guid.NewGuid().ToString().ToUpper();
+                    sNewStepID = ui.NewGUID();
 
                     //NOTE: !! yes we are doing some command specific logic here.
                     //Certain commands have different 'default' values for delimiters, etc.
@@ -655,7 +655,7 @@ namespace ACWebMethods
                     //what way when adding, we don't have to loop
                     //(yes, I know we have to loop here, but adding is already a long process
                     //... so we can better afford to do it here than there.)
-                    string sNewStepID = System.Guid.NewGuid().ToString().ToUpper();
+                    string sNewStepID = ui.NewGUID();
 
                     //it's a bit hokey, but if a step already exists in the clipboard, 
                     //and we are copying that step again, 
@@ -703,7 +703,8 @@ namespace ACWebMethods
         {
             dataAccess dc = new dataAccess();
             FunctionTemplates.HTMLTemplates ft = new FunctionTemplates.HTMLTemplates();
-
+			acUI.acUI ui = new acUI.acUI();
+			
             //get all the steps that have the calling stepid as a parent (codeblock)
             string sSQL = "select step_id" +
                 " from task_step" +
@@ -716,7 +717,7 @@ namespace ACWebMethods
             foreach (DataRow dr in dt.Rows)
             {
                 string sThisStepID = dr["step_id"].ToString();
-                string sThisNewID = System.Guid.NewGuid().ToString().ToUpper();
+                string sThisNewID = ui.NewGUID();
 
                 //put them in the table
                 sSQL = "delete from task_step_clipboard" +
@@ -1164,7 +1165,7 @@ namespace ACWebMethods
             //the group_id might be empty, in which case we need a new guid
             if (string.IsNullOrEmpty(sGroupID))
             {
-                sGroupID = System.Guid.NewGuid().ToString().ToUpper();
+                sGroupID = ui.NewGUID();
             }
 
             sSQL += "insert into task_asset_attribute" +
@@ -2164,7 +2165,7 @@ namespace ACWebMethods
 
 
                 // passed client and server validations, create the user
-                string sNewID = System.Guid.NewGuid().ToString().ToUpper();
+                string sNewID = ui.NewGUID();
 
                 try
                 {
@@ -2438,11 +2439,12 @@ namespace ACWebMethods
         {
             //iMode 0=new task, 1=new major version, 2=new minor version
             dataAccess dc = new dataAccess();
-
+			acUI.acUI ui = new acUI.acUI();
+			
             string sErr = "";
             string sSQL = "";
 
-            string sNewTaskID = Guid.NewGuid().ToString();
+            string sNewTaskID = ui.NewGUID();
 
             int iIsDefault = 0;
             string sTaskName = "";
@@ -3158,7 +3160,7 @@ namespace ACWebMethods
                             {
                                 //since we can delete each item from the page it needs a unique id.
                                 //ticks are shorter than a guid
-                                string sPID = "pv" + Guid.NewGuid().ToString();
+                                string sPID = "pv" + ui.NewGUID();
 
                                 string sValue = xVal.Value;
                                 if (dc.IsTrue(sEncrypt))
@@ -3184,7 +3186,7 @@ namespace ACWebMethods
                         {
                             //if, when getting the parameter, there are no values... add one.  We don't want a parameter with no values
                             //AND - no remove button on this only value
-                            sValuesHTML += "<div id=\"pv" + Guid.NewGuid().ToString() + "\">" +
+                            sValuesHTML += "<div id=\"pv" + ui.NewGUID() + "\">" +
                                 "<textarea class=\"param_edit_value\" rows=\"1\"></textarea></div>";
                         }
                     }
@@ -3197,7 +3199,7 @@ namespace ACWebMethods
                 {
                     //if, when getting the parameter, there are no values... add one.  We don't want a parameter with no values
                     //AND - no remove button on this only value
-                    sValuesHTML += "<div id=\"pv" + Guid.NewGuid().ToString() + "\">" +
+                    sValuesHTML += "<div id=\"pv" + ui.NewGUID() + "\">" +
                         "<textarea class=\"param_edit_value\" rows=\"1\"></textarea></div>";
                 }
 
@@ -3281,7 +3283,7 @@ namespace ACWebMethods
             //if sParamID is empty, we are adding
             if (string.IsNullOrEmpty(sParamID))
             {
-                sParamID = "p_" + Guid.NewGuid().ToString().ToUpper();
+                sParamID = "p_" + ui.NewGUID();
                 sParameterXPath = "//parameter[@id = \"" + sParamID + "\"]";  //reset this if we had to get a new id
 
 
@@ -3354,7 +3356,7 @@ namespace ACWebMethods
                 string sReadyValue = ui.unpackJSON(sVal);
                 sReadyValue = (dc.IsTrue(sEncrypt) ? dc.EnCrypt(sReadyValue) : sReadyValue);
 
-                sValueXML += "<value id=\"pv_" + Guid.NewGuid().ToString() + "\">" + sReadyValue + "</value>";
+                sValueXML += "<value id=\"pv_" + ui.NewGUID() + "\">" + sReadyValue + "</value>";
             }
 
             sValueXML = "<values present_as=\"" + sPresentAs + "\">" + sValueXML + "</values>";

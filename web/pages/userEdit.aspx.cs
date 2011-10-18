@@ -266,7 +266,7 @@ namespace Web.pages
             }
 
             // passed client and server validations, create the user
-            string sNewUserID = System.Guid.NewGuid().ToString().ToUpper();
+            string sNewUserID = ui.NewGUID();
 
 
             try

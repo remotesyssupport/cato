@@ -4713,7 +4713,7 @@ namespace FunctionTemplates
                         string sRIdxChecked = "";
                         string sLPosChecked = "";
                         string sRPosChecked = "";
-                        string sVarGUID = "v" + System.Guid.NewGuid().ToString();
+                        string sVarGUID = "v" + ui.NewGUID();
 
                         switch (sType)
                         {
@@ -4905,7 +4905,7 @@ namespace FunctionTemplates
         {
             //passed in a reference to return the elements unique ID back to the calling function
             //in case it's needed for client side operations.
-            string sElementID = "x" + System.Guid.NewGuid().ToString();
+            string sElementID = "x" + ui.NewGUID();
 
             return " id=\"" + sElementID + "\"" +
                 " step_id=\"" + sStepID + "\"" +
@@ -4921,7 +4921,7 @@ namespace FunctionTemplates
         {
             //passed in a reference to return the elements unique ID back to the calling function
             //in case it's needed for client side operations.
-            sElementID = "x" + System.Guid.NewGuid().ToString();
+            sElementID = "x" + ui.NewGUID();
 
             return " id=\"" + sElementID + "\"" +
                 " step_id=\"" + sStepID + "\"" +

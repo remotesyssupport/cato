@@ -969,7 +969,9 @@ namespace ACWebMethods
         }
         private string DrawRegistryNode(XElement xeNode, string sXPath)
         {
-            string sHTML = "";
+			acUI.acUI ui = new acUI.acUI();
+			
+			string sHTML = "";
 
             string sNodeLabel = xeNode.Name.ToString();
 
@@ -980,12 +982,12 @@ namespace ACWebMethods
             //AND ALSO if it's editable, even if it has no children, we'll still draw it as a container.
             if (xeNode.HasElements)
             {
-                string sGroupID = Guid.NewGuid().ToString();
+                string sGroupID = ui.NewGUID();
 
                 sHTML += "<div class=\"ui-widget-content ui-corner-bottom registry_section\" id=\"" + sGroupID + "\">"; //this section
 
                 sHTML += "  <div class=\"ui-state-default registry_section_header\" xpath=\"" + sXPath + "\">"; //header
-                sHTML += "      <div class=\"registry_section_header_title editable\" id=\"" + Guid.NewGuid().ToString() + "\">" + sNodeLabel + "</div>";
+                sHTML += "      <div class=\"registry_section_header_title editable\" id=\"" + ui.NewGUID() + "\">" + sNodeLabel + "</div>";
 
                 sHTML += "<div class=\"registry_section_header_icons\">"; //step header icons
 
@@ -1053,7 +1055,9 @@ namespace ACWebMethods
         }
         private string DrawRegistryItem(XElement xe, string sXPath)
         {
-            string sHTML = "";
+			acUI.acUI ui = new acUI.acUI();
+			
+			string sHTML = "";
             string sEncrypt = "false";
 
             if (xe.Attribute("encrypt") != null)
@@ -1064,11 +1068,11 @@ namespace ACWebMethods
             string sNodeLabel = xe.Name.ToString();
 
 
-            string sGroupID = Guid.NewGuid().ToString();
+            string sGroupID = ui.NewGUID();
 
             sHTML += "<div class=\"ui-widget-content ui-corner-tl ui-corner-bl registry_node\" xpath=\"" + sXPath + "\" id=\"" + sGroupID + "\">";
-            sHTML += "<span class=\"registry_node_label editable\" id=\"" + Guid.NewGuid().ToString() + "\">" + sNodeLabel +
-                "</span> : <span class=\"registry_node_value editable\" id=\"" + Guid.NewGuid().ToString() + "\" encrypt=\"" + sEncrypt + "\">" + sNodeValue + "</span>" + Environment.NewLine;
+            sHTML += "<span class=\"registry_node_label editable\" id=\"" + ui.NewGUID() + "\">" + sNodeLabel +
+                "</span> : <span class=\"registry_node_value editable\" id=\"" + ui.NewGUID() + "\" encrypt=\"" + sEncrypt + "\">" + sNodeValue + "</span>" + Environment.NewLine;
 
             sHTML += "<div class=\"registry_section_header_icons\">"; //step header icons
 
@@ -1309,7 +1313,7 @@ namespace ACWebMethods
 
             try
             {
-                string sNewID = Guid.NewGuid().ToString();
+                string sNewID = ui.NewGUID();
                 string sCloudAccountID = ui.GetCloudAccountID();
 
                 if (string.IsNullOrEmpty(sCloudAccountID))
@@ -1515,7 +1519,7 @@ namespace ACWebMethods
 
             try
             {
-                string sNewID = Guid.NewGuid().ToString();
+                string sNewID = ui.NewGUID();
 
                 sSQL = "insert into ecotemplate (ecotemplate_id, ecotemplate_name, ecotemplate_desc)" +
                     " values ('" + sNewID + "'," +
@@ -2206,7 +2210,7 @@ namespace ACWebMethods
             string sSQL = "insert into ecotemplate_action " +
                  " (action_id, action_name, ecotemplate_id, original_task_id)" +
                  " values (" +
-                 " '" + Guid.NewGuid().ToString() + "'," +
+                 " '" + ui.NewGUID() + "'," +
                  " '" + sActionName + "'," +
                  " '" + sEcoTemplateID + "'," +
                  " '" + sOTID + "'" +
@@ -2782,7 +2786,8 @@ namespace ACWebMethods
 
                 sSQL = "insert into action_schedule (schedule_id, task_id, action_id, ecosystem_id, account_id," +
 					" months, days, hours, minutes, days_or_weeks, label, descr, parameter_xml, debug_level)" +
-                   	" values (uuid(), " +
+                   	" values (" +
+					" '" + ui.NewGUID() + "'," +
 					" '" + sTaskID + "'," +
 					(!string.IsNullOrEmpty(sActionID) ? " '" + sActionID + "'" : "''") + "," +
 					(!string.IsNullOrEmpty(sEcosystemID) ? " '" + sEcosystemID + "'" : "''") + "," +

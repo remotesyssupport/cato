@@ -241,7 +241,7 @@ namespace Web.pages
 					if (iExists == 0)
 						sIsDefault = "1";
 					
-					sAccountID = System.Guid.NewGuid().ToString();
+					sAccountID = ui.NewGUID();
                     sSql = "insert into cloud_account (account_id, account_name, account_number, account_type, is_default, login_id, login_password, auto_manage_security)" +
                     " values ('" + sAccountID + "'," +
                     "'" + sAccountName + "'," +
@@ -450,7 +450,7 @@ namespace Web.pages
                         sPPClause = "'" + dc.EnCrypt(sPP) + "'";
 
                     sSQL = "insert into cloud_account_keypair (keypair_id, account_id, keypair_name, private_key, passphrase)" +
-                        " values ('" + System.Guid.NewGuid().ToString() + "'," +
+                        " values ('" + ui.NewGUID() + "'," +
                         "'" + sAccountID + "'," +
                         "'" + sName.Replace("'", "''") + "'," +
                         sPKClause + "," +

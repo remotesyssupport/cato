@@ -222,7 +222,8 @@ namespace Web.pages
         {
             dataAccess dc = new dataAccess();
             awsMethods acAWS = new awsMethods();
-
+			acUI.acUI ui = new acUI.acUI();
+			
             try
             {
                 string sHTML = "";
@@ -262,7 +263,7 @@ namespace Web.pages
                     {
                         //giving each section a guid so we can delete it on the client side after the ajax call.
                         //not 100% the ecosystem_object_id will always be suitable as a javascript ID.
-                        string sGroupID = Guid.NewGuid().ToString();
+                        string sGroupID = ui.NewGUID();
 
                         sHTML += "<div class=\"ui-widget-content ui-corner-all ecosystem_item\" id=\"" + sGroupID + "\">";
 
