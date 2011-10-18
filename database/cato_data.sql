@@ -1,4 +1,4 @@
-INSERT INTO `users` (`user_id`, `username`, `full_name`, `status`, `authentication_type`, `user_password`, `expiration_dt`, `security_question`, `security_answer`, `last_login_dt`, `failed_login_attempts`, `force_change`, `email`, `settings_xml`) VALUES ('0002BDAF-BFD5-4B9D-82D1-FD39C2947D19','administrator','Administrator',1,'local','#ADMINPASSWORD#',NULL,NULL,NULL,NULL,0,1,'',NULL);
+INSERT INTO `users` (`user_id`, `username`, `full_name`, `status`, `authentication_type`, `user_password`, `expiration_dt`, `security_question`, `security_answer`, `last_login_dt`, `failed_login_attempts`, `force_change`, `email`, `settings_xml`, `user_role`) VALUES ('0002BDAF-BFD5-4B9D-82D1-FD39C2947D19','administrator','Administrator',1,'local','#ADMINPASSWORD#',NULL,NULL,NULL,NULL,0,1,'',NULL,'Administrator');
 INSERT INTO `user_password_history` (`user_id`, `password`, `change_time`) VALUES ('0002BDAF-BFD5-4B9D-82D1-FD39C2947D19','#ADMINPASSWORD#',now());
 INSERT INTO `cloud_object_type` (`cloud_object_type`, `vendor`, `api`, `label`, `api_call`, `describe_parameter`, `result_xpath`, `api_hostname`, `api_version`, `request_protocol`, `request_method`, `result_record_xpath`, `request_group_filter`, `request_record_filter`) VALUES ('aws_ec2_instance','aws','ec2','EC2 Instances','DescribeInstances','InstanceId.n','//instancesSet/item/instanceId','ec2.amazonaws.com','2011-05-15','HTTP','GET','//instancesSet/item',NULL,'InstanceId');
 INSERT INTO `cloud_object_type` (`cloud_object_type`, `vendor`, `api`, `label`, `api_call`, `describe_parameter`, `result_xpath`, `api_hostname`, `api_version`, `request_protocol`, `request_method`, `result_record_xpath`, `request_group_filter`, `request_record_filter`) VALUES ('aws_as_group','aws','as','Auto Scaling Groups','DescribeAutoScalingGroups','AutoScalingGroupNames.member.N','//AutoScalingGroupName','autoscaling.amazonaws.com','2010-08-01','HTTP','GET','//AutoScalingGroups/member',NULL,NULL);
@@ -451,36 +451,6 @@ INSERT INTO `messenger_settings` (`id`, `mode_off_on`, `loop_delay_sec`, `retry_
 VALUES (1,'off',30,1,5,'','','',25,'user@example.com','Cloud Sidekick Messenger','');
 INSERT INTO `poller_settings` (`id`, `mode_off_on`, `loop_delay_sec`, `max_processes`, `app_instance`) VALUES (1,'on',3,4,'DEFAULT');
 INSERT INTO `scheduler_settings` (`id`, `mode_off_on`, `loop_delay_sec`, `schedule_min_depth`, `schedule_max_days`, `clean_app_registry`) VALUES (1,'on',5,10,60,5);
-INSERT INTO `users_roles` (`user_id`, `role_name`) VALUES ('0002BDAF-BFD5-4B9D-82D1-FD39C2947D19','Administrator');
-INSERT INTO `user_page_roles` (`role_name`, `page_name`) VALUES ('Developer','about.aspx');
-INSERT INTO `user_page_roles` (`role_name`, `page_name`) VALUES ('Developer','awsDiscovery.aspx');
-INSERT INTO `user_page_roles` (`role_name`, `page_name`) VALUES ('Developer','ecosystemEdit.aspx');
-INSERT INTO `user_page_roles` (`role_name`, `page_name`) VALUES ('Developer','ecosystemManage.aspx');
-INSERT INTO `user_page_roles` (`role_name`, `page_name`) VALUES ('Developer','ecoTemplateEdit.aspx');
-INSERT INTO `user_page_roles` (`role_name`, `page_name`) VALUES ('Developer','ecoTemplateManage.aspx');
-INSERT INTO `user_page_roles` (`role_name`, `page_name`) VALUES ('Developer','globalRegistry.aspx');
-INSERT INTO `user_page_roles` (`role_name`, `page_name`) VALUES ('Developer','home.aspx');
-INSERT INTO `user_page_roles` (`role_name`, `page_name`) VALUES ('Developer','tagEdit.aspx');
-INSERT INTO `user_page_roles` (`role_name`, `page_name`) VALUES ('Developer','taskActivityLog.aspx');
-INSERT INTO `user_page_roles` (`role_name`, `page_name`) VALUES ('Developer','taskCommandHelp.aspx');
-INSERT INTO `user_page_roles` (`role_name`, `page_name`) VALUES ('Developer','taskEdit.aspx');
-INSERT INTO `user_page_roles` (`role_name`, `page_name`) VALUES ('Developer','taskManage.aspx');
-INSERT INTO `user_page_roles` (`role_name`, `page_name`) VALUES ('Developer','taskPrint.aspx');
-INSERT INTO `user_page_roles` (`role_name`, `page_name`) VALUES ('Developer','taskRunLog.aspx');
-INSERT INTO `user_page_roles` (`role_name`, `page_name`) VALUES ('Developer','taskStatusView.aspx');
-INSERT INTO `user_page_roles` (`role_name`, `page_name`) VALUES ('Developer','taskStepVarsEdit.aspx');
-INSERT INTO `user_page_roles` (`role_name`, `page_name`) VALUES ('Developer','taskView.aspx');
-INSERT INTO `user_page_roles` (`role_name`, `page_name`) VALUES ('Developer','userPreferenceEdit.aspx');
-
-INSERT INTO `user_page_roles` (`role_name`, `page_name`) VALUES ('User','about.aspx');
-INSERT INTO `user_page_roles` (`role_name`, `page_name`) VALUES ('User','awsDiscovery.aspx');
-INSERT INTO `user_page_roles` (`role_name`, `page_name`) VALUES ('User','ecosystemEdit.aspx');
-INSERT INTO `user_page_roles` (`role_name`, `page_name`) VALUES ('User','ecosystemManage.aspx');
-INSERT INTO `user_page_roles` (`role_name`, `page_name`) VALUES ('User','home.aspx');
-INSERT INTO `user_page_roles` (`role_name`, `page_name`) VALUES ('User','taskActivityLog.aspx');
-INSERT INTO `user_page_roles` (`role_name`, `page_name`) VALUES ('User','taskRunLog.aspx');
-INSERT INTO `user_page_roles` (`role_name`, `page_name`) VALUES ('User','taskStatusView.aspx');
-INSERT INTO `user_page_roles` (`role_name`, `page_name`) VALUES ('User','userPreferenceEdit.aspx');
 
 -- Example tasks
 

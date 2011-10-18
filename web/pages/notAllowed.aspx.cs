@@ -30,9 +30,8 @@ namespace Web.pages
         
         protected void Page_Load(object sender, EventArgs e)
         {
-//the page where the decision was made to redirect here might have put additional detail messages in the session
-
-    //if so, display that message
+			//the page where the decision was made to redirect here might have put additional detail messages in the session
+			//if so, display that message
 
             if (!string.IsNullOrEmpty((string)ui.GetSessionObject("NotAllowedMessage", "Security")))
             {

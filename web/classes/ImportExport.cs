@@ -204,7 +204,7 @@ namespace ImportExport
                     "'" + xTask.Element("concurrent_instances").Value.Replace("'", "''") + "'," +
                     "'" + xTask.Element("queue_depth").Value.Replace("'", "''") + "'," +
                     "'" + sParameterXML + "'," +
-                    "str_to_date('" + xTask.Element("created_dt").Value.Replace("'", "''") + "','%m/%d/%Y %r')," +
+                    "str_to_date('" + xTask.Element("created_dt").Value.Replace("'", "''") + "','%m/%d/%Y %T')," +
                     "'" + xTask.Element("task_code").Value.Replace("'", "''") + "'," +
                     "'" + xTask.Element("task_name").Value.Replace("'", "''") + "'," +
                     "'" + xTask.Element("version").Value.Replace("'", "''") + "'" +
@@ -641,7 +641,7 @@ namespace ImportExport
                                 //if there's a GUID conflict then just generate a new guid for this task.
                                 if (iCount > 0)
                                 {
-                                    sNewTaskID = Guid.NewGuid().ToString();
+                                    sNewTaskID = ui.NewGUID();
                                 }
 
                                 //check the steps to see if there are any GUID conflicts
@@ -696,7 +696,7 @@ namespace ImportExport
                                 //if there's a GUID conflict then just generate a new guid for this task.
                                 //and re-id the steps
                                 if (iCount > 0)
-                                    sNewTaskID = Guid.NewGuid().ToString();
+                                    sNewTaskID = ui.NewGUID();
 
                                 //check the steps to see if there are any GUID conflicts
                                 //and repair them if necessary
@@ -920,7 +920,7 @@ namespace ImportExport
                     //*) updating the row with the new guid
 
                     string sOrigStepID = drSteps["step_id"].ToString();
-                    string sNewStepID = Guid.NewGuid().ToString();
+                    string sNewStepID = ui.NewGUID();
 
 
                     //this will update any references in function_xml with 

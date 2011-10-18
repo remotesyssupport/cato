@@ -40,6 +40,27 @@ public class dataAccess
     }
 
     #region "Internal Functions"
+	public bool TestDBConnection(ref string sErr) {
+	/*
+	 * We'll be doing a simple query against the database to verify connectivity.
+	 * 
+	 * NOTE: on several completely random places, we've noted an odd connection issue, 
+	 * that seems to only happen immediately after the box (apache/mysql/mono) starts up.
+	 * 
+	 * In those places, hitting this function first seems to "clear the pipes" and subsequent 
+	 * queries work fine.
+	 * 
+	 * This is a terrible workaround hack, but we can move on and fix when the cause is finally found.
+	 * 
+	 * */
+        string sSQL = "select 'Database Test Successful'";
+		string sTestResult = "";
+        if (!sqlGetSingleString(ref sTestResult, sSQL, ref sErr))
+        {
+			return false;
+        }
+		return true;
+	}
     public bool InitDatabaseSettings(string sPath, ref string sErr)
     {
 

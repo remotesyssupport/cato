@@ -15,7 +15,6 @@
 using System;
 using System.DirectoryServices;
 using System.Collections.Generic;
-using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -23,6 +22,9 @@ using Globals;
 using System.Web.Security;
 using System.Data;
 using System.IO;
+using System.Xml.Linq;
+using System.Xml.XPath;
+using System.Linq;
 
 namespace Web
 {
@@ -84,17 +86,32 @@ namespace Web
             //FIRST THINGS FIRST... hitting the login page resets the session.
             HttpContext.Current.Session.Clear();
 			
+			
+			
 			//now, for some reason we were having issues with the initial startup of apache
 			//not able to perform the very first database hit.
 			//this line serves as an inital db hit, but we aren't trapping it
-            string sSQL = "select 'Database Test Successful'";
-			string sTestResult = "";
-            if (!dc.sqlGetSingleString(ref sTestResult, sSQL, ref sErr))
-            {
-            }
+			dc.TestDBConnection(ref sErr);
+			if(sErr != "")
+				Response.Write("<!--DATABASE TEST FAILED: " + sErr + "-->");
+
+			
+			
+			//load the site.master.xml file into the session.  If it doesn't exist, we can't proceed.
+			XDocument xSiteMaster = XDocument.Load(HttpContext.Current.Server.MapPath("~/pages/site.master.xml"));
+			
+			if (xSiteMaster == null)
+			{
+				lblErrorMessage.Text = "Error: Site master XML file is missing or unreadable.";
+				btnLogin.Visible = false;
+			}
+			else 
+			{
+				ui.SetSessionObject("site_master_xml", xSiteMaster, "Security");
+			}
 
 
-
+			//get the slogin settings
             sSQL = "select login_message, page_view_logging, report_view_logging, log_days" +
 				" from login_security_settings where id = 1";
             DataRow dr = null;
@@ -206,7 +223,7 @@ namespace Web
             //put a crap load of static stuff in the session so we can use the values later without hitting the database a lot.
 
             //***SECURITY COLLECTION
-            sSQL = "select full_name, email, last_login_dt from users where user_id = '" + sUserID + "'";
+            sSQL = "select full_name, user_role, email, last_login_dt from users where user_id = '" + sUserID + "'";
             DataRow dr = null;
             if (!dc.sqlGetDataRow(ref dr, sSQL, ref sErr))
             {
@@ -215,10 +232,15 @@ namespace Web
             }
             if (dr != null)
             {
+				string sRole = dr["user_role"].ToString();
+				
                 //like the user_id
                 ui.SetSessionObject("user_id", sUserID, "Security");
                 //when we're ready to stop using the session, a global has proven to work.
                 //CurrentUser.UserID = sUserID;
+
+                //the role
+                ui.SetSessionObject("user_role", sRole, "Security");
 
                 //the full name
                 ui.SetSessionObject("user_full_name", dr["full_name"], "Security");
@@ -235,20 +257,8 @@ namespace Web
                 //email
                 ui.SetSessionObject("user_email", dr["email"], "Security");
 
-                // user roles
-                sSQL = "select role_name from users_roles where user_id = '" + sUserID + "'";
-                string sUserRoles = null;
-                if (!dc.GetDelimitedData(ref sUserRoles, sSQL, ",", ref sErr, false, false))
-                {
-                    lblErrorMessage.Text = sErr;
-                    return;
-                }
-                else
-                {
-                    ui.SetSessionObject("user_roles", sUserRoles, "Security");
-                }
 
-                // user groups
+				// user groups
                 sSQL = "select tag_name from object_tags where object_type = 1 and object_id = '" + sUserID + "'";
                 string sUserTags = null;
                 if (!dc.GetDelimitedData(ref sUserTags, sSQL, ",", ref sErr, false, false))
@@ -264,7 +274,7 @@ namespace Web
                 // admin emails for error reporting
                 sSQL = "select admin_email from messenger_settings where id = 1";
                 string sAdminEmail = null;
-                if (!dc.sqlGetSingleString(ref sUserRoles, sSQL, ref sErr))
+                if (!dc.sqlGetSingleString(ref sAdminEmail, sSQL, ref sErr))
                 {
                     lblErrorMessage.Text = sErr;
                     return;
@@ -289,7 +299,24 @@ namespace Web
                     return;
                 }
 
+				
+                // allowed pages list (from the session)
+                XDocument xSiteMaster = (XDocument)ui.GetSessionObject("site_master_xml", "Security");
 
+                if (xSiteMaster == null)
+                {
+                    lblErrorMessage.Text = "Error: Site master XML is not in the session.";
+                }
+                else
+                {
+                    string sAllowedPages = "";
+                    foreach (XElement xPage in xSiteMaster.XPathSelectElements("//roles/" + sRole + "/allowedpages/page"))
+                    {
+                        sAllowedPages += xPage.Value.ToString().ToLower() + ",";
+                    }
+					
+					ui.SetSessionObject("allowed_pages", sAllowedPages, "Security");
+                }
             }
             else
             {
@@ -447,7 +474,7 @@ namespace Web
 
             //first before anything, if the system is flagged as 'down', only "administrators" can log in.
             string sRole = "";
-            sSQL = "select role_name from users_roles where user_id = (select user_id from users where username = '" + sUsername + "')";
+            sSQL = "select user_role from users where username = '" + sUsername + "'";
 
             if (!dc.sqlGetSingleString(ref sRole, sSQL, ref sErr))
             {

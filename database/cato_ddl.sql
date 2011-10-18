@@ -15,6 +15,7 @@ CREATE TABLE `users` (
   `force_change` int(11) DEFAULT NULL,
   `email` varchar(255) DEFAULT '',
   `settings_xml` text,
+  `user_role` varchar(32) NOT NULL,
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `users_IX_users` (`username`(64))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -718,14 +719,6 @@ CREATE TABLE `user_cloud_accounts` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `user_page_roles` (
-  `role_name` varchar(32) NOT NULL,
-  `page_name` varchar(32) NOT NULL,
-  PRIMARY KEY (`role_name`,`page_name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `user_password_history` (
   `user_id` char(36) NOT NULL DEFAULT '',
   `change_time` datetime NOT NULL DEFAULT '1753-01-01 00:00:00',
@@ -766,16 +759,6 @@ CREATE TABLE `user_session` (
   PRIMARY KEY (`user_id`),
   KEY `FK_user_session_users` (`user_id`),
   CONSTRAINT `FK_user_session_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `users_roles` (
-  `user_id` char(36) NOT NULL DEFAULT '',
-  `role_name` varchar(64) NOT NULL,
-  PRIMARY KEY (`user_id`,`role_name`),
-  KEY `FK_users_roles_users` (`user_id`),
-  CONSTRAINT `FK_users_roles_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 SET @saved_cs_client     = @@character_set_client;

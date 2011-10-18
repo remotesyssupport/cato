@@ -232,16 +232,21 @@ namespace Web.pages
 					ui.WriteObjectChangeLog(Globals.acObjectTypes.CloudAccount, sAccountID, sAccountName, sOriginalName, sAccountName);}
                 else
                 {
+					//now, for some reason we were having issues with the initial startup of apache
+					//not able to perform the very first database hit.
+					//this line serves as an inital db hit, but we aren't trapping it or showing the error
+					dc.TestDBConnection(ref sErr);
+
 					//if there are no rows yet, make this one the default even if the box isn't checked.
 	                int iExists = -1;
-					sSql = "select count(*) from cloud_account";
+					sSql = "select count(*) as cnt from cloud_account";
                 	if (!dc.sqlGetSingleInteger(ref iExists, sSql, ref sErr))
                     	throw new Exception("Unable to count Cloud Accounts: " + sErr);
 					
 					if (iExists == 0)
 						sIsDefault = "1";
 					
-					sAccountID = System.Guid.NewGuid().ToString();
+					sAccountID = ui.NewGUID();
                     sSql = "insert into cloud_account (account_id, account_name, account_number, account_type, is_default, login_id, login_password, auto_manage_security)" +
                     " values ('" + sAccountID + "'," +
                     "'" + sAccountName + "'," +
@@ -450,7 +455,7 @@ namespace Web.pages
                         sPPClause = "'" + dc.EnCrypt(sPP) + "'";
 
                     sSQL = "insert into cloud_account_keypair (keypair_id, account_id, keypair_name, private_key, passphrase)" +
-                        " values ('" + System.Guid.NewGuid().ToString() + "'," +
+                        " values ('" + ui.NewGUID() + "'," +
                         "'" + sAccountID + "'," +
                         "'" + sName.Replace("'", "''") + "'," +
                         sPKClause + "," +

@@ -14,7 +14,7 @@
     </div>
     <div id="left_panel">
         <div class="left_tooltip">
-            <img src="../images/home-192x192.png" alt="" />
+            <img src="../images/terminal-192x192.png" alt="" />
             <div id="left_tooltip_box_outer">
                 <div id="left_tooltip_box_inner">
                         <img src="../images/tooltip.png" alt="" />

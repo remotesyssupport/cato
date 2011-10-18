@@ -268,7 +268,7 @@ namespace Web.pages
 
 
                     sSql = "insert into asset_credential (credential_id, credential_name, username, password, domain, shared_cred_desc, shared_or_local, privileged_password)" +
-                    " values (" + "'" + System.Guid.NewGuid().ToString() + "'," +
+                    " values (" + "'" + ui.NewGUID() + "'," +
                     "'" + sCredentialName.Replace("'", "''") + "'," +
                     "'" + sUserName.Replace("'", "''") + "'," +
                     "'" + dc.EnCrypt(sPassword) + "'," +
