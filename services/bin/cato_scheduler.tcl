@@ -181,7 +181,7 @@ proc run_schedule_instance {instance_row} {
 	set run_on_dt [lindex $instance_row 7]
 	set account_id [lindex $instance_row 8]
 
-	set sql "call addTaskInstance ('$task_id',NULL,'$schedule_id','$debug_level','$plan_id','$parameter_xml','$ecosystem_id,','$account_id')"
+	set sql "call addTaskInstance ('$task_id',NULL,'$schedule_id','$debug_level','$plan_id','$parameter_xml','$ecosystem_id','$account_id')"
 #output $sql
 	set ti [::mysql::sel $::CONN $sql -list]
 	output "Started task instance $ti for schedule id $schedule_id and plan id $plan_id"
