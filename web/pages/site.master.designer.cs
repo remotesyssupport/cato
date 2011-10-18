@@ -23,20 +23,10 @@ namespace Web {
 		
 		protected System.Web.UI.WebControls.ContentPlaceHolder phDetail;
 		
-		protected System.Web.UI.WebControls.Panel pnlHome;
-		
-		protected System.Web.UI.WebControls.Panel pnlInformation;
-		
-		protected System.Web.UI.WebControls.Panel pnlSecurity;
-		
-		protected System.Web.UI.WebControls.Panel pnlProcedures;
-		
-		protected System.Web.UI.WebControls.Panel pnlEcosystems;
-		
-		protected System.Web.UI.WebControls.Panel pnlConfig;
-		
-		protected System.Web.UI.WebControls.Button btnLogOut;
+		protected System.Web.UI.WebControls.PlaceHolder phMenu;
 		
 		protected System.Web.UI.WebControls.DropDownList ddlCloudAccounts;
+		
+		protected System.Web.UI.WebControls.Button btnLogOut;
 	}
 }

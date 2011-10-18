@@ -818,7 +818,7 @@ namespace ACWebMethods
                 try
                 {
                     if (!dc.sqlExecuteUpdate("update user_session set kick=1 where user_id in " +
-                        " (select user_id from users_roles where role_name <> 'Administrator')"
+                        " (select user_id from users where user_role <> 'Administrator')"
                         , ref sErr)) { throw new Exception(sErr); }
                 }
                 catch (Exception ex)

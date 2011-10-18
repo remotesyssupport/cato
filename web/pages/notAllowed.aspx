@@ -1,5 +1,5 @@
 <%@ Page Language="C#" AutoEventWireup="true" CodeBehind="notAllowed.aspx.cs" Inherits="Web.pages.notAllowed"
-    MasterPageFile="~/pages/popupwindow.master" %>
+    MasterPageFile="~/pages/site.master" %>
 
 <asp:Content ID="cDetail" ContentPlaceHolderID="phDetail" runat="server">
     <div id="content">
@@ -14,7 +14,7 @@
                     <p>
                         <br />
                         <br />
-                        You requested an action that is not allowed.</p>
+                        You requested a page or action that is not allowed.</p>
                     <p>
                         <asp:Label ID="lblMessage" runat="server">
                         </asp:Label></p>

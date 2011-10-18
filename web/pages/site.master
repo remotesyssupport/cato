@@ -145,161 +145,36 @@
 <body>
     <div id="fullcontent" class="min900px">
         <form id="form1" runat="server">
-        <!-- This is the MAIN Content section. -->
-        <asp:ScriptManager ID="ScriptManager" runat="server" EnablePageMethods="true">
-            <Services>
-                <asp:ServiceReference Path="~/pages/taskMethods.asmx" />
-                <asp:ServiceReference Path="~/pages/uiMethods.asmx" />
-            </Services>
-        </asp:ScriptManager>
-        <asp:ContentPlaceHolder ID="phDetail" runat="server">
-        </asp:ContentPlaceHolder>
-        <!--  End MAIN Content section. -->
-        <div id="head" class="ui-widget-header">
-            <!-- Main Menu  -->
-            <ul class="sf-menu">
-                <li>
-                    <asp:Panel ID="pnlHome" runat="server">
-                        <a onclick="showPleaseWait();" href="../pages/home.aspx">
-                            <img src="../images/icons/home_24.png" alt="" />
-                            Home</a>
-                    </asp:Panel>
-                </li>
-                <li>
-                    <asp:Panel ID="pnlInformation" runat="server">
-                        <a href="#">
-                            <img src="../images/demo.png" alt="" />
-                            Information</a>
-                        <ul>
-                            <li class="ui-widget-header"><a onclick="showPleaseWait();" href="../pages/systemStatusView.aspx">
-                                <img src="../images/sys_stat_24.png" alt="" />System Status</a> </li>
-                            <li class="ui-widget-header"><a onclick="showPleaseWait();" href="../pages/taskStatusView.aspx">
-                                <img src="../images/task_stat_24.png" alt="" />Task Status</a> </li>
-                            <li class="ui-widget-header"><a onclick="showPleaseWait();" href="../pages/about.aspx">
-                                <img src="../images/icons/about_24.png" alt="" />About</a> </li>
-                        </ul>
-                    </asp:Panel>
-                </li>
-                <li>
-                    <asp:Panel ID="pnlSecurity" runat="server">
-                        <a href="#">
-                            <img src="../images/icons/password.png" alt="" />
-                            Security</a>
-                        <ul>
-                            <li class="ui-widget-header"><a onclick="showPleaseWait();" href="../pages/userEdit.aspx">
-                                <img src="../images/users_24.png" alt="" />Manage Users</a></li>
-                            <li class="ui-widget-header"><a onclick="showPleaseWait();" href="../pages/sharedCredentialEdit.aspx">
-                                <img src="../images/shared_24.png" alt="" />Manage Shared Credentials</a> </li>
-                        </ul>
-                    </asp:Panel>
-                </li>
-                <li>
-                    <asp:Panel ID="pnlProcedures" runat="server">
-                        <a href="#">
-                            <img src="../images/advanced.png" alt="" />
-                            Tasks</a>
-                        <ul>
-                            <li class="ui-widget-header"><a onclick="showPleaseWait();" href="../pages/taskManage.aspx?type=1">
-                                <img src="../images/icons/manage_auto_task_24.png" alt="" />Manage Automated Tasks</a>
-                            </li>
-                        </ul>
-                    </asp:Panel>
-                </li>
-                <li>
-                    <asp:Panel ID="pnlEcosystems" runat="server">
-                        <a href="#">
-                            <img src="../images/display.png" alt="" />
-                            Ecosystems</a>
-                        <ul>
-                            <li class="ui-widget-header"><a onclick="showPleaseWait();" href="../pages/ecoTemplateManage.aspx">
-                                <img src="../images/icons/ecotemplates_24.png" alt="" />Manage Eco Templates</a>
-                            </li>
-                            <li class="ui-widget-header"><a onclick="showPleaseWait();" href="../pages/ecosystemManage.aspx">
-                                <img src="../images/icons/ecosystems_24.png" alt="" />Manage Ecosystems</a>
-                            </li>
-                            <li class="ui-widget-header"><a onclick="showPleaseWait();" href="../pages/awsDiscovery.aspx">
-                                <img src="../images/icons/discovery_24.png" alt="" />Discovery</a> </li>
-                            <!--<li class="ui-widget-header"><a onclick="showPleaseWait();" href="../pages/cloudAPITester.aspx">
-                                <img src="../images/icons/api_tester_24.png" alt="" />Cloud API Tester</a> </li>-->
-                        </ul>
-                    </asp:Panel>
-                </li>
-                <!--<li>
-                    <asp:Panel ID="pnlAssets" runat="server">
-                        <a href="#">
-                            <img src="../images/display.png" alt="" />
-                            Assets</a>
-                        <ul>
-                            <li><a onclick="showPleaseWait();" href="../pages/assetEdit.aspx">
-                                <img src="../images/manage_asset_24.png" alt="" />Manage Assets</a>
-                            </li>
-                            <li><a onclick="showPleaseWait();" href="../pages/globalAttributesEdit.aspx">
-                                <img src="../images/global_24.png" alt="" />Manage Asset Attributes</a>
-                            </li>
-                            <li><a onclick="showPleaseWait();" href="../pages/sharedCredentialEdit.aspx">
-                                <img src="../images/shared_24.png" alt="" />Manage Shared Credentials</a>
-                            </li>
-                        </ul>
-                    </asp:Panel>
-                </li>
--->
-                <li>
-                    <asp:Panel ID="pnlConfig" runat="server">
-                        <a href="#">
-                            <img src="../images/config_24.png" alt="" />
-                            Configuration</a>
-                        <ul>
-                            <li class="ui-widget-header"><a onclick="showPleaseWait();" href="../pages/cloudAccountEdit.aspx">
-                                <img src="../images/icons/cloud_accounts_24.png" alt="" />Cloud Accounts</a>
-                            </li>
-                            <!--
-                            // 2011-10-11 - PMD - remove global registry from menu choice, issue #17
-                            <li class="ui-widget-header"><a onclick="showPleaseWait();" href="../pages/globalRegistry.aspx">
-                                <img src="../images/icons/global_registry_24.png" alt="" />Global Registry</a></li>
-                            -->
-                            <li class="ui-widget-header"><a onclick="showPleaseWait();" href="../pages/loginDefaultsEdit.aspx">
-                                <img src="../images/login_24.png" alt="" />Set Login Defaults</a></li>
-                            <li class="ui-widget-header"><a onclick="showPleaseWait();" href="../pages/pollerSettings.aspx">
-                                <img src="../images/ldap_24.png" alt="" />Poller Settings</a> </li>
-                            <li class="ui-widget-header"><a onclick="showPleaseWait();" href="../pages/importLoadFile.aspx">
-                                <img src="../images/icons/import_24.png" alt="" />Import a Backup File</a> </li>                            <!--<li class="ui-widget-header"><a onclick="showPleaseWait();" href="../pages/ldapEdit.aspx">
-                                <img src="../images/ldap_24.png" alt="" />Set LDAP Connectivity</a>
-                            </li>
-                            <li class="ui-widget-header"><a onclick="showPleaseWait();" href="../pages/tagEdit.aspx">
-                                <img src="../images/tag_24.png" alt="" />Manage Tags</a> </li>
-                            <li class="ui-widget-header"><a onclick="showPleaseWait();" href="../pages/logserverSettings.aspx">
-                                <img src="../images/logserver_24.png" alt="" />Log Server Settings</a>
-                            </li>-->
-                            <li class="ui-widget-header"><a onclick="showPleaseWait();" href="../pages/notificationEdit.aspx">
-                                <img src="../images/notify_24.png" alt="" />Manage Notifications</a>
-                            </li>
-                            <li class="ui-widget-header"><a onclick="showPleaseWait();" href="../pages/schedulerSettings.aspx">
-                                <img src="../images/date.png" alt="" />Scheduler Settings</a> </li>
-                            <li class="ui-widget-header"><a href="#" onclick="openWindow('../pages/securityLogView.aspx', 'logView', 'location=no,status=no,scrollbars=yes,resizable=yes,width=800,height=700');">
-                                <img src="../images/icons/password.png" alt="" />Security Log</a></li>
-                        </ul>
-                    </asp:Panel>
-                </li>
-                <li><a style="cursor: pointer;" onclick="$('#ctl00_btnLogOut').click();">
-                    <img src="../images/logout.png" alt="" />
-                    Logout</a>
-                    <!-- Logout Button handler -->
-                    <div class="hidden">
-                        <asp:Button ID="btnLogOut" runat="server" Text="testlogout" OnClick="Logout_Click" /></div>
-                </li>
-            </ul>
-            <!--   END Main Menu -->
-            <div id="userPreferences" style="cursor: pointer; text-align: right; margin-right: 4px;
-                color: White">
-                <span>Cloud Account:
-                    <asp:DropDownList ID="ddlCloudAccounts" runat="server">
-                    </asp:DropDownList>
-                </span><a style="color: White;" href="../pages/userPreferenceEdit.aspx">My Account</a></div>
-            <div id="update_success_msg" class="hidden" style="color: #FFF; white-space: nowrap;
-                text-align: right;">
-                UpdateSuccessful</div>
-        </div>
-        <br />
+	        <!-- This is the MAIN Content section. -->
+	        <asp:ScriptManager ID="ScriptManager" runat="server" EnablePageMethods="true">
+	            <Services>
+	                <asp:ServiceReference Path="~/pages/taskMethods.asmx" />
+	                <asp:ServiceReference Path="~/pages/uiMethods.asmx" />
+	            </Services>
+	        </asp:ScriptManager>
+	        <asp:ContentPlaceHolder ID="phDetail" runat="server">
+	        </asp:ContentPlaceHolder>
+	        <!--  End MAIN Content section. -->
+	        <div id="head" class="ui-widget-header">
+	            <!-- Main Menu  -->
+	            <ul class="sf-menu">
+					<asp:Placeholder id="phMenu" runat="server"></asp:Placeholder>
+	            </ul>
+	            <!--   END Main Menu -->
+	            <div id="userPreferences" style="cursor: pointer; text-align: right; margin-right: 4px;
+	                color: White">
+	                <span>Cloud Account:
+	                    <asp:DropDownList ID="ddlCloudAccounts" runat="server">
+	                    </asp:DropDownList>
+	                </span><a style="color: White;" href="../pages/userPreferenceEdit.aspx">My Account</a></div>
+	            <div id="update_success_msg" class="hidden" style="color: #FFF; white-space: nowrap;
+	                text-align: right;">
+	                UpdateSuccessful</div>
+	        </div>
+	        <br />
+			<div class="hidden">
+	            <asp:Button ID="btnLogOut" runat="server" Text="testlogout" OnClick="Logout_Click" />
+			</div>
         </form>
         <!-- End .Net form. Only dynamic divs below here -->
         <!-- jQuery Popups. -->

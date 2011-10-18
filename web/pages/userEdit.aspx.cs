@@ -135,7 +135,7 @@ namespace Web.pages
                     if (aSearchTerms[i].Length > 0)
                     {
                         sWhereString += " and (u.full_name like '%" + aSearchTerms[i] +
-                            "%' or ur.role_name like '%" + aSearchTerms[i] +
+                            "%' or u.user_role like '%" + aSearchTerms[i] +
                             "%' or u.username like '%" + aSearchTerms[i] +
                             "%' or u.status like '%" + aSearchTerms[i] +
                             "%' or u.last_login_dt like '%" + aSearchTerms[i] + "%' ) ";
@@ -148,10 +148,8 @@ namespace Web.pages
                 "case when u.status = '1' then 'Enabled' when u.status = '-1' then 'Locked'" +
                     " when u.status = '0' then 'Disabled' end as status," +
                 " u.authentication_type," +
-                " ur.role_name as role " +
+                " u.user_role as role " +
                 " from users u " +
-                " left outer join users_roles ur " +
-                " on u.user_id = ur.user_id " +
                 " where u.status <> 86" +
                 sWhereString +
                 " order by full_name";
@@ -278,7 +276,7 @@ namespace Web.pages
 
                 // all good, save the new user and redirect to the user edit page.
                 sSql = "insert users" +
-                    " (user_id,username,full_name,authentication_type,user_password,force_change,email,status)" +
+                    " (user_id,username,full_name,authentication_type,user_password,force_change,email,status,user_role)" +
                     " values " +
                     "('" + sNewUserID + "','" +
                     sLoginID.Trim().Replace("'", "''") + "'," +
@@ -287,6 +285,7 @@ namespace Web.pages
                     "'" + sForcePasswordChange + "'," +
                     "'" + sEmail.Trim() + "'," +
                     "'" + sStatus + "'" +
+                    "'" + sUserRole + "'" +
                     ")";
                 oTrans.Command.CommandText = sSql;
                 if (!oTrans.ExecUpdate(ref sErr))
@@ -294,14 +293,6 @@ namespace Web.pages
                     throw new Exception(sErr);
                 }
 
-
-                // add role
-                sSql = "insert users_roles (user_id,role_name) values " + "('" + sNewUserID + "','" + sUserRole + "')";
-                oTrans.Command.CommandText = sSql;
-                if (!oTrans.ExecUpdate(ref sErr))
-                {
-                    throw new Exception(sErr);
-                }
 
                 #region "groups"
                 // add user groups, if there are any
@@ -585,6 +576,7 @@ namespace Web.pages
                     " email = '" + sEmail + "'," +
                     " failed_login_attempts = '0'," +
                     " status = '" + sStatus + "' " +
+                    " user_role = '" + sUserRole + "' " +
                     " where user_id = '" + sEditUserID + "'";
                 oTrans.Command.CommandText = sSql;
                 if (!oTrans.ExecUpdate(ref sErr))
@@ -603,14 +595,6 @@ namespace Web.pages
                     }
                 }
 
-
-                // add role
-                sSql = "update users_roles set role_name = '" + sUserRole + "' where user_id = '" + sEditUserID + "'";
-                oTrans.Command.CommandText = sSql;
-                if (!oTrans.ExecUpdate(ref sErr))
-                {
-                    throw new Exception(sErr);
-                }
 
                 /*#region "tags"
                 // remove the existing tags
@@ -744,8 +728,7 @@ namespace Web.pages
             sSQL = "select u.user_id, u.username, u.full_name, u.status, u.last_login_dt," +
                 " u.failed_login_attempts, u.email ,u.authentication_type," +
                 " ifnull(u.user_password,'') as user_password," +
-                " ur.role_name from users u " +
-                " left outer join users_roles ur on ur.user_id = u.user_id" +
+                " u.user_role from users u " +
                 " where u.user_id = '" + sUserID + "'";
             DataRow dr = null;
             if (!dc.sqlGetDataRow(ref dr, sSQL, ref sErr))
@@ -763,7 +746,7 @@ namespace Web.pages
                     sbUserValues.AppendFormat("\"{0}\" : \"{1}\",", "sEmail", (object.ReferenceEquals(dr["email"], DBNull.Value) ? "" : dr["email"].ToString()));
                     sbUserValues.AppendFormat("\"{0}\" : \"{1}\",", "sAuthenticationType", (object.ReferenceEquals(dr["authentication_type"], DBNull.Value) ? "" : dr["authentication_type"].ToString()));
                     sbUserValues.AppendFormat("\"{0}\" : \"{1}\",", "sStatus", (object.ReferenceEquals(dr["status"], DBNull.Value) ? "" : dr["status"].ToString()));
-                    sbUserValues.AppendFormat("\"{0}\" : \"{1}\",", "sRole", (object.ReferenceEquals(dr["role_name"], DBNull.Value) ? "" : dr["role_name"].ToString()));
+                    sbUserValues.AppendFormat("\"{0}\" : \"{1}\",", "sRole", (object.ReferenceEquals(dr["user_role"], DBNull.Value) ? "" : dr["user_role"].ToString()));
                     sbUserValues.AppendFormat("\"{0}\" : \"{1}\",", "sPasswordMasked", "($%#d@x!&");
                     sbUserValues.AppendFormat("\"{0}\" : \"{1}\",", "sFailedLogins", (object.ReferenceEquals(dr["failed_login_attempts"], DBNull.Value) ? "0" : dr["failed_login_attempts"].ToString()));
                     sbUserValues.AppendFormat("\"{0}\" : \"{1}\",", "sUserStatus", (object.ReferenceEquals(dr["status"], DBNull.Value) ? "0" : dr["status"].ToString()));

@@ -1,0 +1,114 @@
+<root>
+	<mainmenu>
+		<!-- 
+			valid menu attributes
+			all items apply to both "menu" and sub"item" nodes
+		
+			* "label" - required, will show "No Label Defined" if not defined			
+			* "roles" - a visibility flag for the menu 
+				* "all" means everyone
+				* omitted or empty means no one
+				* an explicit list of roles if desired, space or comma delimited
+			* "class" - optional additional class or classes, space delimited
+			* "href" - optional, if not provided the <a> has no href
+			* "icon" - optional
+			* "onclick" - optional
+
+			
+			sample menu with one sub item
+			
+	
+			<menu roles="" label="" icon="" class="">	
+				<item label="" icon="" onclick="showPleaseWait();" href="" class="">
+				</item>
+			</menu>
+		-->
+		<menu roles="all" label="Home" icon="../images/icons/home_24.png" onclick="showPleaseWait();" href="../pages/home.aspx">
+		</menu>
+		<menu roles="developer user" label="Information" icon="../images/demo.png">
+			<item roles="developer" label="System Status" icon="../images/sys_stat_24.png" onclick="showPleaseWait();" href="../pages/systemStatusView.aspx">
+			</item>
+			<item roles="developer" label="Task Status" icon="../images/task_stat_24.png" onclick="showPleaseWait();" href="../pages/taskStatusView.aspx">
+			</item>
+			<item roles="developer user" label="About" icon="../images/icons/about_24.png" onclick="showPleaseWait();" href="../pages/about.aspx">
+			</item>
+		</menu>
+		<menu label="Security" icon="../images/icons/password.png">
+			<item label="Manage Users" icon="../images/users_24.png" onclick="showPleaseWait();" href="../pages/userEdit.aspx">
+			</item>
+			<item label="Manage Shared Credentials" icon="../images/shared_24.png" onclick="showPleaseWait();" href="../pages/sharedCredentialEdit.aspx">
+			</item>
+		</menu>
+		<menu roles="developer" label="Tasks" icon="../images/advanced.png">
+			<item roles="developer" label="Manage Tasks" icon="../images/icons/manage_auto_task_24.png" onclick="showPleaseWait();" href="../pages/taskManage.aspx">
+			</item>
+		</menu>
+		<menu roles="developer user" label="Ecosystems" icon="../images/display.png">
+			<item roles="developer" label="Manage Eco Templates" icon="../images/icons/ecotemplates_24.png" onclick="showPleaseWait();" href="../pages/ecoTemplateManage.aspx">
+			</item>
+			<item roles="developer user" label="Manage Ecosystems" icon="../images/icons/ecosystems_24.png" onclick="showPleaseWait();" href="../pages/ecosystemManage.aspx">
+			</item>
+			<item roles="developer" label="Discovery" icon="../images/icons/discovery_24.png" onclick="showPleaseWait();" href="../pages/awsDiscovery.aspx">
+			</item>
+		</menu>
+		<menu roles="developer" label="Configuration" icon="../images/config_24.png">
+			<item label="Cloud Accounts" icon="../images/icons/cloud_accounts_24.png" onclick="showPleaseWait();" href="../pages/cloudAccountEdit.aspx">
+			</item>
+			<item label="Set Login Defaults" icon="../images/login_24.png" onclick="showPleaseWait();" href="../pages/loginDefaultsEdit.aspx">
+			</item>
+			<item label="Poller Settings" icon="../images/ldap_24.png" onclick="showPleaseWait();" href="../pages/pollerSettings.aspx">
+			</item>
+			<item roles="developer" label="Import a Backup File" icon="../images/icons/import_24.png" onclick="showPleaseWait();" href="../pages/importLoadFile.aspx">
+			</item>
+			<item label="Manage Notifications" icon="../images/notify_24.png" onclick="showPleaseWait();" href="../pages/notificationEdit.aspx">
+			</item>
+			<item label="Scheduler Settings" icon="../images/date.png" onclick="showPleaseWait();" href="../pages/schedulerSettings.aspx">
+			</item>
+			<item label="Security Log" icon="../images/icons/password.png" onclick="openWindow('../pages/securityLogView.aspx', 'logView', 'location=no,status=no,scrollbars=yes,resizable=yes,width=800,height=700');">
+			</item>
+		</menu>
+		<menu roles="all" label="Logout" icon="../images/logout.png" onclick="$('#ctl00_btnLogOut').click();">
+		</menu>
+	</mainmenu>
+	<roles>
+		<!--
+		The "allowedpages" section here is to prevent explicit page access.  If a user tries to directly access
+		a page via it's URL (circumventing the menu), the UI won't allow access to the page unless it's in this list.
+		-->
+		<Developer>
+			<allowedpages>
+				<page>about.aspx</page>
+				<page>awsDiscovery.aspx</page>
+				<page>ecosystemEdit.aspx</page>
+				<page>ecosystemManage.aspx</page>
+				<page>ecoTemplateEdit.aspx</page>
+				<page>ecoTemplateManage.aspx</page>
+				<page>globalRegistry.aspx</page>
+				<page>home.aspx</page>
+				<page>tagEdit.aspx</page>
+				<page>taskActivityLog.aspx</page>
+				<page>taskCommandHelp.aspx</page>
+				<page>taskEdit.aspx</page>
+				<page>taskManage.aspx</page>
+				<page>taskPrint.aspx</page>
+				<page>taskRunLog.aspx</page>
+				<page>taskStatusView.aspx</page>
+				<page>taskStepVarsEdit.aspx</page>
+				<page>taskView.aspx</page>
+				<page>userPreferenceEdit.aspx</page>
+			</allowedpages>
+		</Developer>
+		<User>
+			<allowedpages>
+				<page>about.aspx</page>
+				<page>ecosystemEdit.aspx</page>
+				<page>ecosystemManage.aspx</page>
+				<page>home.aspx</page>
+				<page>taskActivityLog.aspx</page>
+				<page>taskRunLog.aspx</page>
+				<page>taskStatusView.aspx</page>
+				<page>userPreferenceEdit.aspx</page>
+			</allowedpages>
+		</User>
+	</roles>
+</root>

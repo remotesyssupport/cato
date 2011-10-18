@@ -255,9 +255,9 @@ namespace acUI
             else
                 return "";
         }
-        public string GetSessionUserRolesByName()
+        public string GetSessionUserRole()
         {
-            object o = GetSessionObject("user_roles", "Security");
+            object o = GetSessionObject("user_role", "Security");
             if (o == null)
                 Logout("Server Session has expired (4).");
             if (o != null)
@@ -317,12 +317,10 @@ namespace acUI
         }
         #endregion
         #region "Security Functions"
-        public bool UserIsInRole(string sRole)
+        public bool UserIsInRole(string sRoleToCheck)
         {
-            //this looks up roles by name
-            string sRoles = null;
-            sRoles = GetSessionUserRolesByName();
-            if (sRoles.IndexOf(sRole) > -1)
+            string sUserRole = GetSessionUserRole();
+            if (sUserRole == sRoleToCheck)
                 return true;
             else
                 return false;
@@ -412,7 +410,7 @@ namespace acUI
             // but you will not be able to see it.
             // IF the page does exist, it will be checked to see if the current user has the privilege of viewing it
 
-            string sRole = GetSessionUserRolesByName();
+            string sRole = GetSessionUserRole();
             string sPage = GetPageNameFromURL(GetPageURL());
 
             //FIRST! --- the Administrator role gets everything, no check required.
@@ -432,15 +430,11 @@ namespace acUI
 
             if (sAllowedPagesNoMatterWhat.IndexOf(sPage) == -1)
             {
-                string sResult = "";
-                string sErr = "";
-
-                dc.sqlGetSingleString(ref sResult, "select 1 from user_page_roles where role_name = '" + sRole + "' and page_name = '" + sPage + "'", ref sErr);
-
-                if (!dc.IsTrue(sResult))
-                {
+				//this will check against what it read in the xml file
+				//which should be cached in the security session at login into a csv string called allowed_pages
+                string sAllowedPages = GetSessionObject("allowed_pages", "Security").ToString();
+                if (sAllowedPages.ToLower().IndexOf(sPage.ToLower()) == -1)
                     ReportSecurityIssue(sPage, sMessage);
-                }
             }
         }
         public void Logout(string sMsg)
