@@ -86,14 +86,16 @@ namespace Web
             //FIRST THINGS FIRST... hitting the login page resets the session.
             HttpContext.Current.Session.Clear();
 			
+			
+			
 			//now, for some reason we were having issues with the initial startup of apache
 			//not able to perform the very first database hit.
 			//this line serves as an inital db hit, but we aren't trapping it
-            string sSQL = "select 'Database Test Successful'";
-			string sTestResult = "";
-            if (!dc.sqlGetSingleString(ref sTestResult, sSQL, ref sErr))
-            {
-            }
+			dc.TestDBConnection(ref sErr);
+			if(sErr != "")
+				Response.Write("<!--DATABASE TEST FAILED: " + sErr + "-->");
+
+			
 			
 			//load the site.master.xml file into the session.  If it doesn't exist, we can't proceed.
 			XDocument xSiteMaster = XDocument.Load(HttpContext.Current.Server.MapPath("~/pages/site.master.xml"));
