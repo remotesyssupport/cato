@@ -115,7 +115,7 @@ namespace Web.pages
                                 foreach (DataRow drMatch in drMatches)
                                 {
                                     string sLink = " <span class=\"ecosystem_link pointer\" ecosystem_id=\"" + drMatch["ecosystem_id"].ToString() + "\">" + drMatch["ecosystem_name"].ToString() + "</span>";
-                                    sResultList += "," + sLink;
+                                    sResultList += (sResultList == "" ? sLink : "," + sLink);
                                 }
                             }
                         }
