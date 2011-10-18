@@ -186,14 +186,6 @@ CREATE TABLE `cloud_object_type_props` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `customer_info` (
-  `keyname` varchar(64) NOT NULL,
-  `value` varchar(1024) DEFAULT NULL,
-  PRIMARY KEY (`keyname`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `ecosystem` (
   `ecosystem_id` varchar(36) NOT NULL,
   `ecosystem_name` varchar(64) NOT NULL,
