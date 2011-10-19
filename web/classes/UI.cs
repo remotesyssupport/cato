@@ -320,7 +320,7 @@ namespace acUI
         public bool UserIsInRole(string sRoleToCheck)
         {
             string sUserRole = GetSessionUserRole();
-            if (sUserRole == sRoleToCheck)
+            if (sUserRole.ToLower() == sRoleToCheck.ToLower())
                 return true;
             else
                 return false;

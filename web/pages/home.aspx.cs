@@ -22,6 +22,7 @@ using System.Web.Configuration;
 using System.IO;
 using Globals;
 using System.Collections;
+using System.Data;
 
 namespace Web.pages
 {
@@ -37,36 +38,54 @@ namespace Web.pages
 			
 			//this will only write out if you're an Administrator
 			//will check each item to make sure the proper config is done.
-			
-			//for starters, just write out the hardcoded html
-			pnlGettingStarted.Visible = true;
-			
-			Literal lt = new Literal();
-			ArrayList aItems = new ArrayList();
-			
-			//administrator account
-			sSQL = "select security_question, security_answer, email from users where username = 'administrator'";
-			DataRow dr = null;
-			if(!dc.sqlGetDataRow(ref dr, sSQL, ref sErr)) {
-				ui.RaiseError(Page, "Unable to read Administrator account", false, sErr);
-			}
-            if (dr != null)
-            {
-				aItems.Add("Set an email account to receive system notifications.");
-				aItems.Add("Select a security challenge question and response.");
-				lt.Text += DrawGettingStartedItem("Administrator Account", aItems, "<a href=\"../pages/userPreferenceEdit.aspx\">Click here</a> to update Administrator account settings.");
-			}
+			if (ui.UserIsInRole("Administrator")) {
+				Literal lt = new Literal();
+				ArrayList aItems = new ArrayList();
 				
-
+				//administrator account
+				sSQL = "select security_question, security_answer, email from users where username = 'administrator'";
+				DataRow dr = null;
+				if(!dc.sqlGetDataRow(ref dr, sSQL, ref sErr)) {
+					ui.RaiseError(Page, "Unable to read Administrator account.", false, sErr);
+				}
+	            if (dr != null)
+	            {
+					if (string.IsNullOrEmpty(dr["email"].ToString()))
+						aItems.Add("Set an email account to receive system notifications.");
+	
+					if (string.IsNullOrEmpty(dr["security_question"].ToString()) || string.IsNullOrEmpty(dr["security_answer"].ToString()))
+						aItems.Add("Select a security challenge question and response.");
 		
-			//messenger settings
-			aItems.Clear();
-			aItems.Add("Sfds");
-			aItems.Add("111");
-			lt.Text += DrawGettingStartedItem("Messenger Settings", aItems, "<a href=\"../pages/userPreferenceEdit.aspx\">Click here</a> to update Messenger settings.");
+					if (aItems.Count > 0)
+						lt.Text += DrawGettingStartedItem("Administrator Account", aItems, "<a href=\"../pages/userPreferenceEdit.aspx\">Click here</a> to update Administrator account settings.");
+				}
+					
+	
+			
+				//messenger settings
+				aItems.Clear();
+				sSQL = "select smtp_server_addr from messenger_settings where id = 1";
+				dr = null;
+				if(!dc.sqlGetDataRow(ref dr, sSQL, ref sErr)) {
+					ui.RaiseError(Page, "Unable to read Messenger Settings.", false, sErr);
+				}
+	            if (dr != null)
+	            {
+					if (string.IsNullOrEmpty(dr["smtp_server_addr"].ToString()))
+						aItems.Add("Define an SMTP server.");
+	
+					if (aItems.Count > 0)
+						lt.Text += DrawGettingStartedItem("Messenger Settings", aItems, "<a href=\"../pages/userPreferenceEdit.aspx\">Click here</a> to update Messenger settings.");
+				}
 
-		
-			phGettingStartedItems.Controls.Add(lt);
+	
+			
+				phGettingStartedItems.Controls.Add(lt);
+				
+				//if the phGettingStarted has anything in it, show the getting started panel
+				if (phGettingStartedItems.Controls.Count > 0)
+					pnlGettingStarted.Visible = true;
+			}
 			
         }
     
