@@ -87,7 +87,28 @@ namespace ACWebMethods
 
             return sMsg;
         }
-
+		
+        [WebMethod(EnableSession = true)]
+		public bool wmLogout()
+        {
+			dataAccess dc = new dataAccess();
+            acUI.acUI ui = new acUI.acUI();
+            try
+            {
+				string sUserID = ui.GetSessionUserID();
+				string sUserName = ui.GetSessionUsername();
+	            string sErr = "";
+	            dc.addSecurityLog(sUserID, Globals.SecurityLogTypes.Security, Globals.SecurityLogActions.UserLogout, Globals.acObjectTypes.None, sUserName, "Manual Log Out", ref sErr);
+	            System.Web.Security.FormsAuthentication.SignOut();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            
+			return true;
+        }
+		
         [WebMethod(EnableSession = true)]
         public string wmAssetSearch(string sSearchText, bool bAllowMultiSelect)
         {

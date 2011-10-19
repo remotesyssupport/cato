@@ -599,7 +599,7 @@ proc get_steps {task_id} {
 	while {[string length [set row [$::db_fetch $::CONN]]] > 0} {
 
 		#output "DEBUG: $row" 4
-		if {[catch {set ::step_arr([lindex $row 0]) $row} err_msg]} {
+		if {[catch {set ::step_arr([string tolower [lindex $row 0]]) $row} err_msg]} {
 			switch -glob $err_msg {
 				"unmatched open brace*" {
 					error_out "Syntax Error -> Unbalanced openning curly brace found in command, remove or escape brace from command." 2000
@@ -3508,7 +3508,7 @@ proc run_commands {task_name codeblock} {
 }
 proc process_step {step_id task_name} {
 	set proc_name process_step
-	set ::STEP_ID $step_id
+	set ::STEP_ID [string tolower $step_id]
 	
 	output "**************************************************************"
 	output "**** PROCESSING STEP $::STEP_ID" 
@@ -3534,9 +3534,9 @@ proc process_step {step_id task_name} {
 			set returned_step_id [if_function $command]
 
 			if {"$returned_step_id" > ""} {
-				set ::STEP_ID $returned_step_id
-				set function_name [lindex $::step_arr($returned_step_id) 3]
-				set command [replace_variables_all [lindex $::step_arr($returned_step_id) 4]]
+				set ::STEP_ID [string tolower $returned_step_id]
+				set function_name [lindex $::step_arr($::STEP_ID) 3]
+				set command [replace_variables_all [lindex $::step_arr($::STEP_ID) 4]]
 				output "'IF' Action Command is {$function_name}" 1
 				output "'IF' Action Full Commmand: {$command}" 6
 			}
@@ -3813,7 +3813,7 @@ proc process_step {step_id task_name} {
 			}
 			set step_id $::STEP_ID
 			run_commands $task_name $new_codeblock
-			set ::STEP_ID $step_id
+			set ::STEP_ID [string tolower $step_id]
 
 			unset new_codeblock
 
@@ -3857,7 +3857,7 @@ proc process_step {step_id task_name} {
 						output "subtask_id is $subtask_id, version is $subtask_version" 1
 				set step_id $::STEP_ID
 				run_commands $subtask_id MAIN
-				set ::STEP_ID $step_id
+					set ::STEP_ID [string tolower $step_id]
 			} else {
 				error_out "Subtask not found or no steps exist." 2012
 			}

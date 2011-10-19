@@ -278,13 +278,13 @@ namespace Web.pages
                 sSql = "insert users" +
                     " (user_id,username,full_name,authentication_type,user_password,force_change,email,status,user_role)" +
                     " values " +
-                    "('" + sNewUserID + "','" +
-                    sLoginID.Trim().Replace("'", "''") + "'," +
+                    "('" + sNewUserID + "'," + 
+					"'" + sLoginID.Trim().Replace("'", "''") + "'," +
                     "'" + sFullName.Trim().Replace("'", "''") + "'," +
                     "'" + sAuthType + "'," + sPassword + "," +
                     "'" + sForcePasswordChange + "'," +
                     "'" + sEmail.Trim() + "'," +
-                    "'" + sStatus + "'" +
+                    "'" + sStatus + "'," +
                     "'" + sUserRole + "'" +
                     ")";
                 oTrans.Command.CommandText = sSql;
@@ -403,12 +403,6 @@ namespace Web.pages
                     //oTrans.Command.CommandText = sSql;
                     //if (!oTrans.ExecUpdate(ref sErr))
                     //    throw new Exception(sErr);
-
-                    //delete roles
-                    sSql = "delete from users_roles where user_id in (" + sbAll.ToString() + ")";
-                    oTrans.Command.CommandText = sSql;
-                    if (!oTrans.ExecUpdate(ref sErr))
-                        throw new Exception(sErr);
                 }
 
                 // delete some users...
@@ -491,7 +485,7 @@ namespace Web.pages
             string sUserRole = oUser[6].ToString();
             string sEmail = oUser[7].ToString();
             string sStatus = oUser[8].ToString();
-            //string sGroupArray = oUser[9].ToString();
+            string sGroupArray = oUser[9].ToString();
 
             dataAccess dc = new dataAccess();
             acUI.acUI ui = new acUI.acUI();
@@ -575,8 +569,8 @@ namespace Web.pages
                     " authentication_type = '" + sAuthType + "'," +
                     " email = '" + sEmail + "'," +
                     " failed_login_attempts = '0'," +
-                    " status = '" + sStatus + "' " +
-                    " user_role = '" + sUserRole + "' " +
+                    " status = '" + sStatus + "'," +
+                    " user_role = '" + sUserRole + "'" +
                     " where user_id = '" + sEditUserID + "'";
                 oTrans.Command.CommandText = sSql;
                 if (!oTrans.ExecUpdate(ref sErr))
@@ -596,7 +590,7 @@ namespace Web.pages
                 }
 
 
-                /*#region "tags"
+                #region "tags"
                 // remove the existing tags
                 sSql = "delete from object_tags where object_id = '" + sEditUserID + "'";
                 oTrans.Command.CommandText = sSql;
@@ -620,7 +614,7 @@ namespace Web.pages
                         }
                     }
                 }
-                #endregion*/
+                #endregion
 
 
 

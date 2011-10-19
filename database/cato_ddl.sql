@@ -34,7 +34,7 @@ CREATE TABLE `action_plan` (
   `source` varchar(16) NOT NULL DEFAULT 'manual',
   `schedule_id` varchar(36) DEFAULT NULL,
   PRIMARY KEY (`plan_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1531 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
@@ -51,7 +51,7 @@ CREATE TABLE `action_plan_history` (
   `schedule_id` varchar(36) DEFAULT NULL,
   `task_instance` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`plan_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=124 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
@@ -91,7 +91,7 @@ CREATE TABLE `application_registry` (
   `command_line` varchar(255) DEFAULT '',
   `platform` varchar(255) DEFAULT '',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
@@ -378,7 +378,7 @@ CREATE TABLE `message` (
   `msg_bcc` varchar(255) DEFAULT '',
   PRIMARY KEY (`msg_id`),
   KEY `message_IX_message` (`status`)
-) ENGINE=InnoDB AUTO_INCREMENT=15314 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
@@ -497,7 +497,7 @@ CREATE TABLE `schedule_instance` (
   KEY `schedule_instance_IX_schedule_instance` (`status`,`run_dt`),
   KEY `FK_schedule_instance_schedule` (`schedule_id`),
   CONSTRAINT `FK_schedule_instance_schedule` FOREIGN KEY (`schedule_id`) REFERENCES `schedule` (`schedule_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=10558 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
@@ -604,7 +604,7 @@ CREATE TABLE `task_instance` (
   KEY `IX_task_instance_task_id` (`task_id`),
   KEY `IX_task_instance_task_status` (`task_status`),
   KEY `IX_task_instance_schedule_instance` (`schedule_instance`)
-) ENGINE=InnoDB AUTO_INCREMENT=7915 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
@@ -620,7 +620,7 @@ CREATE TABLE `task_instance_log` (
   KEY `task_instance_log_IX_task_instance_log` (`task_instance`,`entered_dt`),
   KEY `IX_task_instance_log_connection_name` (`connection_name`),
   CONSTRAINT `FK_task_instance_log_task_instance` FOREIGN KEY (`task_instance`) REFERENCES `task_instance` (`task_instance`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=20909 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
@@ -746,7 +746,7 @@ CREATE TABLE `user_security_log` (
   KEY `IX_user_security_log_user_id` (`user_id`),
   KEY `FK_user_security_log_users` (`user_id`),
   CONSTRAINT `FK_user_security_log_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=17198 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;

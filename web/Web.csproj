@@ -49,11 +49,11 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.EnterpriseServices" />
-    <Reference Include="MySql.Data">
-      <HintPath>bin\ext\mysql.data.dll</HintPath>
-    </Reference>
     <Reference Include="ICSharpCode.SharpZipLib">
       <HintPath>bin\ext\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="MySql.Data">
+      <HintPath>bin\ext\mysql.data.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -319,6 +319,7 @@
     </Compile>
     <Compile Include="classes\ImportExport.cs" />
     <None Include="pages\site.master.xml" />
+    <None Include="script\site.master.js" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v9.0\WebApplications\Microsoft.WebApplication.targets" />

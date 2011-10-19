@@ -28,7 +28,6 @@ namespace Web
 {
     public partial class sitemaster : System.Web.UI.MasterPage
     {
-        dataAccess dc = new dataAccess();
         acUI.acUI ui = new acUI.acUI();
         public acUI.AppGlobals ag = new acUI.AppGlobals();
 
@@ -168,15 +167,5 @@ namespace Web
                 }
 			}
         }
-        protected void Logout_Click(object sender, EventArgs e)
-        {
-            string sUserName = "";
-            string sErr = "";
-            dc.addSecurityLog(sUserID, Globals.SecurityLogTypes.Security, Globals.SecurityLogActions.UserLogout, Globals.acObjectTypes.None, sUserName, "Manual Log Out", ref sErr);
-            ui.SetCookie("user_id", "", "");
-            FormsAuthentication.SignOut();
-            FormsAuthentication.RedirectToLoginPage();
-        }
-
     }
 }
