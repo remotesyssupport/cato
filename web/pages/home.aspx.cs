@@ -27,8 +27,72 @@ namespace Web.pages
 {
     public partial class home : System.Web.UI.Page
     {
-        protected void Page_Load(object sender, EventArgs e)
+        dataAccess dc = new dataAccess();
+        acUI.acUI ui = new acUI.acUI();
+		
+		protected void Page_Load(object sender, EventArgs e)
         {
+			string sSQL = "";
+			string sErr = "";
+			
+			//this will only write out if you're an Administrator
+			//will check each item to make sure the proper config is done.
+			
+			//for starters, just write out the hardcoded html
+			pnlGettingStarted.Visible = true;
+			
+			Literal lt = new Literal();
+			ArrayList aItems = new ArrayList();
+			
+			//administrator account
+			sSQL = "select security_question, security_answer, email from users where username = 'administrator'";
+			DataRow dr = null;
+			if(!dc.sqlGetDataRow(ref dr, sSQL, ref sErr)) {
+				ui.RaiseError(Page, "Unable to read Administrator account", false, sErr);
+			}
+            if (dr != null)
+            {
+				aItems.Add("Set an email account to receive system notifications.");
+				aItems.Add("Select a security challenge question and response.");
+				lt.Text += DrawGettingStartedItem("Administrator Account", aItems, "<a href=\"../pages/userPreferenceEdit.aspx\">Click here</a> to update Administrator account settings.");
+			}
+				
+
+		
+			//messenger settings
+			aItems.Clear();
+			aItems.Add("Sfds");
+			aItems.Add("111");
+			lt.Text += DrawGettingStartedItem("Messenger Settings", aItems, "<a href=\"../pages/userPreferenceEdit.aspx\">Click here</a> to update Messenger settings.");
+
+		
+			phGettingStartedItems.Controls.Add(lt);
+			
         }
-    }
+    
+		protected string DrawGettingStartedItem(string sTitle, ArrayList aItems, string sActionLine)
+		{
+			string sHTML = "";
+
+			sHTML += "<div class=\"ui-widget\" style=\"margin-top: 10px;\">";
+			sHTML += "<div style=\"padding: 10px;\" class=\"ui-state-highlight ui-corner-all\">";
+			sHTML += "<span style=\"float: left; margin-right: .3em;\" class=\"ui-icon ui-icon-info\"></span>";
+			sHTML += "<strong>" + sTitle + "</strong>";
+
+			
+			//each item
+			foreach (string sItem in aItems) 
+			{
+				sHTML += "<p style=\"margin-left: 10px;\">" + sItem + "</p>";				
+			}
+
+			
+			sHTML += "<br />";
+			sHTML += "<p>" + sActionLine + "</p>";
+			sHTML += "</div>";
+			sHTML += "</div>";
+			
+			return sHTML;
+		}
+	}
 }
