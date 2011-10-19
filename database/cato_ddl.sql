@@ -708,17 +708,6 @@ CREATE TABLE `task_step_user_settings` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `user_cloud_accounts` (
-  `user_id` varchar(36) NOT NULL,
-  `account_id` varchar(255) NOT NULL,
-  `account_password` varchar(255) NOT NULL,
-  `account_type` varchar(255) NOT NULL,
-  `is_default` int(11) NOT NULL,
-  PRIMARY KEY (`user_id`,`account_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `user_password_history` (
   `user_id` char(36) NOT NULL DEFAULT '',
   `change_time` datetime NOT NULL DEFAULT '1753-01-01 00:00:00',
