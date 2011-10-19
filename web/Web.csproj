@@ -49,11 +49,11 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.EnterpriseServices" />
-    <Reference Include="MySql.Data">
-      <HintPath>bin\ext\mysql.data.dll</HintPath>
-    </Reference>
     <Reference Include="ICSharpCode.SharpZipLib">
       <HintPath>bin\ext\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="MySql.Data">
+      <HintPath>bin\ext\mysql.data.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
