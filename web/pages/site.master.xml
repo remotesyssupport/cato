@@ -67,7 +67,7 @@
 			<item label="Security Log" icon="../images/icons/password.png" onclick="openWindow('../pages/securityLogView.aspx', 'logView', 'location=no,status=no,scrollbars=yes,resizable=yes,width=800,height=700');">
 			</item>
 		</menu>
-		<menu roles="all" label="Logout" icon="../images/logout.png" onclick="$('#ctl00_btnLogOut').click();">
+		<menu roles="all" label="Logout" icon="../images/logout.png" onclick="logout();">
 		</menu>
 	</mainmenu>
 	<roles>

@@ -26,7 +26,5 @@ namespace Web {
 		protected System.Web.UI.WebControls.PlaceHolder phMenu;
 		
 		protected System.Web.UI.WebControls.DropDownList ddlCloudAccounts;
-		
-		protected System.Web.UI.WebControls.Button btnLogOut;
 	}
 }
