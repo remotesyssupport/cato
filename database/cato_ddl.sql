@@ -614,7 +614,7 @@ CREATE TABLE `task_instance_log` (
   `step_id` char(36) DEFAULT '',
   `entered_dt` datetime DEFAULT NULL,
   `connection_name` varchar(36) DEFAULT NULL,
-  `log` text,
+  `log` mediumtext,
   `command_text` text,
   PRIMARY KEY (`id`),
   KEY `task_instance_log_IX_task_instance_log` (`task_instance`,`entered_dt`),
