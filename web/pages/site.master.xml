@@ -96,6 +96,8 @@
 				<page>taskStepVarsEdit.aspx</page>
 				<page>taskView.aspx</page>
 				<page>userPreferenceEdit.aspx</page>
+				<page>systemStatusView.aspx</page>
+				<page>importLoadFile.aspx</page>
 			</allowedpages>
 		</Developer>
 		<User>
@@ -103,6 +105,7 @@
 				<page>about.aspx</page>
 				<page>ecosystemEdit.aspx</page>
 				<page>ecosystemManage.aspx</page>
+				<page>awsDiscovery.aspx</page>
 				<page>home.aspx</page>
 				<page>taskActivityLog.aspx</page>
 				<page>taskRunLog.aspx</page>
