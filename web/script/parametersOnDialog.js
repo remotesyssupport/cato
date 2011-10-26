@@ -34,6 +34,29 @@ $(document).ready(function () {
         //and add it to the dialog
         $(this).before(output);
     });
+    
+   
+    
+    /*
+	//encrypted fields are a pair of fields... 
+	$(".encunderlay").live("keydown", function(event) {
+		var $ovr = $(this).next(".encoverlay");
+		var stars = "";
+		
+		//length of the text?
+		var ln = $(this).val().length;
+		for (i=0;i<=ln;i++)
+		{
+			stars += "*";
+		}
+
+		//setTimeout(function() {
+			$ovr.text(stars);
+		//}, 50);
+
+	});
+	*/
+
 });
 
 function DrawParameterEditForm(parameter_xml) {
@@ -91,7 +114,7 @@ function DrawParameterEditForm(parameter_xml) {
                         output += "<div class=\"task_launch_parameter_value\">";
 
                         //                        //if it's encrypt, draw a masked input, otherwise a standard textarea
-                        //                        if (masked == "true") {
+                        //                        if (encrypt == "true") {
                         //                            output += "<input type=\"password\" class=\"task_launch_parameter_value_input\">";
                         //                        }
                         //                        else {
@@ -119,18 +142,38 @@ function DrawParameterEditForm(parameter_xml) {
                         if (vidx > 0)
                             return false;
 
-
                         output += "<div class=\"task_launch_parameter_value\">";
 
-                        //                        //if it's masked, draw a masked input, otherwise a standard textarea
-                        //                        if (masked == "true") {
-                        //                            output += "<input type=\"password\" class=\"task_launch_parameter_value_input\">";
-                        //                        }
-                        //                        else {
-                        output += "<textarea class=\"task_launch_parameter_value_input\" rows=\"1\">";
-                        output += $(v).text();
-                        output += "</textarea>";
-                        //}
+	                    //if it's "encrypt", draw a hidden field, and flag the entry one for input masking
+	                    //NOTE: any value here will be encrypted because it came from the database.
+	                    
+	                    //MORE IMPORTANT NOTE: if the value is changed by the user, it will NOT be encrypted any more
+	                    //therefore the encrypt="true" flag will be removed.
+	                    
+	                    if (encrypt == "true") {
+	                    	//the actual textarea
+							output += "<textarea encrypt=\"true\" class=\"task_launch_parameter_value_input encunderlay\" rows=\"1\">";
+	                        output += $(v).text();
+	                        output += "</textarea>";
+	                    	
+	                    	//ALL THIS IS A GOOD IDEA... just will take hours of tinkering to get it right.
+	                    	/*
+	                    	var stars = "";
+							var ln = $(v).text().length;
+							for (i=0;i<=ln;i++) 
+							{
+								stars += "*";
+							}
+
+	                    	//and this covering div lies over it
+	                    	output += "<textarea class=\"encoverlay\">" + stars + "</textarea>";
+	                    	*/
+	                    } else {
+							//if it wasn't encrypt, this will show the actual value
+							output += "<textarea class=\"task_launch_parameter_value_input\" rows=\"1\">";
+	                        output += $(v).text();
+	                        output += "</textarea>";
+                    	}
 
                         output += "</div>";
                     });
@@ -165,6 +208,8 @@ function buildXMLToSubmit() {
             //values
             xml += "<values present_as=\"" + present_as + "\">\n";
             $($values).each(function (vidx, v) {
+            	//if the value textarea has the "encrypt" flag, it will also have an associated hidden field...
+            	//use that hidden value instead
                 xml += "<value>";
                 xml += $(v).val();
                 xml += "</value>\n";

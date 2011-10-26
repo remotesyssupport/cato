@@ -2494,9 +2494,14 @@ namespace ACWebMethods
                     //spin the nodes in the ACTION xml, then dig in to the task XML and UPDATE the value if found.
                     //(if the node no longer exists, delete the node from the action XML)
                     //and action "values" take precedence over task values.
-                    foreach (XElement xDefault in xADDoc.XPathSelectElements("//parameter"))
+					
+					//this does a regular loop because we can't remove from an IEnumerable
+					int x = xADDoc.XPathSelectElements("//parameter").Count();
+					for (int i = (x-1); i>=0; i--)
                     {
-                        //look it up in the task param xml
+						XElement xDefault = xADDoc.XPathSelectElements("//parameter").ElementAt(i);
+						
+						//look it up in the task param xml
                         XElement xADName = xDefault.XPathSelectElement("name");
                         string sADName = (xADName == null ? "" : xADName.Value);
                         XElement xADValues = xDefault.XPathSelectElement("values");
@@ -2517,9 +2522,34 @@ namespace ACWebMethods
                         //and the "values" collection will be the 'next' node
                         XElement xTaskParamValues = xTaskParam.XPathSelectElement("values");
 
-                        //if the values node matches, remove it
+						
+						//if this is an encrypted override, encrypt the value before committing it.
+						//(we don't need to add a redundant "encrypt=true" flag here, 
+						//because the task parameters document is always the "master".
+						//it's just if it has the attribute, encrypt any override value.
+		                if (xTaskParam.Attribute("encrypt") != null)
+						{
+							if (dc.IsTrue(xTaskParam.Attribute("encrypt").Value))
+							{
+								//TODO: if we want to support encrypted lists... each value should be encrypted in a loop
+								//this only does the first one
+								XElement xVal = xADValues.XPathSelectElement("value[1]");
+								if (xVal != null)
+									xVal.Value = dc.EnCrypt(xVal.Value);
+							}
+						}
+						
+						
+						//now that the encryption is sorted out,
+						// if it happens to match what's on the task (also encrypted)
+						//  we just remove it.
                         if (xTaskParamValues.Value.Equals(xADValues.Value))
+                        {
                             xDefault.Remove();
+                            continue;
+                        }
+
+
                     }
 
                     //done
@@ -2875,6 +2905,12 @@ namespace ACWebMethods
         [WebMethod(EnableSession = true)]
         public void wmSavePlan(int iPlanID, string sParameterXML, int iDebugLevel)
         {
+			/*
+			 * JUST AS A REMINDER:
+			 * There is no parameter 'merging' happening here.  This is a Plan ...
+			 *   it has ALL the parameters it needs to pass to the CE.
+			 * 
+			 * */
             acUI.acUI ui = new acUI.acUI();
 
             try
@@ -2908,6 +2944,12 @@ namespace ACWebMethods
             string sMonths, string sDays, string sHours, string sMinutes, string sDaysOrWeeks,
             string sParameterXML, int iDebugLevel)
         {
+			/*
+			 * JUST AS A REMINDER:
+			 * There is no parameter 'merging' happening here.  This is a Scheduled Plan ...
+			 *   it has ALL the parameters it needs to pass to the CE.
+			 * 
+			 * */
             acUI.acUI ui = new acUI.acUI();
 
             try

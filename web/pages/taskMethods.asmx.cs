@@ -3520,10 +3520,11 @@ namespace ACWebMethods
                             {
                                 string sValue = xValue.Value;
 
-                                //only show stars if it's encrypted
-                                if (bEncrypt)
-                                    sValue = "(********)";
-                                else
+														//TODO: PARAMS: needs attention
+								//                                //only show stars if it's encrypted
+//                                if (bEncrypt)
+//                                    sValue = "(********)";
+//                                else
                                     if (bSnipValues)
                                         sValue = ui.GetSnip(xValue.Value, 64);
                                     else
@@ -3801,13 +3802,14 @@ namespace ACWebMethods
                     XElement xParams = xDoc.XPathSelectElement("/parameters");
                     if (xParams == null)
                         throw new Exception("Parameter XML data for[" + sType + ":" + sID + "] does not contain 'parameters' root node.");
-
-                    //NOTE: some values on this document may have a "encrypt" attribute.  If so, we will clean them before
-                    //returning it.
-                    foreach (XElement xEncryptedValue in xDoc.XPathSelectElements("//parameter[@encrypt='true']/values/value"))
-                    {
-                        xEncryptedValue.Value = "(********)";
-                    }
+					
+						//TODO: PARAMS: needs attention
+//                    //NOTE: some values on this document may have a "encrypt" attribute.  If so, we will clean them before
+//                    //returning it.
+//                    foreach (XElement xEncryptedValue in xDoc.XPathSelectElements("//parameter[@encrypt='true']/values/value"))
+//                    {
+//                        xEncryptedValue.Value = "(********)";
+//                    }
 
                     return xDoc.ToString();
                 }
