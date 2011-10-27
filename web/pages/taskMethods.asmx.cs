@@ -3371,7 +3371,7 @@ namespace ACWebMethods
 					else
 						sReadyValue = dc.EnCrypt(ui.unpackJSON(sVal));						
 				} else {
-					sReadyValue = dc.EnCrypt(ui.unpackJSON(sVal));						
+					sReadyValue = ui.unpackJSON(sVal);						
 				}
 				
                 sValueXML += "<value id=\"pv_" + ui.NewGUID() + "\">" + sReadyValue + "</value>";
@@ -3543,10 +3543,10 @@ namespace ACWebMethods
                         {
                             foreach (XElement xValue in xValues.XPathSelectElements("value"))
                             {
-                                string sValue = xValue.Value;
+                                string sValue = (string.IsNullOrEmpty(xValue.Value) ? "" : xValue.Value);
 
-                                //only show stars if it's encrypted
-                                if (bEncrypt)
+                                //only show stars IF it's encrypted, but ONLY if it has a value
+                                if (bEncrypt && !string.IsNullOrEmpty(sValue))
 									sValue = "********";
 								else
                                     if (bSnipValues)
@@ -3766,18 +3766,6 @@ namespace ACWebMethods
                 {
                     //first, a list gets ALL the values replaced...
                     xTaskParamValues.ReplaceNodes(xDefValues);
-					
-					//TODO: PARAMS: is this working!?
-					//then we spin the new values and add the oev if they're encrypted
-//					if (dc.IsTrue(sEncrypt))
-//					{
-//						//yeah, we're spinning the task array... we just replaced it ... derp!
-//						foreach (XElement xVal in xTaskParamValues.Elements("value"))
-//						{
-//							xVal.SetAttributeValue("oev", xVal.Value);
-//	                        xVal.Value = "********";
-//						}
-//					}
                	}
                 else
                 {
@@ -3790,11 +3778,15 @@ namespace ACWebMethods
                     if (xVal != null)
 					{
 						//if this is an encrypted parameter, we'll be replacing (if a default exists) the oev attribute
+						//AND the value... don't want them to get out of sync!
 						if (dc.IsTrue(sEncrypt))
 						{
 							if (xDefValues.XPathSelectElement("value") != null)
 								if (xDefValues.XPathSelectElement("value").Attribute("oev") != null)
+								{
 									xVal.SetAttributeValue("oev", xDefValues.XPathSelectElement("value").Attribute("oev").Value);
+									xVal.Value = xDefValues.XPathSelectElement("value").Value;
+								}
 						}
 						else
 						{
@@ -3887,7 +3879,9 @@ namespace ACWebMethods
 						//if the value is empty, it still gets an oev attribute
 						string sVal = (string.IsNullOrEmpty(xEncryptedValue.Value) ? "" : ui.packJSON(xEncryptedValue.Value));
 						xEncryptedValue.SetAttributeValue("oev", sVal);
-                        xEncryptedValue.Value = "********";
+						//but it only gets stars if it has a value
+						if (!string.IsNullOrEmpty(sVal))
+                        	xEncryptedValue.Value = "********";
                     }
 
                     return xDoc.ToString(SaveOptions.DisableFormatting);
