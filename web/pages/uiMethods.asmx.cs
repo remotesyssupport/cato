@@ -2606,7 +2606,7 @@ namespace ACWebMethods
                     }
 
                     //done
-                    sOverrideXML = xADDoc.ToString();
+                    sOverrideXML = xADDoc.ToString(SaveOptions.DisableFormatting);
 
                     //FINALLY, we have an XML that represents only the differences we wanna save.
                     sSQL = "update ecotemplate_action set" +
@@ -2695,7 +2695,7 @@ namespace ACWebMethods
 					xToEncrypt.SetAttributeValue("oev", null);
 	            }
 				
-				sParameterXML = xDoc.ToString();
+				sParameterXML = xDoc.ToString(SaveOptions.DisableFormatting);
             }
 		}
 		[WebMethod(EnableSession = true)]

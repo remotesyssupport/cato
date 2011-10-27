@@ -856,12 +856,20 @@ function presentPlanParams(plan_id, plan_name) {
     $("#task_launch_params_content").appendTo("#plan_edit_parameters");
 }
 function dismissPlanParams() {
+    var task_id = $("#task_launch_dialog_task_id").val();
     var action_id = $("#task_launch_dialog_action_id").val();
     var plan_id = $("#plan_edit_plan_id").val();
 
-    //get the default parameters for the plan again
-    $("#rbAction").attr("checked", "checked");
-    getParamXML(action_id, "action");
+	//if the action_id is empty, we must be looking at the dialog on a task centric page.
+	if (action_id != "") {
+	    //get the default parameters for the action again
+	    $("#rbAction").attr("checked", "checked");
+	    getParamXML(action_id, "action");
+	} else {
+	    //get the default parameters for the task again
+	    $("#rbDefault").attr("checked", "checked");
+	    getParamXML(task_id, "task");
+	}
 
     //put it back
     $("#task_launch_params_content").appendTo("#task_launch_dialog_parameters");
