@@ -614,7 +614,7 @@ CREATE TABLE `task_instance_log` (
   `step_id` char(36) DEFAULT '',
   `entered_dt` datetime DEFAULT NULL,
   `connection_name` varchar(36) DEFAULT NULL,
-  `log` text,
+  `log` mediumtext,
   `command_text` text,
   PRIMARY KEY (`id`),
   KEY `task_instance_log_IX_task_instance_log` (`task_instance`,`entered_dt`),
@@ -705,17 +705,6 @@ CREATE TABLE `task_step_user_settings` (
   CONSTRAINT `FK_task_step_user_settings_task_step` FOREIGN KEY (`step_id`) REFERENCES `task_step` (`step_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `FK_task_step_user_settings_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `user_cloud_accounts` (
-  `user_id` varchar(36) NOT NULL,
-  `account_id` varchar(255) NOT NULL,
-  `account_password` varchar(255) NOT NULL,
-  `account_type` varchar(255) NOT NULL,
-  `is_default` int(11) NOT NULL,
-  PRIMARY KEY (`user_id`,`account_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
