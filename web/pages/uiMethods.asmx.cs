@@ -2523,20 +2523,41 @@ namespace ACWebMethods
                         XElement xTaskParamValues = xTaskParam.XPathSelectElement("values");
 
 						
-						//if this is an encrypted override, encrypt the value before committing it.
-						//(we don't need to add a redundant "encrypt=true" flag here, 
-						//because the task parameters document is always the "master".
-						//it's just if it has the attribute, encrypt any override value.
+						//so... it might be 
+						//a) just an oev (original encrypted value) so de-base64 it
+						//b) a value flagged for encryption
+						
+						//note we don't care about dirty unencrypted values... they'll compare down below just fine.
+						
+						//is it encrypted?
 		                if (xTaskParam.Attribute("encrypt") != null)
 						{
 							if (dc.IsTrue(xTaskParam.Attribute("encrypt").Value))
 							{
 								foreach (XElement xVal in xADValues.XPathSelectElements("value"))
 								{
-									xVal.Value = dc.EnCrypt(xVal.Value);
+									if (xVal.HasAttributes) {
+										//a) is it an oev?  unpackJSON it (that's just an obfuscation wrapper)
+										if (xVal.Attribute("oev") != null) 
+										{
+											if (dc.IsTrue(xVal.Attribute("oev").Value)) 
+											{
+												xVal.Value = ui.unpackJSON(xVal.Value);
+												xVal.SetAttributeValue("oev", null);
+											}
+										}
+										
+										//b) is it do_encrypt?  (remove the attribute to keep the db clutter down)
+										if (xVal.Attribute("do_encrypt") != null) 
+										{
+											xVal.Value = dc.EnCrypt(xVal.Value);
+											xVal.SetAttributeValue("do_encrypt", null);
+										}
+									}
 								}
 							}
 						}
+
 						
 						
 						//now that the encryption is sorted out,

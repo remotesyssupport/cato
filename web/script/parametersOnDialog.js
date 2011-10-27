@@ -36,6 +36,10 @@ $(document).ready(function () {
     });
     
    
+    //any change to a value at all sets the dirty flag
+    $(".task_launch_parameter_value_input").live('change', function () {
+        $(this).attr("dirty","true");
+    });
     
     /*
 	//encrypted fields are a pair of fields... 

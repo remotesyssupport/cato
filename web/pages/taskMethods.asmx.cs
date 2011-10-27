@@ -3167,6 +3167,8 @@ namespace ACWebMethods
 								{
 									// 1) obscure the ENCRYPTED value and make it safe to be an html attribute
 				                    // 2) return some stars so the user will know a value is there.
+									//TODO: PARAMS this is crap... I gotta remember to check the OEV for the single param save too?
+									//not sure, this is so confusing.
 									sObscuredValue = "oev=\"" + ui.packJSON(sValue) + "\"";
 									sValue = "";
 								}
@@ -3728,7 +3730,13 @@ namespace ACWebMethods
                 }
 
 
-                //and the "values" collection will be the 'next' node
+				//is this an encrypted parameter?
+				string sEncrypt = "";
+				if (xTaskParam.Attribute("encrypt") != null)
+                	sEncrypt = xTaskParam.Attribute("encrypt").Value;
+
+ 
+				//and the "values" collection will be the 'next' node
                 XElement xTaskParamValues = xTaskParam.XPathSelectElement("values");
 
                 string sPresentAs = xTaskParamValues.Attribute("present_as").Value;
@@ -3744,16 +3752,42 @@ namespace ACWebMethods
                 }
                 else if (sPresentAs == "list")
                 {
-                    //so, I guess a list gets ALL the values replaced. 
+                    //first, a list gets ALL the values replaced...
                     xTaskParamValues.ReplaceNodes(xDefValues);
-                }
+					
+					//TODO: PARAMS: is this working!?
+					//then we spin the new values and add the oev if they're encrypted
+					if (dc.IsTrue(sEncrypt))
+					{
+						//yeah, we're spinning the task array... we just replaced it ... derp!
+						foreach (XElement xVal in xTaskParamValues.Elements("value"))
+						{
+							xVal.SetAttributeValue("oev", ui.packJSON(xVal.Value));
+	                        xVal.Value = "(********)";
+						}
+					}
+               	}
                 else
                 {
                     //it's a single value, so just replace it with the default.
                     XElement xVal = xTaskParamValues.XPathSelectElement("value[1]");
                     if (xVal != null)
-                        xVal.Value = xDefValues.XPathSelectElement("value").Value;
-                }
+					{
+						//if this is an encrypted parameter, we'll be replacing (if a default exists) the oev attribute
+						if (dc.IsTrue(sEncrypt))
+						{
+							if (xDefValues.XPathSelectElement("value") != null)
+								xVal.SetAttributeValue("oev", ui.packJSON(xDefValues.XPathSelectElement("value").Value));
+		                        xVal.Value = "(********)";
+						}
+						else
+						{
+							//not encrypted, just replace the value.
+							if (xDefValues.XPathSelectElement("value") != null)
+								xVal.Value = xDefValues.XPathSelectElement("value").Value;
+						}
+					}
+				}
             }
 
             return xTPDoc.ToString(); ;
