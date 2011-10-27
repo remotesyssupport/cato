@@ -2531,11 +2531,10 @@ namespace ACWebMethods
 						{
 							if (dc.IsTrue(xTaskParam.Attribute("encrypt").Value))
 							{
-								//TODO: if we want to support encrypted lists... each value should be encrypted in a loop
-								//this only does the first one
-								XElement xVal = xADValues.XPathSelectElement("value[1]");
-								if (xVal != null)
+								foreach (XElement xVal in xADValues.XPathSelectElements("value"))
+								{
 									xVal.Value = dc.EnCrypt(xVal.Value);
+								}
 							}
 						}
 						

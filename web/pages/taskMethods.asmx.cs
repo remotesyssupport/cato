@@ -3087,7 +3087,6 @@ namespace ACWebMethods
         public string wmGetTaskParam(string sType, string sID, string sParamID)
         {
             dataAccess dc = new dataAccess();
-
             acUI.acUI ui = new acUI.acUI();
 
             if (!ui.IsGUID(sID))
@@ -3102,7 +3101,7 @@ namespace ACWebMethods
                 else if (sType == "task")
                     sTable = "task";
 
-                //default values if adding - get overridded if there is a record
+                //default values if adding - get overridden if there is a record
                 string sName = "";
                 string sDesc = "";
                 string sRequired = "false";
@@ -3159,16 +3158,21 @@ namespace ACWebMethods
                             foreach (XElement xVal in xVals)
                             {
                                 //since we can delete each item from the page it needs a unique id.
-                                //ticks are shorter than a guid
                                 string sPID = "pv" + ui.NewGUID();
 
                                 string sValue = xVal.Value;
-                                if (dc.IsTrue(sEncrypt))
-                                    sValue = "";
-
+								string sObscuredValue = "";
+								
+								if (dc.IsTrue(sEncrypt))
+								{
+									// 1) obscure the ENCRYPTED value and make it safe to be an html attribute
+				                    // 2) return some stars so the user will know a value is there.
+									sObscuredValue = "oev=\"" + ui.packJSON(sValue) + "\"";
+									sValue = "";
+								}
 
                                 sValuesHTML += "<div id=\"" + sPID + "\">" +
-                                    "<textarea class=\"param_edit_value\" rows=\"1\">" + sValue + "</textarea>";
+                                    "<textarea class=\"param_edit_value\" rows=\"1\" " + sObscuredValue + ">" + sValue + "</textarea>";
 
                                 if (i > 0)
                                 {
@@ -3426,11 +3430,18 @@ namespace ACWebMethods
                 throw new Exception("Invalid or missing Task or Parameter ID.");
             }
         }
+		/*
+		 * wmGetParameters returns a presentable, HTML list of parameters.
+		 * it does appear on the Task Edit page, and is editable...
+		 * ...but it's editable in a popup for a single value... not anything done here.
+		 * 
+		 * all we do here is give the label a pointer if it's editable.
+		 * 
+		 * */
         [WebMethod(EnableSession = true)]
         public string wmGetParameters(string sType, string sID, bool bEditable, bool bSnipValues)
         {
             dataAccess dc = new dataAccess();
-
             acUI.acUI ui = new acUI.acUI();
 
             try
@@ -3520,11 +3531,10 @@ namespace ACWebMethods
                             {
                                 string sValue = xValue.Value;
 
-														//TODO: PARAMS: needs attention
-								//                                //only show stars if it's encrypted
-//                                if (bEncrypt)
-//                                    sValue = "(********)";
-//                                else
+                                //only show stars if it's encrypted
+                                if (bEncrypt)
+									sValue = "(********)";
+								else
                                     if (bSnipValues)
                                         sValue = ui.GetSnip(xValue.Value, 64);
                                     else
@@ -3684,14 +3694,29 @@ namespace ACWebMethods
             //and default "values" take precedence over task values.
             foreach (XElement xDefault in xDefDoc.XPathSelectElements("//parameter"))
             {
-                //look it up in the task param xml
+				//nothing to do if it's empty
+				if (xDefault == null)
+					break;
+
+				//look it up in the task param xml
                 XElement xDefName = xDefault.XPathSelectElement("name");
                 string sDefName = (xDefName == null ? "" : xDefName.Value);
                 XElement xDefValues = xDefault.XPathSelectElement("values");
-                //string sValues = (xValues == null ? "" : xValues.ToString());
-
-
-                //now we have the name of the parameter, go find it in the TASK param XML
+				
+				//nothing to do if there is no values node...
+				if (xDefValues == null)
+					break;
+				//or if it contains no values.
+				if (!xDefValues.HasElements)
+					break;
+				//or if there is no parameter name
+				if (string.IsNullOrEmpty(sDefName))
+					break;
+				
+				
+				//so, we have some valid data in the defaults xml... let's merge!
+				
+				//we have the name of the parameter... go find it in the TASK param XML
                 XElement xTaskParam = xTPDoc.XPathSelectElement("//parameter/name[. = '" + sDefName + "']/..");  //NOTE! the /.. gets the parent of the name node!
 
                 //if it doesn't exist in the task params, remove it from this document, permanently
@@ -3803,13 +3828,16 @@ namespace ACWebMethods
                     if (xParams == null)
                         throw new Exception("Parameter XML data for[" + sType + ":" + sID + "] does not contain 'parameters' root node.");
 					
-						//TODO: PARAMS: needs attention
-//                    //NOTE: some values on this document may have a "encrypt" attribute.  If so, we will clean them before
-//                    //returning it.
-//                    foreach (XElement xEncryptedValue in xDoc.XPathSelectElements("//parameter[@encrypt='true']/values/value"))
-//                    {
-//                        xEncryptedValue.Value = "(********)";
-//                    }
+						//TODO: PARAMS: (remove this label after testing)
+	                    //NOTE: some values on this document may have a "encrypt" attribute.
+						//If so, we will:
+						// 1) obscure the ENCRYPTED value and make it safe to be an html attribute
+	                    // 2) return some stars so the user will know a value is there.
+	                    foreach (XElement xEncryptedValue in xDoc.XPathSelectElements("//parameter[@encrypt='true']/values/value"))
+	                    {
+							xEncryptedValue.SetAttributeValue("oev", ui.packJSON(xEncryptedValue.Value));
+	                        xEncryptedValue.Value = "(********)";
+	                    }
 
                     return xDoc.ToString();
                 }
