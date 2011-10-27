@@ -1357,13 +1357,16 @@ namespace ACWebMethods
         public string wmRunTask(string sTaskID, string sEcosystemID, string sAccountID, string sAssetID, string sParameterXML, int iDebugLevel)
         {
             dataAccess dc = new dataAccess();
-
             acUI.acUI ui = new acUI.acUI();
-
+			uiMethods um = new uiMethods();
+			
             //we encoded this in javascript before the ajax call.
             //the safest way to unencode it is to use the same javascript lib.
             //(sometimes the javascript and .net libs don't translate exactly, google it.)
             sParameterXML = ui.unpackJSON(sParameterXML).Replace("'", "''");
+							
+			//we gotta peek into the XML and encrypt any newly keyed values
+			um.PrepareAndEncryptParameterXML(ref sParameterXML);				
 
             try
             {
@@ -3866,16 +3869,16 @@ namespace ACWebMethods
                     if (xParams == null)
                         throw new Exception("Parameter XML data for[" + sType + ":" + sID + "] does not contain 'parameters' root node.");
 					
-						//TODO: PARAMS: (remove this label after testing)
-	                    //NOTE: some values on this document may have a "encrypt" attribute.
-						//If so, we will:
-						// 1) obscure the ENCRYPTED value and make it safe to be an html attribute
-	                    // 2) return some stars so the user will know a value is there.
-	                    foreach (XElement xEncryptedValue in xDoc.XPathSelectElements("//parameter[@encrypt='true']/values/value"))
-	                    {
-							xEncryptedValue.SetAttributeValue("oev", ui.packJSON(xEncryptedValue.Value));
-	                        xEncryptedValue.Value = "(********)";
-	                    }
+					//TODO: PARAMS: (remove this label after testing)
+                    //NOTE: some values on this document may have a "encrypt" attribute.
+					//If so, we will:
+					// 1) obscure the ENCRYPTED value and make it safe to be an html attribute
+                    // 2) return some stars so the user will know a value is there.
+                    foreach (XElement xEncryptedValue in xDoc.XPathSelectElements("//parameter[@encrypt='true']/values/value"))
+                    {
+						xEncryptedValue.SetAttributeValue("oev", ui.packJSON(xEncryptedValue.Value));
+                        xEncryptedValue.Value = "(********)";
+                    }
 
                     return xDoc.ToString();
                 }

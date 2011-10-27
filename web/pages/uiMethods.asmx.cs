@@ -2442,6 +2442,9 @@ namespace ACWebMethods
                     //the safest way to unencode it is to use the same javascript lib.
                     //(sometimes the javascript and .net libs don't translate exactly, google it.)
                     sActionDefaultsXML = ui.unpackJSON(sActionDefaultsXML);
+				
+					//we gotta peek into the XML and encrypt any newly keyed values
+					PrepareAndEncryptParameterXML(ref sActionDefaultsXML);				
 
 
                     //so, like when we read it, we gotta spin and compare, and build an XML that only represents *changes*
@@ -2656,7 +2659,46 @@ namespace ACWebMethods
         #endregion
 
         #region "Task Launch Dialog"
-        [WebMethod(EnableSession = true)]
+		//this one is used by several functions... 
+		//it looks in the XML for anything to encrypt or rearrange
+		//because we can't do everything on the client.
+		public void PrepareAndEncryptParameterXML(ref string sParameterXML)
+		{
+    	    dataAccess dc = new dataAccess();
+            acUI.acUI ui = new acUI.acUI();
+		
+			if (!string.IsNullOrEmpty(sParameterXML))
+            {
+                XDocument xDoc = XDocument.Parse(sParameterXML);
+                if (xDoc == null)
+                    throw new Exception("Parameter XML data is invalid.");
+
+                XElement xParams = xDoc.XPathSelectElement("/parameters");
+                if (xParams == null)
+                    throw new Exception("Parameter XML data does not contain 'parameters' root node.");
+
+				//now, all we're doing here is:
+				// a) encrypting any new values
+				// b) moving any oev values from an attribute to a value
+				
+				// a) encrypt new values
+                foreach (XElement xToEncrypt in xDoc.XPathSelectElements("//parameter/values/value[@do_encrypt='true']"))
+	            {
+	                xToEncrypt.Value = dc.EnCrypt(xToEncrypt.Value);
+					xToEncrypt.SetAttributeValue("do_encrypt", null);
+				}
+
+				//b) unbase64 any oev's and move them to values
+                foreach (XElement xToEncrypt in xDoc.XPathSelectElements("//parameter/values/value[@oev='true']"))
+	            {
+	                xToEncrypt.Value = ui.unpackJSON(xToEncrypt.Value);
+					xToEncrypt.SetAttributeValue("oev", null);
+	            }
+				
+				sParameterXML = xDoc.ToString();
+            }
+		}
+		[WebMethod(EnableSession = true)]
         public string wmGetActionPlans(string sTaskID, string sActionID, string sEcosystemID)
         {
             try
@@ -2876,6 +2918,9 @@ namespace ACWebMethods
                 //the safest way to unencode it is to use the same javascript lib.
                 //(sometimes the javascript and .net libs don't translate exactly, google it.)
                 sParameterXML = ui.unpackJSON(sParameterXML).Replace("'", "''");
+				
+				//we gotta peek into the XML and encrypt any newly keyed values
+				PrepareAndEncryptParameterXML(ref sParameterXML);				
 
                 dataAccess dc = new dataAccess();
                 string sSQL = null;
@@ -2915,7 +2960,8 @@ namespace ACWebMethods
         public void wmRunLater(string sTaskID, string sActionID, string sEcosystemID, string sRunOn, string sParameterXML, int iDebugLevel)
         {
             acUI.acUI ui = new acUI.acUI();
-            
+			dataAccess dc = new dataAccess();
+			
             try
             {
  				string sCloudAccountID = ui.GetCloudAccountID();
@@ -2927,8 +2973,10 @@ namespace ACWebMethods
                 //the safest way to unencode it is to use the same javascript lib.
                 //(sometimes the javascript and .net libs don't translate exactly, google it.)
                 sParameterXML = ui.unpackJSON(sParameterXML).Replace("'", "''");
+				
+				//we gotta peek into the XML and encrypt any newly keyed values
+				PrepareAndEncryptParameterXML(ref sParameterXML);				
 
-                dataAccess dc = new dataAccess();
                 string sSQL = null;
                 string sErr = null;
 
@@ -2972,6 +3020,9 @@ namespace ACWebMethods
                 //the safest way to unencode it is to use the same javascript lib.
                 //(sometimes the javascript and .net libs don't translate exactly, google it.)
                 sParameterXML = ui.unpackJSON(sParameterXML).Replace("'", "''");
+				
+				//we gotta peek into the XML and encrypt any newly keyed values
+				PrepareAndEncryptParameterXML(ref sParameterXML);				
 
                 dataAccess dc = new dataAccess();
                 string sSQL = null;
@@ -3011,6 +3062,9 @@ namespace ACWebMethods
                 //the safest way to unencode it is to use the same javascript lib.
                 //(sometimes the javascript and .net libs don't translate exactly, google it.)
                 sParameterXML = ui.unpackJSON(sParameterXML).Replace("'", "''");
+				
+				//we gotta peek into the XML and encrypt any newly keyed values
+				PrepareAndEncryptParameterXML(ref sParameterXML);				
 
                 dataAccess dc = new dataAccess();
                 string sSQL = null;
