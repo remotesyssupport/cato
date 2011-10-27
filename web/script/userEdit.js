@@ -370,14 +370,13 @@ function OnUpdateFailure(error, userContext, methodName) {
 }
 
 
-//sLoginID sFullName sAuthType sNewUserPassword sForcePasswordChange sUserRole sEmail As String
+//sLoginID sFullName sAuthType sUserPassword sForcePasswordChange sUserRole sEmail As String
 function SaveNewUser() {
     //alert('save new user');
     var bSave = true;
     var strValidationError = '';
 
     //some fields are fixed on a new user
-    var sNewUserPassword = '';
     var sForcePasswordChange = '1';
 
     //some client side validation before we attempt to save the user
@@ -451,7 +450,7 @@ function SaveNewUser() {
     stuff[0] = sLoginID;
     stuff[1] = sFullName;
     stuff[2] = sAuthType;
-    stuff[3] = sNewUserPassword;
+    stuff[3] = sUserPassword;
     stuff[4] = sGeneratePW;
     stuff[5] = sForcePasswordChange;
     stuff[6] = sUserRole;
