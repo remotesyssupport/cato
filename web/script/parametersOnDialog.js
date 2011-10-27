@@ -123,17 +123,24 @@ function DrawParameterEditForm(parameter_xml) {
                 else if (present_as == "list") {
                     $($values).each(function (vidx, v) {
                         output += "<div class=\"task_launch_parameter_value\">";
-            			//TODO: PARAMS: hidden field/masking crap
-                        //                        //if it's encrypt, draw a masked input, otherwise a standard textarea
-                        //                        if (encrypt) {
-                        //                            output += "<input type=\"password\" class=\"task_launch_parameter_value_input\">";
-                        //                        }
-                        //                        else {
-                        output += "<textarea class=\"task_launch_parameter_value_input\" rows=\"1\">";
-                        output += $(v).text();
-                        output += "</textarea>";
-                        //                        }
-                        
+
+	                    if (encrypt) {
+	                    	//what's the oev?
+            	            var oev = "";
+				            if ($(v).attr("oev"))
+			            		oev = "oev=\"" + $(v).attr("oev") + "\"";
+	                    
+	                    	//the actual textarea
+							output += "<textarea class=\"task_launch_parameter_value_input\" rows=\"1\" " + oev + ">";
+	                        output += $(v).text();
+	                        output += "</textarea>";
+	                    } else {
+							//if it wasn't encrypt, this will show the actual value
+							output += "<textarea class=\"task_launch_parameter_value_input\" rows=\"1\">";
+	                        output += $(v).text();
+	                        output += "</textarea>";
+                        }
+                                                                        
                         //don't draw the 'x' on the first value... make at least one value required.
                         if (vidx > 0) {
                             output += "<span class=\"floatright ui-icon ui-icon-trash parameter_dialog_remove_btn\" title=\"Remove Value\"></span>";
@@ -174,7 +181,7 @@ function DrawParameterEditForm(parameter_xml) {
 	                        output += "</textarea>";
 	                    	
             				//TODO: PARAMS: hidden field/masking crap
-            		                    	//ALL THIS IS A GOOD IDEA... just will take hours of tinkering to get it right.
+	                    	//ALL THIS IS A GOOD IDEA... just will take hours of tinkering to get it right.
 	                    	/*
 	                    	var stars = "";
 							var ln = $(v).text().length;

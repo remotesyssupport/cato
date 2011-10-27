@@ -3170,8 +3170,6 @@ namespace ACWebMethods
 								{
 									// 1) obscure the ENCRYPTED value and make it safe to be an html attribute
 				                    // 2) return some stars so the user will know a value is there.
-									//TODO: PARAMS this is crap... I gotta remember to check the OEV for the single param save too?
-									//not sure, this is so confusing.
 									sObscuredValue = "oev=\"" + ui.packJSON(sValue) + "\"";
 									sValue = "";
 								}
@@ -3880,7 +3878,6 @@ namespace ACWebMethods
                     if (xParams == null)
                         throw new Exception("Parameter XML data for[" + sType + ":" + sID + "] does not contain 'parameters' root node.");
 					
-					//TODO: PARAMS: (remove this label after testing)
                     //NOTE: some values on this document may have a "encrypt" attribute.
 					//If so, we will:
 					// 1) obscure the ENCRYPTED value and make it safe to be an html attribute
