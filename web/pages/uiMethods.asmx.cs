@@ -1335,7 +1335,7 @@ namespace ACWebMethods
             try
             {
                 string sNewID = ui.NewGUID();
-                string sCloudAccountID = ui.GetCloudAccountID();
+                string sCloudAccountID = ui.GetSelectedCloudAccountID();
 
                 if (string.IsNullOrEmpty(sCloudAccountID))
                     return "Unable to create - No Cloud Account selected.";
@@ -1366,7 +1366,7 @@ namespace ACWebMethods
 
 
         [WebMethod(EnableSession = true)]
-        public void wmAddEcosystemObjects(string sEcosystemID, string sObjectType, string sObjectIDs)
+        public void wmAddEcosystemObjects(string sEcosystemID, string sCloudID, string sObjectType, string sObjectIDs)
         {
             dataAccess dc = new dataAccess();
             acUI.acUI ui = new acUI.acUI();
@@ -1381,9 +1381,10 @@ namespace ACWebMethods
             {
 
                 string sSQL = "insert into ecosystem_object " +
-                     " (ecosystem_id, ecosystem_object_id, ecosystem_object_type, added_dt)" +
+                     " (ecosystem_id, cloud_id, ecosystem_object_id, ecosystem_object_type, added_dt)" +
                      " values (" +
                      " '" + sEcosystemID + "'," +
+                     " '" + sCloudID + "'," +
                      " '" + sObjectID + "'," +
                      " '" + sObjectType + "'," +
                      " now() " +
@@ -1815,7 +1816,7 @@ namespace ACWebMethods
                     sSQL = "select ecosystem_id, ecosystem_name, ecosystem_desc" +
                         " from ecosystem" +
                         " where ecotemplate_id = '" + sEcoTemplateID + "'" +
-                        " and account_id = '" + ui.GetCloudAccountID() + "'" +
+                        " and account_id = '" + ui.GetSelectedCloudAccountID() + "'" +
                         " order by ecosystem_name";
 
                     DataTable dt = new DataTable();
@@ -2909,7 +2910,7 @@ namespace ACWebMethods
 
             try
             {
-				string sCloudAccountID = ui.GetCloudAccountID();
+				string sCloudAccountID = ui.GetSelectedCloudAccountID();
 				
                 if (sTaskID.Length == 0 || sMonths.Length == 0 || sDays.Length == 0 || sHours.Length == 0 || sMinutes.Length == 0 || sDaysOrWeeks.Length == 0)
                     throw new Exception("Missing or invalid Schedule timing or Task ID.");
@@ -2964,7 +2965,7 @@ namespace ACWebMethods
 			
             try
             {
- 				string sCloudAccountID = ui.GetCloudAccountID();
+ 				string sCloudAccountID = ui.GetSelectedCloudAccountID();
 				
 				if (sTaskID.Length == 0 || sRunOn.Length == 0)
                     throw new Exception("Missing Action Plan date or Task ID.");

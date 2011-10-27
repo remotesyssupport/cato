@@ -23,6 +23,8 @@ namespace Web.pages {
 		
 		protected System.Web.UI.WebControls.TextBox txtSearch;
 		
-		protected System.Web.UI.WebControls.PlaceHolder phAccounts;
+		protected System.Web.UI.WebControls.Literal ltAccounts;
+		
+		protected System.Web.UI.WebControls.Literal ltProviders;
 	}
 }

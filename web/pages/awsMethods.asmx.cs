@@ -57,7 +57,7 @@ namespace Web.pages
         #region "Request Building Methods"
         //this method looks up a cloud object in our database, and executes a call based on parameters stored in the cloud_object_type table.
         //the columns created as part of the object are defined in cloud_object_type_detail table
-        public DataTable GetCloudObjectsAsDataTable(string sObjectType, ref string sErr)
+        public DataTable GetCloudObjectsAsDataTable(string sCloudID, string sObjectType, ref string sErr)
         {
             acUI.acUI ui = new acUI.acUI();
 
@@ -70,7 +70,7 @@ namespace Web.pages
                 CloudObjectType cot = ui.GetCloudObjectType(sObjectType);
                 if (cot != null)
                 {
-                    if (string.IsNullOrEmpty(cot.ObjectType))
+                    if (string.IsNullOrEmpty(cot.ID))
                     { sErr = "Cannot find definition for requested object type [" + sObjectType + "]"; return null; }
                 }
                 else
@@ -79,8 +79,14 @@ namespace Web.pages
                     return null;
                 }
 
-                string sXML = GetCloudObjectsAsXML(sObjectType, ref sErr, null);
+                string sXML = GetCloudObjectsAsXML(sCloudID, cot, ref sErr, null);
                 if (sErr != "") return null;
+				
+				if (string.IsNullOrEmpty(sXML))
+				{
+					sErr = "GetCloudObjectsAsXML returned an empty document.";
+					return null;
+				}
 
                 //OK look, all this namespace nonsense is annoying.  Every AWS result I've witnessed HAS a namespace
                 // (which messes up all our xpaths)
@@ -104,19 +110,20 @@ namespace Web.pages
                         //we'll load it up with all the goodness we need anywhere else
                         DataColumn dc = new DataColumn();
 
-                        dc.ColumnName = p.PropertyName;
+                        dc.ColumnName = p.Name;
 
                         //This is important!  Places in the GUI expect the first column to be the ID column.
                         //hoping to stop doing that in favor of this property.
-                        dc.ExtendedProperties.Add("IsID", p.IsID);
-                        //what was the xpath for this property?
-                        dc.ExtendedProperties.Add("XPath", p.PropertyXPath);
+                        if (p.IsID) dc.ExtendedProperties.Add("IsID", true);
+                        //will we try to draw an icon?
+                        if (p.HasIcon) dc.ExtendedProperties.Add("HasIcon", true);
+
+						//what was the xpath for this property?
+                        dc.ExtendedProperties.Add("XPath", p.XPath);
                         //a "short list" property is one that will always show up... it's a shortcut in some places.
                         dc.ExtendedProperties.Add("ShortList", p.ShortList);
                         //it might have a custom caption
-                        if (!string.IsNullOrEmpty(p.PropertyLabel)) dc.Caption = p.PropertyLabel;
-                        //will we try to draw an icon?
-                        if (p.PropertyHasIcon) dc.ExtendedProperties.Add("HasIcon", true);
+                        if (!string.IsNullOrEmpty(p.Label)) dc.Caption = p.Label;
 
                         //add the column
                         dt.Columns.Add(dc);
@@ -159,38 +166,70 @@ namespace Web.pages
                 return null;
             }
         }
-        public string GetCloudObjectsAsXML(string sObjectType, ref string sErr, Dictionary<string, string> AdditionalArguments)
+        public string GetCloudObjectsAsXML(string sCloudID, CloudObjectType cot, ref string sErr, Dictionary<string, string> AdditionalArguments)
         {
             acUI.acUI ui = new acUI.acUI();
 
             string sXML = "";
 
-            string sAccessKeyID = ui.GetCloudLoginID();
-            string sSecretAccessKeyID = ui.GetCloudLoginPassword();
+            string sAccessKeyID = ui.GetSelectedCloudLoginID();
+            string sSecretAccessKeyID = ui.GetSelectedCloudLoginPassword();
 
-            //get the cloud object type from the session
-            Globals.CloudObjectType cot = ui.GetCloudObjectType(sObjectType);
+			//cleaner code below if we shorten the parent product.
+			Product prod = cot.ParentProduct;
+			
             if (cot != null)
             {
                 //many reasons why we'd bail here.  Rather than a bunch of testing below, let's just crash
                 //if a key field is missing.
-                if (string.IsNullOrEmpty(cot.ObjectType))
-                { sErr = "Cannot find definition for requested object type [" + sObjectType + "]"; return null; }
-                if (string.IsNullOrEmpty(cot.APIHostName))
-                { sErr = "APIHostName not defined for requested object type [" + sObjectType + "]"; return null; }
-                if (string.IsNullOrEmpty(cot.APICall))
-                { sErr = "APICall not defined for requested object type [" + sObjectType + "]"; return null; }
-                if (string.IsNullOrEmpty(cot.APIRequestMethod))
-                { sErr = "APIRequestMethod not defined for requested object type [" + sObjectType + "]"; return null; }
+                if (string.IsNullOrEmpty(cot.ID))
+                { sErr = "Cannot find definition for requested object type [" + cot.ID + "]"; return null; }
+//                if (string.IsNullOrEmpty(prod.APIUrlPrefix))
+//                { sErr = "APIUrlPrefix not defined for requested object type [" + cot.ID + "]"; return null; }
+//                if (string.IsNullOrEmpty(cot.APICall))
+//                { sErr = "APICall not defined for requested object type [" + cot.ID + "]"; return null; }
             }
             else
             {
-                sErr = "GetCloudObjectType failed for [" + sObjectType + "]";
+                sErr = "GetCloudObjectType failed for [" + cot.ID + "]";
                 return null;
             }
+			
+			//get the cloud object
+			Cloud c = new Cloud(sCloudID);
+			if (c.ID == null) {
+                sErr = "Failed to get Cloud details for Cloud ID [" + sCloudID + "].";
+                return null;
+			}
+			
+			//HOST URL
+			//we have to use the provided cloud and object type to construct an endpoint
+			//if either of these values is missing, we will attempt to use the other one standalone.
+			string sHostName = "";
+			
+			//if both are there, concatenate them
+			if (!string.IsNullOrEmpty(prod.APIUrlPrefix) && !string.IsNullOrEmpty(c.APIUrl))
+				sHostName = prod.APIUrlPrefix + "." + c.APIUrl;
+			else if (string.IsNullOrEmpty(prod.APIUrlPrefix) && !string.IsNullOrEmpty(c.APIUrl))
+				sHostName = c.APIUrl;
+			else if (!string.IsNullOrEmpty(prod.APIUrlPrefix) && string.IsNullOrEmpty(c.APIUrl))
+				sHostName = prod.APIUrlPrefix;
+			
+			if (string.IsNullOrEmpty(sHostName)) {
+                sErr = "Unable to reconcile an endpoint from the Cloud [" + c.Name + "] or Cloud Object [" + cot.ID + "] definitions." + sErr;
+                return null;
+			}
+			
+			
+			//HOST URI
+			//what's the URI... (if any)
+			string sResourceURI = "";
+			if (!string.IsNullOrEmpty(prod.APIUri))
+				sResourceURI = prod.APIUri;
 
+			
 
-
+			//PARAMETERS
             //first, this is an explicit list of parameters in a dictionary. 
             //in the real world, we'll probably pull these params from a table
             //or have to parse a querystring
@@ -207,7 +246,7 @@ namespace Web.pages
                 sortedRequestParams.Add(sTmp[0], sTmp[1]);
             }
 
-
+			//ADDITIONAL ARGUMENTS
             if (AdditionalArguments != null)
             {
                 //we have custom arguments... use them
@@ -220,20 +259,27 @@ namespace Web.pages
             string sDate = DateTime.UtcNow.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss", DateTimeFormatInfo.InvariantInfo);
 
             sortedRequestParams.Add("AWSAccessKeyId", sAccessKeyID);
-            sortedRequestParams.Add("Version", cot.APIVersion);
-            sortedRequestParams.Add("Timestamp", sDate);
-            //sortedRequestParams.Add("Expires", date);
+            sortedRequestParams.Add("Version", prod.APIVersion);
+            
+			//some products use the older Expires method
+			if (prod.Name == "s3")
+				sortedRequestParams.Add("Expires", "2020202020"); // a point waaaay in the distant future.
+			else
+			sortedRequestParams.Add("Timestamp", sDate);
+			
             sortedRequestParams.Add("SignatureMethod", "HmacSHA256");
             sortedRequestParams.Add("SignatureVersion", "2");
-
-
-            string sHostName = cot.APIHostName;
-
-            //now we have all the parameters in a list, build a sorted, encoded querystring string
+			
+			
+		
+			//now we have all the parameters in a list, build a sorted, encoded querystring string
             string sQueryString = GetSortedParamsAsString(sortedRequestParams, true);
-            //then build the full request to be signed
-            string sStringToSign = awsComposeStringToSign(cot.APIRequestMethod, sHostName, "", sQueryString);
-            //and sign it
+            
+			
+			//use the URL/URI plus the querystring to build the full request to be signed
+            string sStringToSign = awsComposeStringToSign("GET", sHostName, sResourceURI, sQueryString);
+            
+			//and sign it
             //string sSignature = GetAWS3_SHA1AuthorizationValue(sSecretAccessKeyID, sStringToSign);
             string sSignature = awsGetSHA256AuthorizationValue(sSecretAccessKeyID, sStringToSign);
 
@@ -241,7 +287,7 @@ namespace Web.pages
             sSignature = PercentEncodeRfc3986(sSignature);
 
 
-            string sHostURL = "https://" + sHostName + "/";
+            string sHostURL = prod.APIProtocol.ToLower() + "://" + sHostName + sResourceURI;
             string sURL = sHostURL + "?" + sQueryString + "&Signature=" + sSignature;
 
             try
@@ -270,26 +316,51 @@ namespace Web.pages
                 // Create a request for the URL. 
                 //WebRequest request = WebRequest.Create(sAPICall);
                 HttpWebRequest request = WebRequest.Create(sURL) as HttpWebRequest;
-                request.Method = cot.APIRequestMethod;
+                request.Method = "GET";
+				
 
+				
+				
                 HttpWebResponse response = request.GetResponse() as HttpWebResponse;
-
-                // Get the stream containing content returned by the server.
-                Stream dataStream = response.GetResponseStream();
-                // Open the stream using a StreamReader for easy access.
-                StreamReader sr = new StreamReader(dataStream);
-                // Read the content.
-                sXML = sr.ReadToEnd();
-
-                // Clean up the streams and the response.
-                sr.Close();
-                response.Close();
-
+				
+				if (response.StatusCode == HttpStatusCode.OK)
+	            {
+		            // Get the stream containing content returned by the server.
+		            Stream dataStream = response.GetResponseStream();
+		            // Open the stream using a StreamReader for easy access.
+		            StreamReader sr = new StreamReader(dataStream);
+		            // Read the content.
+		            sXML = sr.ReadToEnd();
+		
+		            // Clean up the streams and the response.
+		            sr.Close();
+		            response.Close();
+	            }
 
             }
+			catch (WebException ex)
+			{
+			    using (WebResponse response = ex.Response)
+			    {
+					if (response != null)
+					{
+						HttpWebResponse httpResponse = (HttpWebResponse)response;
+		        		sErr = "HTTP Status Code: " + httpResponse.StatusCode.ToString();
+			        	using (Stream data = response.GetResponseStream())
+			        	{
+			           		string text = new StreamReader(data).ReadToEnd();
+			           		sErr += text;
+			        	}
+					}
+					else
+						sErr = ex.Message;
+			    }
+				return null;
+			}
             catch (Exception ex)
             {
-                throw ex;
+				sErr = ex.Message;
+				return null;
             }
 
 

@@ -1,3 +1,10 @@
+CREATE TABLE `clouds` (
+  `cloud_id` varchar(36) NOT NULL,
+  `provider` varchar(32) NOT NULL,
+  `cloud_name` varchar(32) NOT NULL,
+  `api_url` varchar(512) NOT NULL,
+  PRIMARY KEY (`cloud_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `users` (
@@ -131,7 +138,7 @@ CREATE TABLE `cloud_account` (
   `account_id` varchar(36) NOT NULL,
   `account_name` varchar(64) NOT NULL,
   `account_number` varchar(64) DEFAULT NULL,
-  `account_type` varchar(16) DEFAULT NULL,
+  `provider` varchar(16) DEFAULT NULL,
   `login_id` varchar(64) NOT NULL,
   `login_password` varchar(512) NOT NULL,
   `is_default` int(11) NOT NULL,
@@ -149,40 +156,6 @@ CREATE TABLE `cloud_account_keypair` (
   `passphrase` varchar(128) DEFAULT NULL,
   PRIMARY KEY (`account_id`,`keypair_name`),
   UNIQUE KEY `keypair_id_UNIQUE` (`keypair_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `cloud_object_type` (
-  `cloud_object_type` varchar(32) NOT NULL,
-  `vendor` varchar(16) NOT NULL,
-  `api` varchar(16) NOT NULL,
-  `label` varchar(32) NOT NULL,
-  `api_call` varchar(64) NOT NULL,
-  `describe_parameter` varchar(128) DEFAULT NULL,
-  `result_xpath` varchar(1024) DEFAULT NULL,
-  `api_hostname` varchar(256) DEFAULT NULL COMMENT '	',
-  `api_version` varchar(32) DEFAULT NULL,
-  `request_protocol` varchar(32) DEFAULT NULL,
-  `request_method` varchar(16) DEFAULT NULL,
-  `result_record_xpath` varchar(256) DEFAULT NULL,
-  `request_group_filter` varchar(256) DEFAULT NULL,
-  `request_record_filter` varchar(256) DEFAULT NULL,
-  PRIMARY KEY (`cloud_object_type`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `cloud_object_type_props` (
-  `cloud_object_type` varchar(32) NOT NULL,
-  `property_name` varchar(256) NOT NULL,
-  `property_label` varchar(256) DEFAULT NULL,
-  `property_xpath` varchar(256) NOT NULL,
-  `id_field` int(11) NOT NULL,
-  `has_icon` int(11) NOT NULL,
-  `short_list` int(11) NOT NULL,
-  `sort_order` int(11) NOT NULL,
-  PRIMARY KEY (`cloud_object_type`,`property_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -206,6 +179,7 @@ CREATE TABLE `ecosystem` (
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `ecosystem_object` (
   `ecosystem_id` varchar(36) NOT NULL,
+  `cloud_id` varchar(36) NOT NULL,
   `ecosystem_object_id` varchar(64) NOT NULL,
   `ecosystem_object_type` varchar(32) NOT NULL,
   `added_dt` datetime DEFAULT NULL,

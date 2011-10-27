@@ -41,28 +41,48 @@ namespace Web.pages
 
         protected void Page_Load(object sender, EventArgs e)
         {
+			//get the clouds
+			BindClouds();
+			
             //draw the tabs
-            sSQL = "select cloud_object_type, label from cloud_object_type order by vendor, api";
+			Provider oProvider = ui.GetSelectedCloudProvider();
+	        if (oProvider == null)
+                ui.RaiseError(Page, "Unable to get Cloud Provider.", false, sErr);
+
+            if (oProvider.Products.Count > 0)
+            {
+                foreach (Product oProduct in oProvider.Products.Values)
+                {
+                    ltTabs.Text += "<li class=\"group_header\">" + oProduct.Label + "</li>";
+                	
+	                foreach (CloudObjectType oCOT in oProduct.CloudObjectTypes.Values)
+	                {
+	                    ltTabs.Text += "<li class=\"group_tab\" object_type=\"" + oCOT.ID + "\">" + 
+	                        oCOT.Label + "</li>";
+	                }
+                }
+            }
+        }
+
+        private void BindClouds()
+        {
+            sSQL = "select cloud_id, cloud_name" +
+				" from clouds" +
+				" where provider = '" + ui.GetSelectedCloudProviderName() + "'";
+
 
             DataTable dt = new DataTable();
             if (!dc.sqlGetDataTable(ref dt, sSQL, ref sErr))
-            {
-                ui.RaiseError(Page, "Unable to get Cloud Object Types.", false, sErr);
-            }
+                ui.RaiseError(Page, "Unable to get Clouds for selected Cloud Account.", false, sErr);
 
-            if (dt.Rows.Count > 0)
-            {
-                foreach (DataRow dr in dt.Rows)
-                {
-                    ltTabs.Text += "<li class=\"group_tab\" object_type=\"" + dr["cloud_object_type"].ToString() + "\">" +
-                        dr["label"].ToString() + "</li>";
-                }
-            }
-
+            ddlClouds.DataSource = dt;
+            ddlClouds.DataValueField = "cloud_id";
+            ddlClouds.DataTextField = "cloud_name";
+            ddlClouds.DataBind();
         }
 
         [WebMethod(EnableSession = true)]
-        public static string wmGetCloudObjectList(string sObjectType)
+        public static string wmGetCloudObjectList(string sCloudID, string sObjectType)
         {
             acUI.acUI ui = new acUI.acUI();
             awsMethods acAWS = new awsMethods();
@@ -70,16 +90,32 @@ namespace Web.pages
             string sXML = "";
             string sErr = "";
             string sHTML = "";
+			
+            //get the cloud object type from the session
+            CloudObjectType cot = ui.GetCloudObjectType(sObjectType);
+            if (cot != null)
+            {
+                if (string.IsNullOrEmpty(cot.ID))
+                { sErr = "Cannot find definition for requested object type [" + sObjectType + "]"; return null; }
+            }
+            else
+            {
+                sErr = "GetCloudObjectType failed for [" + sObjectType + "]";
+                return null;
+            }
+			
+			
+            sXML = acAWS.GetCloudObjectsAsXML(sCloudID, cot, ref sErr, null);
+			if (string.IsNullOrEmpty(sXML))
+			{
+				return "GetCloudObjectsAsXML returned an empty document.";
+			}
 
-            sXML = acAWS.GetCloudObjectsAsXML(sObjectType, ref sErr, null);
-            if (sXML == "")
-                sXML = "<span class='ui-state-error'>No data returned from AWS.</span>" + sErr;
 
 
             //try a few debugging things:
             //Peek at our object type definition
             sHTML += "<h3>Getting Cloud Object Type definition...</h3><div>";
-            CloudObjectType cot = ui.GetCloudObjectType(sObjectType);
             if (cot != null)
             {
                 sHTML += cot.AsString();
@@ -109,9 +145,11 @@ namespace Web.pages
                 if (cot.XMLRecordXPath != "")
                 {
                     XElement xe = xDoc.XPathSelectElement(cot.XMLRecordXPath);
-                    if (xe == null)
-                        sHTML += "<span class='ui-state-error'>Record XPath [" + cot.XMLRecordXPath + "] was not found.</span>";
-                    else
+                    if (xe == null) {
+                        sHTML += "<span class='ui-state-info'>Record XPath [" + cot.XMLRecordXPath + "] was not found.</span><br />";
+                        sHTML += "<span class='ui-state-info'>(This may be a normal condition if the result XML doesn't contain any objects.)</span>";
+					}
+					else
                         sHTML += "Record XPath found a node with [" + xe.Nodes().Count() + "] elements.";
                 }
                 else

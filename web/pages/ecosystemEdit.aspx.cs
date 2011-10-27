@@ -67,7 +67,7 @@ namespace Web.pages
                     " from ecosystem e" +
                     " join ecotemplate et on e.ecotemplate_id = et.ecotemplate_id" +
                     " where e.ecosystem_id = '" + sEcosystemID + "'" +
-                    " and e.account_id = '" + ui.GetCloudAccountID() + "'";
+                    " and e.account_id = '" + ui.GetSelectedCloudAccountID() + "'";
 
                 DataRow dr = null;
                 if (!dc.sqlGetDataRow(ref dr, sSQL, ref sErr)) return false;
@@ -229,81 +229,100 @@ namespace Web.pages
                 string sHTML = "";
                 string sErr = "";
 
-                ////build a filter string from a query
-                //string sSQL = "select ecosystem_object_id" +
-                //    " from ecosystem_object" +
-                //    " where ecosystem_id = '" + sEcosystemID + "'" +
-                //    " and ecosystem_object_type = '" + sType + "'" +
-                //    " order by ecosystem_object_id";
-
-                //string sIDs = "";
-                //if (!dc.csvGetList(ref sIDs, sSQL, ref sErr))
-                //    return sErr;
-
-                //get the actual rows
-                string sSQL = "select eo.ecosystem_object_id, eo.ecosystem_object_type, cot.label" +
+				//So, we'll first get a distinct list of all clouds represented in this set
+				//then for each cloud we'll get the objects.
+                string sSQL = "select eo.cloud_id, c.cloud_name" +
                     " from ecosystem_object eo" +
-                    " join cloud_object_type cot on eo.ecosystem_object_type = cot.cloud_object_type" +
+                    " join clouds c on eo.cloud_id = c.cloud_id" +
                     " where eo.ecosystem_id ='" + sEcosystemID + "'" +
                     " and eo.ecosystem_object_type = '" + sType + "'" +
-                    " order by cot.label";
+					" group by eo.cloud_id, c.cloud_name" +
+                    " order by c.cloud_name";
 
-                DataTable dt = new DataTable();
-                if (!dc.sqlGetDataTable(ref dt, sSQL, ref sErr))
+                DataTable dtClouds = new DataTable();
+                if (!dc.sqlGetDataTable(ref dtClouds, sSQL, ref sErr))
                     return sErr;
 
 
-                if (dt.Rows.Count > 0)
+                if (dtClouds.Rows.Count > 0)
                 {
-                    //we only need to hit the API once... this result will contain all the objects
-                    //and our DrawProperties will filter the DataTable on the ID.
-                    DataTable dtAPIResults = acAWS.GetCloudObjectsAsDataTable(sType, ref sErr);
-
-                    foreach (DataRow dr in dt.Rows)
+                    foreach (DataRow drCloud in dtClouds.Rows)
                     {
-                        //giving each section a guid so we can delete it on the client side after the ajax call.
-                        //not 100% the ecosystem_object_id will always be suitable as a javascript ID.
-                        string sGroupID = ui.NewGUID();
+						string sCloudID = drCloud["cloud_id"].ToString();
+						string sCloudName = drCloud["cloud_name"].ToString();
 
-                        sHTML += "<div class=\"ui-widget-content ui-corner-all ecosystem_item\" id=\"" + sGroupID + "\">";
+		                //get the cloud object rows
+		                sSQL = "select eo.ecosystem_object_id, eo.ecosystem_object_type, cot.label" +
+		                    " from ecosystem_object eo" +
+		                    " join cloud_object_type cot on eo.ecosystem_object_type = cot.cloud_object_type" +
+		                    " where eo.ecosystem_id ='" + sEcosystemID + "'" +
+		                    " and eo.ecosystem_object_type = '" + sType + "'" +
+		                    " and eo.cloud_id = '" + sCloudID + "'" +
+							" order by cot.label";
+		
+		                DataTable dtObjects = new DataTable();
+		                if (!dc.sqlGetDataTable(ref dtObjects, sSQL, ref sErr))
+		                    return sErr;
+		
+		
+		                if (dtObjects.Rows.Count > 0)
+		                {
+							//we only need to hit the API once... this result will contain all the objects
+		                    //and our DrawProperties will filter the DataTable on the ID.
+		                    DataTable dtAPIResults = acAWS.GetCloudObjectsAsDataTable(sCloudID, sType, ref sErr);
+		
+		                    foreach (DataRow drObject in dtObjects.Rows)
+		                    {
+		                        //giving each section a guid so we can delete it on the client side after the ajax call.
+		                        //not 100% the ecosystem_object_id will always be suitable as a javascript ID.
+		                        string sGroupID = ui.NewGUID();
+		
+		                        sHTML += "<div class=\"ui-widget-content ui-corner-all ecosystem_item\" id=\"" + sGroupID + "\">";
+		
+		
+		                        string sObjectID = drObject["ecosystem_object_id"].ToString();
+		
+		                        string sLabel = "Cloud: " + sCloudName + " - " + sObjectID;
+		
+		                        sHTML += "<div class=\"ui-widget-header ecosystem_item_header\">";
+		                        sHTML += "<div class=\"ecosystem_item_header_title\"><span>" + sLabel + "</span></div>";
+		
+		                        sHTML += "<div class=\"ecosystem_item_header_icons\">";
+		
+		                        sHTML += "<span class=\"ui-icon ui-icon-close ecosystem_item_remove_btn pointer\"" +
+									" id_to_delete=\"" + drObject["ecosystem_object_id"].ToString() + "\"" +
+									" id_to_remove=\"" + sGroupID + "\">";
+		                        sHTML += "</span>";
+		
+		                        sHTML += "</div>";
+		
+		                        sHTML += "</div>";
+		
+		                        //the details section
+		                        sHTML += "<div class=\"ecosystem_item_detail\">";
+		
+		                        if (dtAPIResults != null)
+		                        {
+		                            if (dtAPIResults.Rows.Count > 0)
+		                                sHTML += DrawAllProperties(dtAPIResults, sObjectID);
+		                        }
+		
+		
+		                        //end detail section
+		                        sHTML += "</div>";
+		                        //end block
+		                        sHTML += "</div>";
+		                    }
+		                }
+		                else
+		                {
+		                    sHTML += "<span>This ecosystem does not contain any Cloud Objects.</span>";
+		                }
 
-
-                        string sObjectID = dr["ecosystem_object_id"].ToString();
-
-                        string sLabel = sObjectID;
-
-                        sHTML += "<div class=\"ui-widget-header ecosystem_item_header\">";
-                        sHTML += "<div class=\"ecosystem_item_header_title\"><span>" + sLabel + "</span></div>";
-
-                        sHTML += "<div class=\"ecosystem_item_header_icons\">";
-
-                        sHTML += "<span class=\"ui-icon ui-icon-close ecosystem_item_remove_btn pointer\" id_to_delete=\"" + dr["ecosystem_object_id"].ToString() + "\" id_to_remove=\"" + sGroupID + "\">";
-                        sHTML += "</span>";
-
-                        sHTML += "</div>";
-
-                        sHTML += "</div>";
-
-                        //the details section
-                        sHTML += "<div class=\"ecosystem_item_detail\">";
-
-                        if (dtAPIResults != null)
-                        {
-                            if (dtAPIResults.Rows.Count > 0)
-                                sHTML += DrawAllProperties(dtAPIResults, sObjectID);
-                        }
-
-
-                        //end detail section
-                        sHTML += "</div>";
-                        //end block
-                        sHTML += "</div>";
-                    }
-                }
-                else
-                {
-                    sHTML += "<span>This ecosystem does not contain any Cloud Objects.</span>";
-                }
+					}
+				}
+				
+				
 
 
                 return sHTML;

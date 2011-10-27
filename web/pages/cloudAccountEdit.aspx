@@ -52,7 +52,7 @@
         <asp:TextBox ID="txtSearch" runat="server" class="search_text" />
         <span id="item_search_btn">Search</span>
 		<div id="accounts">
-			<asp:PlaceHolder id="phAccounts" runat="server"></asp:PlaceHolder>
+			<asp:Literal id="ltAccounts" runat="server"></asp:Literal>
 		</div>
     </div>
     <div id="edit_dialog" class="hidden" title="Create Account">
@@ -81,11 +81,11 @@
                     </tr>
                     <tr>
                         <td>
-                            Account Type:
+                            Provider:
                         </td>
                         <td>
-                            <select id="ddlAccountType">
-                                <option value="Amazon AWS">Amazon AWS</option>
+                            <select id="ddlProvider">
+								<asp:Literal id="ltProviders" runat="server"></asp:Literal>
                             </select>
                         </td>
                     </tr>

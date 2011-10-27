@@ -167,7 +167,6 @@
     <Compile Include="pages\logserverSettings.aspx.cs">
       <DependentUpon>logserverSettings.aspx</DependentUpon>
     </Compile>
-    <None Include="pages\luAWSRegions.xml" />
     <None Include="pages\luCompareTemplates.xml" />
     <None Include="pages\luConnectionType.xml" />
     <None Include="pages\luDatasetTemplates.xml" />
@@ -320,6 +319,12 @@
     <Compile Include="classes\ImportExport.cs" />
     <None Include="pages\site.master.xml" />
     <None Include="script\site.master.js" />
+    <Compile Include="pages\cloudEdit.aspx.cs">
+      <DependentUpon>cloudEdit.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="pages\cloudEdit.aspx.designer.cs">
+      <DependentUpon>cloudEdit.aspx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v9.0\WebApplications\Microsoft.WebApplication.targets" />
@@ -493,5 +498,7 @@
     <Content Include="pages\userPreferenceEdit.aspx" />
     <Content Include="pages\importLoadFile.aspx" />
     <Content Include="pages\importReconcile.aspx" />
+    <Content Include="pages\cloudEdit.aspx" />
+    <Content Include="script\cloudEdit.js" />
   </ItemGroup>
 </Project>

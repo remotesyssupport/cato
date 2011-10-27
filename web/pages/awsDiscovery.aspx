@@ -40,6 +40,9 @@
     </div>
     <div id="left_panel">
         <div id="group_tabs">
+			<h3>Cloud</h3>
+			<asp:DropDownList id="ddlClouds" runat="server"></asp:DropDownList>
+			<hr />
             <ul>
                 <asp:Literal ID="ltTabs" runat="server"></asp:Literal>
             </ul>

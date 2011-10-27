@@ -11,18 +11,20 @@
 namespace Web.pages {
 	
 	
-	public partial class awsDiscovery {
+	public partial class cloudEdit {
 		
 		protected System.Web.UI.WebControls.Content cHead;
 		
 		protected System.Web.UI.WebControls.Content cDetail;
 		
-		protected System.Web.UI.WebControls.DropDownList ddlEcosystems;
+		protected System.Web.UI.WebControls.HiddenField hidSortColumn;
 		
-		protected System.Web.UI.WebControls.Literal ltResults;
+		protected System.Web.UI.WebControls.HiddenField hidPage;
 		
-		protected System.Web.UI.WebControls.DropDownList ddlClouds;
+		protected System.Web.UI.WebControls.TextBox txtSearch;
 		
-		protected System.Web.UI.WebControls.Literal ltTabs;
+		protected System.Web.UI.WebControls.Literal ltClouds;
+		
+		protected System.Web.UI.WebControls.Literal ltProviders;
 	}
 }
