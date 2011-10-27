@@ -2530,29 +2530,30 @@ namespace ACWebMethods
 						//note we don't care about dirty unencrypted values... they'll compare down below just fine.
 						
 						//is it encrypted?
-		                if (xTaskParam.Attribute("encrypt") != null)
+						bool bEncrypted = false;
+						if (xTaskParam.Attribute("encrypt") != null)
+							bEncrypted = dc.IsTrue(xTaskParam.Attribute("encrypt").Value);
+								
+						if (bEncrypted)
 						{
-							if (dc.IsTrue(xTaskParam.Attribute("encrypt").Value))
+							foreach (XElement xVal in xADValues.XPathSelectElements("value"))
 							{
-								foreach (XElement xVal in xADValues.XPathSelectElements("value"))
-								{
-									if (xVal.HasAttributes) {
-										//a) is it an oev?  unpackJSON it (that's just an obfuscation wrapper)
-										if (xVal.Attribute("oev") != null) 
+								if (xVal.HasAttributes) {
+									//a) is it an oev?  unpackJSON it (that's just an obfuscation wrapper)
+									if (xVal.Attribute("oev") != null) 
+									{
+										if (dc.IsTrue(xVal.Attribute("oev").Value)) 
 										{
-											if (dc.IsTrue(xVal.Attribute("oev").Value)) 
-											{
-												xVal.Value = ui.unpackJSON(xVal.Value);
-												xVal.SetAttributeValue("oev", null);
-											}
+											xVal.Value = ui.unpackJSON(xVal.Value);
+											xVal.SetAttributeValue("oev", null);
 										}
-										
-										//b) is it do_encrypt?  (remove the attribute to keep the db clutter down)
-										if (xVal.Attribute("do_encrypt") != null) 
-										{
-											xVal.Value = dc.EnCrypt(xVal.Value);
-											xVal.SetAttributeValue("do_encrypt", null);
-										}
+									}
+									
+									//b) is it do_encrypt?  (remove the attribute to keep the db clutter down)
+									if (xVal.Attribute("do_encrypt") != null) 
+									{
+										xVal.Value = dc.EnCrypt(xVal.Value);
+										xVal.SetAttributeValue("do_encrypt", null);
 									}
 								}
 							}
@@ -2561,14 +2562,43 @@ namespace ACWebMethods
 						
 						
 						//now that the encryption is sorted out,
-						// if it happens to match what's on the task (also encrypted)
+						// if the combined values of the parameter happens to match what's on the task
 						//  we just remove it.
-                        if (xTaskParamValues.Value.Equals(xADValues.Value))
-                        {
-                            xDefault.Remove();
-                            continue;
-                        }
-
+						
+						//we're doing combined because of lists (the whole list must match for it to be a dupe)
+						
+						//it's easy to look at all the values in a node with the node.Value property.
+						//but we'll have to manually concatenate all the oev attributes
+						
+						string sTaskVals = "";
+						string sDefVals = "";
+						
+						if (bEncrypted)
+						{
+							// the task document already has the oev obfuscated
+	                        foreach (XAttribute xa in xTaskParamValues.Elements("value").Attributes("oev"))
+							{
+								sTaskVals += xa.Value;
+							}
+							//but the XML we just got from the client doesn't... it's in the value.
+	                        foreach (XElement xe in xADValues.Elements("value"))
+							{
+								sDefVals += ui.packJSON(xe.Value);
+							}
+							if (sTaskVals.Equals(sDefVals))
+	                        {
+	                            xDefault.Remove();
+	                            continue;
+	                        }
+						}
+						else
+						{
+	                        if (xTaskParamValues.Value.Equals(xADValues.Value))
+	                        {
+	                            xDefault.Remove();
+	                            continue;
+	                        }
+						}
 
                     }
 

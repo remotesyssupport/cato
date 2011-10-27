@@ -3757,18 +3757,22 @@ namespace ACWebMethods
 					
 					//TODO: PARAMS: is this working!?
 					//then we spin the new values and add the oev if they're encrypted
-					if (dc.IsTrue(sEncrypt))
-					{
-						//yeah, we're spinning the task array... we just replaced it ... derp!
-						foreach (XElement xVal in xTaskParamValues.Elements("value"))
-						{
-							xVal.SetAttributeValue("oev", ui.packJSON(xVal.Value));
-	                        xVal.Value = "(********)";
-						}
-					}
+//					if (dc.IsTrue(sEncrypt))
+//					{
+//						//yeah, we're spinning the task array... we just replaced it ... derp!
+//						foreach (XElement xVal in xTaskParamValues.Elements("value"))
+//						{
+//							xVal.SetAttributeValue("oev", xVal.Value);
+//	                        xVal.Value = "(********)";
+//						}
+//					}
                	}
                 else
                 {
+					//IMPORTANT NOTE:
+					//remember... both these XML documents came from wmGetObjectParameterXML...
+					//so any encrypted data IS ALREADY OBFUSCATED and base64'd in the oev attribute.
+					
                     //it's a single value, so just replace it with the default.
                     XElement xVal = xTaskParamValues.XPathSelectElement("value[1]");
                     if (xVal != null)
@@ -3777,8 +3781,8 @@ namespace ACWebMethods
 						if (dc.IsTrue(sEncrypt))
 						{
 							if (xDefValues.XPathSelectElement("value") != null)
-								xVal.SetAttributeValue("oev", ui.packJSON(xDefValues.XPathSelectElement("value").Value));
-		                        xVal.Value = "(********)";
+								if (xDefValues.XPathSelectElement("value").Attribute("oev") != null)
+									xVal.SetAttributeValue("oev", xDefValues.XPathSelectElement("value").Attribute("oev").Value);
 						}
 						else
 						{
