@@ -3342,18 +3342,17 @@ namespace ACWebMethods
 
 
             // not clean at all handling both tasks and ecosystems in the same method, but whatever.
-            string sLogVals = (dc.IsTrue(sEncrypt) ? "" : " Values:[" + sValues + "]");
             if (bParamAdd)
             {
-                if (sType == "task") { ui.WriteObjectAddLog(Globals.acObjectTypes.Task, sID, "Parameter", "Added Parameter:" + sName + sLogVals); };
-                if (sType == "ecosystem") { ui.WriteObjectAddLog(Globals.acObjectTypes.Ecosystem, sID, "Parameter", "Added Parameter:" + sName + sLogVals); };
+                if (sType == "task") { ui.WriteObjectAddLog(Globals.acObjectTypes.Task, sID, "Parameter", "Added Parameter:" + sName ); };
+                if (sType == "ecosystem") { ui.WriteObjectAddLog(Globals.acObjectTypes.Ecosystem, sID, "Parameter", "Added Parameter:" + sName); };
             }
             else
             {
                 // would be a lot of trouble to add the from to, why is it needed you have each value in the log, just scroll back
                 // so just add a changed message to the log
-                if (sType == "task") { dc.addSecurityLog(ui.GetSessionUserID(), Globals.SecurityLogTypes.Object, Globals.SecurityLogActions.ObjectModify, Globals.acObjectTypes.Task, sID, "Parameter Changed:[" + sName + "]" + sLogVals, ref sErr); };
-                if (sType == "ecosystem") { dc.addSecurityLog(ui.GetSessionUserID(), Globals.SecurityLogTypes.Object, Globals.SecurityLogActions.ObjectModify, Globals.acObjectTypes.Ecosystem, sID, "Parameter Changed:[" + sName + "]" + sLogVals, ref sErr); };
+                if (sType == "task") { dc.addSecurityLog(ui.GetSessionUserID(), Globals.SecurityLogTypes.Object, Globals.SecurityLogActions.ObjectModify, Globals.acObjectTypes.Task, sID, "Parameter Changed:[" + sName + "]", ref sErr); };
+                if (sType == "ecosystem") { dc.addSecurityLog(ui.GetSessionUserID(), Globals.SecurityLogTypes.Object, Globals.SecurityLogActions.ObjectModify, Globals.acObjectTypes.Ecosystem, sID, "Parameter Changed:[" + sName + "]", ref sErr); };
             }
 
             //update the values
@@ -3362,9 +3361,21 @@ namespace ACWebMethods
 
             foreach (string sVal in aValues)
             {
-                string sReadyValue = ui.unpackJSON(sVal);
-                sReadyValue = (dc.IsTrue(sEncrypt) ? dc.EnCrypt(sReadyValue) : sReadyValue);
-
+                string sReadyValue = "";
+				
+				//if encrypt is true we MIGHT want to encrypt this value.
+				//but it might simply be a resubmit of an existing value in which case we DON'T
+				//if it has oev: as a prefix, it needs no additional work
+				if (dc.IsTrue(sEncrypt))
+				{
+					if (sVal.IndexOf("oev:") > -1)
+						sReadyValue = sVal.Replace("oev:", "");
+					else
+						sReadyValue = dc.EnCrypt(ui.unpackJSON(sVal));						
+				} else {
+					sReadyValue = dc.EnCrypt(ui.unpackJSON(sVal));						
+				}
+				
                 sValueXML += "<value id=\"pv_" + ui.NewGUID() + "\">" + sReadyValue + "</value>";
             }
 
