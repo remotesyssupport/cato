@@ -26,8 +26,7 @@ $(document).ready(function () {
         //construct a new input section
         var output = "";
         output += "<div class=\"task_launch_parameter_value\">";
-        output += "<textarea class=\"task_launch_parameter_value_input\" width=\"90%\" rows=\"1\">";
-        output += "</textarea>";
+        output += "<textarea class=\"task_launch_parameter_value_input\" width=\"90%\" rows=\"1\"></textarea>";
         output += "<img class=\"parameter_dialog_remove_btn\" src=\"../images/icons/fileclose.png\" alt=\"Remove Value\" />";
         output += "</div>";
 
@@ -113,34 +112,28 @@ function DrawParameterEditForm(parameter_xml) {
                         var is_selected = $(v).attr("selected");
                         var selected = (is_selected == "true" ? "selected=\"selected\"" : "");
 
-                        output += "<option " + selected + ">";
-                        output += $(v).text();
-                        output += "</option>";
+                        output += "<option " + selected + ">" + $(v).text() + "</option>";
                     });
 
                     output += "</select>";
                 }
                 else if (present_as == "list") {
                     $($values).each(function (vidx, v) {
+						var attr = "";
+		
                         output += "<div class=\"task_launch_parameter_value\">";
 
 	                    if (encrypt) {
 	                    	//what's the oev?
-            	            var oev = "";
 				            if ($(v).attr("oev"))
-			            		oev = "oev=\"" + $(v).attr("oev") + "\"";
-	                    
-	                    	//the actual textarea
-							output += "<textarea class=\"task_launch_parameter_value_input\" rows=\"1\" " + oev + ">";
-	                        output += $(v).text();
-	                        output += "</textarea>";
-	                    } else {
-							//if it wasn't encrypt, this will show the actual value
-							output += "<textarea class=\"task_launch_parameter_value_input\" rows=\"1\">";
-	                        output += $(v).text();
-	                        output += "</textarea>";
+			            		attr = "oev=\"" + $(v).attr("oev") + "\"";
                         }
-                                                                        
+
+                    	//the actual textarea
+                    	//don't break it to multiple lines or it adds spaces!
+						output += "<textarea class=\"task_launch_parameter_value_input\" rows=\"1\" " + attr + ">" + $(v).text() + "</textarea>";
+
+                                                                                                                                                
                         //don't draw the 'x' on the first value... make at least one value required.
                         if (vidx > 0) {
                             output += "<span class=\"floatright ui-icon ui-icon-trash parameter_dialog_remove_btn\" title=\"Remove Value\"></span>";
@@ -160,28 +153,26 @@ function DrawParameterEditForm(parameter_xml) {
                         if (vidx > 0)
                             return false;
 
+                        var attr = "";
+                        
                         output += "<div class=\"task_launch_parameter_value\">";
 
 	                    //if it's "encrypt", draw a hidden field, and flag the entry one for input masking
 	                    //NOTE: any value here will be encrypted because it came from the database.
 	                    
 	                    //MORE IMPORTANT NOTE: if the value is changed by the user, it will NOT be encrypted any more
-	                    //therefore the encrypt="true" flag will be removed.
+	                    //see the document.ready for the binding of the change event that sets a dirty flag in this case.
 	                    
 	                    if (encrypt) {
 	                    	//what's the oev?
-            	            var oev = "";
 				            if ($(v).attr("oev"))
-			            		oev = "oev=\"" + $(v).attr("oev") + "\"";
+			            		attr = "oev=\"" + $(v).attr("oev") + "\"";
 
-	                    
-	                    	//the actual textarea
-							output += "<textarea class=\"task_launch_parameter_value_input encunderlay\" rows=\"1\" " + oev + ">";
-	                        output += $(v).text();
-	                        output += "</textarea>";
 	                    	
             				//TODO: PARAMS: hidden field/masking crap
 	                    	//ALL THIS IS A GOOD IDEA... just will take hours of tinkering to get it right.
+	                    	
+	                    	//give the main textarea the "encunderlay" class
 	                    	/*
 	                    	var stars = "";
 							var ln = $(v).text().length;
@@ -193,12 +184,10 @@ function DrawParameterEditForm(parameter_xml) {
 	                    	//and this covering div lies over it
 	                    	output += "<textarea class=\"encoverlay\">" + stars + "</textarea>";
 	                    	*/
-	                    } else {
-							//if it wasn't encrypt, this will show the actual value
-							output += "<textarea class=\"task_launch_parameter_value_input\" rows=\"1\">";
-	                        output += $(v).text();
-	                        output += "</textarea>";
                     	}
+	                    
+                    	//the actual textarea
+						output += "<textarea class=\"task_launch_parameter_value_input\" rows=\"1\" " + attr + ">" + $(v).text() + "</textarea>";
 
                         output += "</div>";
                     });

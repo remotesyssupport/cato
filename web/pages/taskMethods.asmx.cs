@@ -160,7 +160,7 @@ namespace ACWebMethods
 
 
                 sSQL = "update task_step set " +
-                    " function_xml = '" + xDoc.ToString().Replace("'", "''") + "'" +
+                    " function_xml = '" + xDoc.ToString(SaveOptions.DisableFormatting).Replace("'", "''") + "'" +
                     " where step_id = '" + sStepID + "';";
 
                 if (!dc.sqlExecuteUpdate(sSQL, ref sErr))
@@ -3806,7 +3806,7 @@ namespace ACWebMethods
 				}
             }
 
-            return xTPDoc.ToString(); ;
+            return xTPDoc.ToString(SaveOptions.DisableFormatting); ;
 
         }
 
@@ -3888,7 +3888,7 @@ namespace ACWebMethods
                         xEncryptedValue.Value = "(********)";
                     }
 
-                    return xDoc.ToString();
+                    return xDoc.ToString(SaveOptions.DisableFormatting);
                 }
             }
             catch (Exception ex)
@@ -4005,7 +4005,7 @@ namespace ACWebMethods
                     xTasks.Add(xTask);
 
 
-                    sSQL = "update users set settings_xml = '" + xDoc.ToString() + "'" +
+                    sSQL = "update users set settings_xml = '" + xDoc.ToString(SaveOptions.DisableFormatting) + "'" +
                         " where user_id = '" + sUserID + "'";
                     if (!dc.sqlExecuteUpdate(sSQL, ref sErr))
                     {
