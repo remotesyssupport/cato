@@ -215,6 +215,8 @@
     </div>
     <!--DIALOGS-->
     <div id="task_launch_dialog" title="Run Task">
+        <div id="plan_edit_dialog" title="Edit Plan">
+        </div>
     </div>
     <div id="param_edit_dialog" title="Parameter">
     </div>
