@@ -19,7 +19,7 @@ namespace Web.pages {
 		
 		protected System.Web.UI.WebControls.Panel pnlGettingStarted;
 		
-		protected System.Web.UI.WebControls.PlaceHolder phGettingStartedItems;
+		protected System.Web.UI.WebControls.Literal ltGettingStartedItems;
 		
 		protected System.Web.UI.WebControls.PlaceHolder phGroupTabs;
 	}

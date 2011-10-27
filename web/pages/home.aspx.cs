@@ -39,7 +39,6 @@ namespace Web.pages
 			//this will only write out if you're an Administrator
 			//will check each item to make sure the proper config is done.
 			if (ui.UserIsInRole("Administrator")) {
-				Literal lt = new Literal();
 				ArrayList aItems = new ArrayList();
 				
 				//administrator account
@@ -57,7 +56,12 @@ namespace Web.pages
 						aItems.Add("Select a security challenge question and response.");
 		
 					if (aItems.Count > 0)
-						lt.Text += DrawGettingStartedItem("Administrator Account", aItems, "<a href=\"../pages/userPreferenceEdit.aspx\">Click here</a> to update Administrator account settings.");
+					{
+						if (ui.GetSessionUsername().ToLower() == "administrator")
+							ltGettingStartedItems.Text += DrawGettingStartedItem("Administrator Account", aItems, "<a href=\"../pages/userPreferenceEdit.aspx\">Click here</a> to update Administrator account settings.");
+						else
+							ltGettingStartedItems.Text += DrawGettingStartedItem("Administrator Account", aItems, "You must be logged in as 'Administrator' to change these settings.");					
+					}
 				}
 					
 	
@@ -75,15 +79,38 @@ namespace Web.pages
 						aItems.Add("Define an SMTP server.");
 	
 					if (aItems.Count > 0)
-						lt.Text += DrawGettingStartedItem("Messenger Settings", aItems, "<a href=\"../pages/userPreferenceEdit.aspx\">Click here</a> to update Messenger settings.");
+						ltGettingStartedItems.Text += DrawGettingStartedItem("Messenger Settings", aItems, "<a href=\"../pages/notificationEdit.aspx\">Click here</a> to update Messenger settings.");
 				}
+					
+	
+			
+				//cloud account settings
+				//a little different - this one can be an empty table
+				aItems.Clear();
+				sSQL = "select login_id, login_password from cloud_account";
+				dr = null;
+				if(!dc.sqlGetDataRow(ref dr, sSQL, ref sErr)) {
+					ui.RaiseError(Page, "Unable to read Cloud Accounts.", false, sErr);
+				}
+	            if (dr != null)
+	            {
+					if (string.IsNullOrEmpty(dr["login_id"].ToString()) || string.IsNullOrEmpty(dr["login_password"].ToString()))
+						aItems.Add("Provide an Account Login ID and Password.");
+				}
+				else 
+				{
+					aItems.Add("There are no Cloud Accounts defined.");
+				}
+				if (aItems.Count > 0)
+					ltGettingStartedItems.Text += DrawGettingStartedItem("Cloud Accounts", aItems, "<a href=\"../pages/cloudAccountEdit.aspx\">Click here</a> to manage Cloud Accounts.");
 
 	
 			
-				phGettingStartedItems.Controls.Add(lt);
-				
+			
 				//if the phGettingStarted has anything in it, show the getting started panel
-				if (phGettingStartedItems.Controls.Count > 0)
+				if (string.IsNullOrEmpty(ltGettingStartedItems.Text))
+					pnlGettingStarted.Visible = false;
+				else
 					pnlGettingStarted.Visible = true;
 			}
 			

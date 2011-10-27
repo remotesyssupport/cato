@@ -17,7 +17,7 @@
 		    <div id="getting_started" class="ui-widget-content ui-corner-all" style="padding: 20px; margin-top: 20px;">
 				<h1>Welcome to Cloud Sidekick Cato!</h1>
 				<p>There are just a few more things you need to do to get started.</p>
-				<asp:PlaceHolder id="phGettingStartedItems" runat="server"></asp:PlaceHolder>
+				<asp:Literal id="ltGettingStartedItems" runat="server"></asp:Literal>
 			</div>
 		</asp:Panel>
     </div>
