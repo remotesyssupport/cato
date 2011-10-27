@@ -3547,7 +3547,7 @@ namespace ACWebMethods
 
                                 //only show stars if it's encrypted
                                 if (bEncrypt)
-									sValue = "(********)";
+									sValue = "********";
 								else
                                     if (bSnipValues)
                                         sValue = ui.GetSnip(xValue.Value, 64);
@@ -3775,7 +3775,7 @@ namespace ACWebMethods
 //						foreach (XElement xVal in xTaskParamValues.Elements("value"))
 //						{
 //							xVal.SetAttributeValue("oev", xVal.Value);
-//	                        xVal.Value = "(********)";
+//	                        xVal.Value = "********";
 //						}
 //					}
                	}
@@ -3885,7 +3885,7 @@ namespace ACWebMethods
                     foreach (XElement xEncryptedValue in xDoc.XPathSelectElements("//parameter[@encrypt='true']/values/value"))
                     {
 						xEncryptedValue.SetAttributeValue("oev", ui.packJSON(xEncryptedValue.Value));
-                        xEncryptedValue.Value = "(********)";
+                        xEncryptedValue.Value = "********";
                     }
 
                     return xDoc.ToString(SaveOptions.DisableFormatting);
