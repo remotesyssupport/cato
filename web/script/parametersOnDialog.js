@@ -125,7 +125,7 @@ function DrawParameterEditForm(parameter_xml) {
 
 	                    if (encrypt) {
 	                    	//what's the oev?
-				            if ($(v).attr("oev"))
+				            if ($(v).attr("oev") != null)
 			            		attr = "oev=\"" + $(v).attr("oev") + "\"";
                         }
 
@@ -165,7 +165,7 @@ function DrawParameterEditForm(parameter_xml) {
 	                    
 	                    if (encrypt) {
 	                    	//what's the oev?
-				            if ($(v).attr("oev"))
+				            if ($(v).attr("oev") != null)
 			            		attr = "oev=\"" + $(v).attr("oev") + "\"";
 
 	                    	
@@ -236,7 +236,7 @@ function buildXMLToSubmit() {
   	            
   	            if (encrypt) {
 	  	            var is_dirty = false;
-		            if ($(v).attr("dirty"))
+		            if ($(v).attr("dirty") != null)
 	            		is_dirty = true;
 	
 	            	//if the value textarea has the "encrypt" flag, it will also have an associated json packed attribute...
@@ -245,7 +245,7 @@ function buildXMLToSubmit() {
 						//this is a new value, needs to be encrypted on the server.
 		                attr = " do_encrypt=\"true\"";
 					} else {
-			            if ($(v).attr("oev"))
+			            if ($(v).attr("oev") != null)
 			            {
 							attr = " oev=\"true\"";
 							val = $(v).attr("oev");

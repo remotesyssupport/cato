@@ -3884,7 +3884,9 @@ namespace ACWebMethods
                     // 2) return some stars so the user will know a value is there.
                     foreach (XElement xEncryptedValue in xDoc.XPathSelectElements("//parameter[@encrypt='true']/values/value"))
                     {
-						xEncryptedValue.SetAttributeValue("oev", ui.packJSON(xEncryptedValue.Value));
+						//if the value is empty, it still gets an oev attribute
+						string sVal = (string.IsNullOrEmpty(xEncryptedValue.Value) ? "" : ui.packJSON(xEncryptedValue.Value));
+						xEncryptedValue.SetAttributeValue("oev", sVal);
                         xEncryptedValue.Value = "********";
                     }
 
