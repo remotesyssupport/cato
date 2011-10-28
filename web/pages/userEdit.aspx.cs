@@ -333,12 +333,17 @@ namespace Web.pages
             //default message if undefined in the table
             if (string.IsNullOrEmpty(sBody))
                 sBody = sFullName + " - an account has been created for you in " + ag.APP_NAME + "." + Environment.NewLine + Environment.NewLine +
-                "Your User Name is: " + sLoginID + "." + Environment.NewLine +
-                "Your temporary password is: " + sUserPassword + "." + Environment.NewLine;
+                "Your User Name: " + sLoginID + "." + Environment.NewLine +
+                "Your temporary password: " + sUserPassword + "." + Environment.NewLine;
 
             //replace our special tokens with the values
-            sBody = sBody.Replace("##FULLNAME##", sFullName).Replace("##USERNAME##", sLoginID).Replace("##PASSWORD##", sUserPassword);
-
+            sBody = sBody.Replace("##FULLNAME##", sFullName).Replace("##USERNAME##", sLoginID);
+				
+			if (sGeneratePW == "1")
+				sBody = sBody.Replace("##PASSWORD##", sUserPassword);
+			else
+				sBody = sBody.Replace("##PASSWORD##", "Will be provided by an Administrator.");				
+				
             if (!ui.SendEmailMessage(sEmail.Trim(), ag.APP_COMPANYNAME + " Account Management", "Welcome to " + ag.APP_COMPANYNAME, sBody, ref sErr))
                 throw new Exception(sErr);
 
