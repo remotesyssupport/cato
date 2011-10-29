@@ -391,7 +391,12 @@ proc insert_audit {step_id command log connection} {
         regsub -all "(')" $log "''" log
         regsub -all "(')" $command "''" command
 
+        if {"$step_id" != ""} {
         set sql "insert into task_instance_log (task_instance, step_id, entered_dt, connection_name, log, command_text) values ($::TASK_INSTANCE,'$step_id', $::getdate,'$connection','$log','$command')"
+        } else {
+                set sql "insert into task_instance_log (task_instance, step_id, entered_dt, connection_name, log, command_text) values ($::TASK_INSTANCE,NULL, $::getdate,'$connection','$log','$command')"
+        }
+
         if { [catch {$::db_exec $::CONN $sql} return_code ]} {
 			error_out "ERROR: Unable to insert log entry. Return Code: {$return_code}" 9999
         }
@@ -553,6 +558,7 @@ proc initialize {} {
 	set ::MY_PID [pid]
 	set ::handle_names ""
 	set ::BREAK 0
+	set ::INLOOP 0
 	set ::SENSITIVE ""
 
 	#set ::FILTER_BUFFER 0
@@ -609,9 +615,8 @@ proc get_steps {task_id} {
 				}
 			}
 		}
-		lappend ::codeblock_arr($task_id,[lindex $row 1]) [lindex $row 0]
+		lappend ::codeblock_arr($task_id,[lindex $row 1]) [string tolower [lindex $row 0]]
 	}
-
 #	output "checking for output producing steps" 2
 
 	#output "out of get_steps" 4
@@ -640,11 +645,16 @@ proc parse_input_params {params} {
 		### 2010-01-19 - PMD - variable names case insensitive
 		set name [string toupper [$node selectNodes string(name)]]
 		set value_nodes [$node selectNodes {./values}]
+		set is_encrypted [$node getAttribute encrypt ""]
 		set ii 1
 		array unset ::runtime_arr $name,*
 		if {"$value_nodes" > ""} {
 			foreach value_node [$value_nodes childNodes] {
 				set value [fix [$value_node asText]]
+				if {"$is_encrypted" == "true"} {
+					#set value [decrypt_string $value $::SITE_KEY]
+					#lappend ::SENSITIVE $value
+				}
 				output "value node $name, $value" 3
 				set_variable $name,$ii $value
 				incr ii
@@ -872,9 +882,9 @@ proc error_out {error_msg error_type} {
 
 	set AUDIT_TRAIL_ON 2
 	
-	if {![info exists ::STEP_ID]} {
-		set ::STEP_ID 0
-	}
+	#if {![info exists ::STEP_ID]} {
+	#	set ::STEP_ID 0
+	#}
 	error $error_msg $error_msg $error_type
 }
 
@@ -2706,6 +2716,7 @@ proc get_ecosystem_registry {key} {
 			set is_encrypted [$key_node getAttribute encrypt ""]
 			if {"$is_encrypted" == "true"} {
 				set return_string [decrypt_string $return_string $::SITE_KEY]
+				lappend ::SENSITIVE $return_string
 			}
 		}
 		$dataset_root delete
@@ -3491,6 +3502,9 @@ proc run_commands {task_name codeblock} {
 
 	foreach codeblock_step $::codeblock_arr($task_name,$codeblock) {
 		process_step $codeblock_step $task_name
+		if {$::BREAK == 1 && $::INLOOP == 1} {
+			break
+		}
 
 #		set compare_to 1
 #		set increment 1
@@ -3794,7 +3808,9 @@ proc process_step {step_id task_name} {
 		"break_loop" {
 					output "Breaking out of loop" 1
 			insert_audit $::STEP_ID  "" "Breaking out of loop." ""
-			set ::BREAK 1
+			if {$::INLOOP == 1} {
+				set ::BREAK 1
+			}
 		}
 		"while" {
 			while_loop $command $task_name
@@ -4190,7 +4206,7 @@ proc process_task {} {
 	global SUBMITTED_BY
 	global SYSTEMS
 	set ::TEST_RESULT ""
-	set ::STEP_ID 0
+	set ::STEP_ID ""
 
 	
 	set sql "select A.task_instance, B.task_name, A.asset_id, 
@@ -5198,8 +5214,14 @@ proc for_loop {command task_name} {
 			output "max iterations hit, $max_iterations. Breaking out of loop"
 			break
 		}
+		set ::INLOOP 1
 		process_step $action $task_name
+		if {$::BREAK == 1} {
+			set ::BREAK 0
+			break
+		}
 	}
+	set ::INLOOP 0
 
 	return
 }
@@ -5216,12 +5238,18 @@ proc while_loop {command task_name} {
 	regsub -all "&gt;" $test_cond ">" test_cond
 	regsub -all "&lt;" $test_cond "<" test_cond
 	while {[expr $test_cond]} {
+		set ::INLOOP 1
 		process_step $action $task_name
+		if {$::BREAK == 1} {
+			set ::BREAK 0
+			break
+		}
 		set test_cond [replace_variables_all $test]
 		regsub -all "&amp;" $test_cond {\&} test_cond
 		regsub -all "&gt;" $test_cond ">" test_cond
 		regsub -all "&lt;" $test_cond "<" test_cond
 	} 	
+	set ::INLOOP 0
 	return
 }
 proc get_instance_handle {command} {
