@@ -17,6 +17,8 @@ namespace Web.pages {
 		
 		protected System.Web.UI.WebControls.Content cDetail;
 		
+		protected System.Web.UI.WebControls.DropDownList ddlClouds;
+		
 		protected System.Web.UI.WebControls.Literal ltTabs;
 	}
 }

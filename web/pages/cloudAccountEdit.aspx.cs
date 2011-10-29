@@ -22,6 +22,7 @@ using System.Web.UI.WebControls;
 using System.Web.Services;
 using System.Data;
 using System.Text;
+using Globals;
 
 namespace Web.pages
 {
@@ -34,12 +35,26 @@ namespace Web.pages
         {
             if (!Page.IsPostBack)
             {
-				Literal lt = new Literal();
-				lt.Text = GetAccounts("");
-				phAccounts.Controls.Add(lt);
+				ltAccounts.Text = GetAccounts("");
+				
+				//one time get of the Provider list.
+				ltProviders.Text = GetProviders();
             }
         }
-
+		
+		public string GetProviders() {
+			string sOptionHTML = "";
+			
+			CloudProviders cp = ui.GetCloudProviders();
+			if (cp != null)
+			{
+				foreach (Provider p in cp.Values) {
+					sOptionHTML += "<option value=\"" + p.Name + "\">" + p.Name + "</option>";
+				}
+			}
+		
+			return sOptionHTML;
+		}
 		public string GetAccounts(string sSearch) {
             string sSQL = "";
             string sErr = "";
@@ -58,13 +73,13 @@ namespace Web.pages
                     {
                         sWhereString = " and (account_name like '%" + aSearchTerms[i] + "%' " +
                             "or account_number like '%" + aSearchTerms[i] + "%' " +
-                            "or account_type like '%" + aSearchTerms[i] + "%' " +
+                            "or provider like '%" + aSearchTerms[i] + "%' " +
                             "or login_id like '%" + aSearchTerms[i] + "%') ";
                     }
                 }
             }
 
-            sSQL = "select account_id, account_name, account_number, account_type, login_id, auto_manage_security," +
+            sSQL = "select account_id, account_name, account_number, provider, login_id, auto_manage_security," +
                 " case is_default when 1 then 'Yes' else 'No' end as is_default" +
                 " from cloud_account" +
                 " where 1=1 " + sWhereString +
@@ -90,7 +105,7 @@ namespace Web.pages
 
             sHTML += "<th sortcolumn=\"account_name\">Account Name</th>";
             sHTML += "<th sortcolumn=\"account_number\">Account Number</th>";
-            sHTML += "<th sortcolumn=\"account_type\">Type</th>";
+            sHTML += "<th sortcolumn=\"provider\">Type</th>";
             sHTML += "<th sortcolumn=\"login_id\">Login ID</th>";
             sHTML += "<th sortcolumn=\"is_default\">Default?</th>";
 
@@ -109,7 +124,7 @@ namespace Web.pages
 
                 sHTML += "<td tag=\"selectable\">" + dr["account_name"].ToString() +  "</td>";
                 sHTML += "<td tag=\"selectable\">" + dr["account_number"].ToString() +  "</td>";
-                sHTML += "<td tag=\"selectable\">" + dr["account_type"].ToString() +  "</td>";
+                sHTML += "<td tag=\"selectable\">" + dr["provider"].ToString() +  "</td>";
                 sHTML += "<td tag=\"selectable\">" + dr["login_id"].ToString() +  "</td>";
                 sHTML += "<td tag=\"selectable\">" + dr["is_default"].ToString() +  "</td>";
 
@@ -144,7 +159,7 @@ namespace Web.pages
 
             DataTable dt = new DataTable();
             // get a list of ids that will be deleted for the log
-            sSql = "select account_id, account_name, account_type, login_id from cloud_account where account_id in (" + sDeleteArray + ")";
+            sSql = "select account_id, account_name, provider, login_id from cloud_account where account_id in (" + sDeleteArray + ")";
             if (!dc.sqlGetDataTable(ref dt, sSql, ref sErr))
                 throw new Exception(sErr);
 
@@ -172,14 +187,14 @@ namespace Web.pages
             // if we made it here, so save the logs
             foreach (DataRow dr in dt.Rows)
             {
-                ui.WriteObjectDeleteLog(Globals.acObjectTypes.CloudAccount, dr["account_id"].ToString(), dr["account_name"].ToString(), dr["account_type"].ToString() + " Account for LoginID [" + dr["login_id"].ToString() + "] Deleted");
+                ui.WriteObjectDeleteLog(Globals.acObjectTypes.CloudAccount, dr["account_id"].ToString(), dr["account_name"].ToString(), dr["provider"].ToString() + " Account for LoginID [" + dr["login_id"].ToString() + "] Deleted");
             }
 
             return sErr;
         }
 
         [WebMethod(EnableSession = true)]
-        public static string SaveAccount(string sMode, string sAccountID, string sAccountName, string sAccountNumber, string sAccountType, 
+        public static string SaveAccount(string sMode, string sAccountID, string sAccountName, string sAccountNumber, string sProvider, 
 			string sLoginID, string sLoginPassword, string sLoginPasswordConfirm, string sIsDefault, string sAutoManageSecurity)
         {
             // for logging
@@ -218,7 +233,7 @@ namespace Web.pages
                     sSql = "update cloud_account set" +
                         " account_name = '" + sAccountName + "'," +
                         " account_number = '" + sAccountNumber + "'," +
-                        " account_type = '" + sAccountType + "'," +
+                        " provider = '" + sProvider + "'," +
                         " is_default = '" + sIsDefault + "'," +
                         " auto_manage_security = '" + sAutoManageSecurity + "'," +
                         " login_id = '" + sLoginID + "'" +
@@ -247,11 +262,11 @@ namespace Web.pages
 						sIsDefault = "1";
 					
 					sAccountID = ui.NewGUID();
-                    sSql = "insert into cloud_account (account_id, account_name, account_number, account_type, is_default, login_id, login_password, auto_manage_security)" +
+                    sSql = "insert into cloud_account (account_id, account_name, account_number, provider, is_default, login_id, login_password, auto_manage_security)" +
                     " values ('" + sAccountID + "'," +
                     "'" + sAccountName + "'," +
                     "'" + sAccountNumber + "'," +
-                    "'" + sAccountType + "'," +
+                    "'" + sProvider + "'," +
                     "'" + sIsDefault + "'," +
                     "'" + sLoginID + "'," +
                     "'" + dc.EnCrypt(sLoginPassword) + "'," +
@@ -284,7 +299,7 @@ namespace Web.pages
             }
 			
             // no errors to here, so return an empty string
-            return "{'account_id':'" + sAccountID + "', 'account_name':'" + sAccountName + "', 'account_type':'" + sAccountType + "'}";
+            return "{'account_id':'" + sAccountID + "', 'account_name':'" + sAccountName + "', 'provider':'" + sProvider + "'}";
         }
 
         [WebMethod(EnableSession = true)]
@@ -297,17 +312,17 @@ namespace Web.pages
 
             string sAccountName = null;
             string sAccountNumber = null;
-            string sAccountType = null;
+            string sProvider = null;
             string sIsDefault = null;
             string sAutoManage = null;
             string sLoginID = null;
             string sLoginPassword = null;
 
 
-            sSql = "select account_id, account_name, account_number, account_type, login_id, is_default, auto_manage_security" +
+            sSql = "select account_id, account_name, account_number, provider, login_id, is_default, auto_manage_security" +
                 " from cloud_account where account_id = '" + sID + "'";
 
-            StringBuilder sbAssetValues = new StringBuilder();
+            StringBuilder sb = new StringBuilder();
             DataRow dr = null;
             if (!dc.sqlGetDataRow(ref dr, sSql, ref sErr))
             {
@@ -319,33 +334,33 @@ namespace Web.pages
                 {
                     sAccountName = (object.ReferenceEquals(dr["account_name"], DBNull.Value) ? "" : dr["account_name"].ToString());
                     sAccountNumber = (object.ReferenceEquals(dr["account_number"], DBNull.Value) ? "" : dr["account_number"].ToString());
-                    sAccountType = (object.ReferenceEquals(dr["account_type"], DBNull.Value) ? "" : dr["account_type"].ToString());
+                    sProvider = (object.ReferenceEquals(dr["provider"], DBNull.Value) ? "" : dr["provider"].ToString());
                     sIsDefault = (object.ReferenceEquals(dr["is_default"], DBNull.Value) ? "0" : (dc.IsTrue(dr["is_default"].ToString()) ? "1" : "0"));
                     sAutoManage = (object.ReferenceEquals(dr["auto_manage_security"], DBNull.Value) ? "" : dr["auto_manage_security"].ToString());
                     sLoginID = (object.ReferenceEquals(dr["login_id"], DBNull.Value) ? "" : dr["login_id"].ToString());
                     sLoginPassword = "($%#d@x!&";
 
-                    // Return the asset object as a JSON 
+                    // Return the object as a JSON 
 
-                    sbAssetValues.Append("{");
-                    sbAssetValues.AppendFormat("\"{0}\" : \"{1}\",", "sAccountName", sAccountName);
-                    sbAssetValues.AppendFormat("\"{0}\" : \"{1}\",", "sAccountNumber", sAccountNumber);
-                    sbAssetValues.AppendFormat("\"{0}\" : \"{1}\",", "sAccountType", sAccountType);
-                    sbAssetValues.AppendFormat("\"{0}\" : \"{1}\",", "sIsDefault", sIsDefault);
-                    sbAssetValues.AppendFormat("\"{0}\" : \"{1}\",", "sAutoManage", sAutoManage);
-                    sbAssetValues.AppendFormat("\"{0}\" : \"{1}\",", "sLoginID", sLoginID);
-                    sbAssetValues.AppendFormat("\"{0}\" : \"{1}\"", "sLoginPassword", sLoginPassword);
-                    sbAssetValues.Append("}");
+                    sb.Append("{");
+                    sb.AppendFormat("\"{0}\" : \"{1}\",", "sAccountName", sAccountName);
+                    sb.AppendFormat("\"{0}\" : \"{1}\",", "sAccountNumber", sAccountNumber);
+                    sb.AppendFormat("\"{0}\" : \"{1}\",", "sProvider", sProvider);
+                    sb.AppendFormat("\"{0}\" : \"{1}\",", "sIsDefault", sIsDefault);
+                    sb.AppendFormat("\"{0}\" : \"{1}\",", "sAutoManage", sAutoManage);
+                    sb.AppendFormat("\"{0}\" : \"{1}\",", "sLoginID", sLoginID);
+                    sb.AppendFormat("\"{0}\" : \"{1}\"", "sLoginPassword", sLoginPassword);
+                    sb.Append("}");
 
                 }
                 else
                 {
-                    sbAssetValues.Append("{}");
+                    sb.Append("{}");
                 }
 
             }
 
-            return sbAssetValues.ToString();
+            return sb.ToString();
         }
 
         [WebMethod(EnableSession = true)]

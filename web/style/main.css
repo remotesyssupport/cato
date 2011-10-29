@@ -195,6 +195,9 @@ body
 {
 	cursor: pointer;
 }
+.bold {
+	font-weight: bold;
+}
 .italic
 {
 	font-style: italic;
@@ -492,7 +495,7 @@ td.row_over
 }
 .group_tab
 {
-	padding: 3px;
+	padding: 3px 3px 3px 10px;
 	border: 1px solid #d3d3d3;
 	background-color: #c2c2c2;
 	font-weight: normal;
@@ -520,6 +523,20 @@ td.row_over
 	font-weight: normal;
 	color: #212121;
 	outline: none;
+}
+.group_header
+{
+	padding: 3px;
+	border: 1px solid #a3a3a3;
+	background-color: #c2c2c2;
+	font-weight: bold;
+	font-size: 10pt;
+	color: #f4f4f4;
+	outline: none;
+	-moz-border-radius-bottomright: 6px;
+	-webkit-border-top-right-radius: 6px;
+	-moz-border-radius-topright: 6px;
+	-webkit-border-top-right-radius: 6px;
 }
 
 /*"Tags" that show up on the various edit pages.*/
@@ -671,6 +688,8 @@ We used a table to avoid the annoyance of div float left and right.
 	border: solid 1px #e5e5e5;
 	padding: 2px 0px 2px 8px;
 	-moz-border-radius: 8px;
+	/*required for the encoverlay*/
+	position: relative;
 }
 .task_launch_parameter_value_input
 {
@@ -731,6 +750,26 @@ We used a table to avoid the annoyance of div float left and right.
 }
 
 /*END of the taskLaunchDialog styles*/
+
+/* the parametersondialog class has a couple styles*/
+.encoverlay 
+{
+	top: 0px;
+	left: 0px; 
+	height: 100px; 
+	width: 100px; 
+	position: absolute; 
+	z-index: 10; 
+	font-size: 16pt; 
+	width: 375px; 
+	margin-left: 2px; 
+	padding: 4px 0px 0px 10px;
+	pointer-events: none;
+}
+.encunderlay
+{
+	color: #000000;
+}
 
 .parameter_dialog_add_btn
 {

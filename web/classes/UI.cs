@@ -320,7 +320,7 @@ namespace acUI
         public bool UserIsInRole(string sRoleToCheck)
         {
             string sUserRole = GetSessionUserRole();
-            if (sUserRole == sRoleToCheck)
+            if (sUserRole.ToLower() == sRoleToCheck.ToLower())
                 return true;
             else
                 return false;
@@ -693,7 +693,7 @@ namespace acUI
                 if (sTmp[i].IndexOf(".") > -1)
                 {
                     sPageName = sTmp[i];
-                    break; // TODO: might not be correct. Was : Exit For
+                    break;
                 }
             }
 
@@ -856,14 +856,17 @@ namespace acUI
         }
         public string RemoveNamespacesFromXML(string sXML)
         {
-            Regex r = new Regex(" xmlns=\"(.)*\"");
-            Match match = r.Match(sXML);
-
-            while (match.Success == true)
-            {
-                sXML = sXML.Replace(match.ToString(), "");
-                match = match.NextMatch();
-            }
+			if (!string.IsNullOrEmpty(sXML)) 
+			{
+	            Regex r = new Regex(" xmlns=\"(.)*\"");
+	            Match match = r.Match(sXML);
+	
+	            while (match.Success == true)
+	            {
+	                sXML = sXML.Replace(match.ToString(), "");
+	                match = match.NextMatch();
+	            }
+			}
             return sXML;
         }
         public string QuoteUp(string sString)
@@ -945,8 +948,8 @@ namespace acUI
         {
             if (sAccountID.Length == 36)
             {
-                string sSQL = "select account_id, account_type, account_name," +
-                    " concat(account_name, ' (', account_type, ')') as account_label, " +
+                string sSQL = "select account_id, provider, account_name," +
+                    " concat(account_name, ' (', provider, ')') as account_label, " +
                     " login_id, login_password, is_default" +
                     " from cloud_account" +
                     " where account_id = '" + sAccountID + "'";
@@ -957,14 +960,22 @@ namespace acUI
                 {
                     if (((drCloudAccounts != null)))
                     {
-                        SetSessionObject("cloud_account_id", drCloudAccounts["account_id"].ToString(), "Security");
-                        SetSessionObject("cloud_login_id", drCloudAccounts["login_id"].ToString(), "Security");
-                        SetSessionObject("cloud_account_type", drCloudAccounts["account_type"].ToString(), "Security");
-
-                        string sEncryptedPassword = drCloudAccounts["login_password"].ToString();
-                        string sPassword = (!string.IsNullOrEmpty(sEncryptedPassword) ? dc.DeCrypt(sEncryptedPassword) : "").ToString();
-
-                        SetSessionObject("cloud_login_password", sPassword, "Security");
+	                    SetSessionObject("cloud_account_id", drCloudAccounts["account_id"].ToString(), "Security");
+	                    SetSessionObject("cloud_login_id", drCloudAccounts["login_id"].ToString(), "Security");
+	
+	                    string sEncryptedPassword = drCloudAccounts["login_password"].ToString();
+	                    string sPassword = (!string.IsNullOrEmpty(sEncryptedPassword) ? dc.DeCrypt(sEncryptedPassword) : "").ToString();
+	
+	                    SetSessionObject("cloud_login_password", sPassword, "Security");
+	
+						//we'll get the whole Provider object for the selected one
+						CloudProviders cp = GetCloudProviders();
+						if (cp != null)
+						{
+							Provider p = cp[drCloudAccounts["provider"].ToString()];
+		                    SetSessionObject("cloud_provider", p, "Security");
+	                    	SetSessionObject("cloud_provider_name", drCloudAccounts["provider"].ToString(), "Security");
+						}
                     }
                     else
                     {
@@ -987,19 +998,10 @@ namespace acUI
 
 
         }
-        public bool PutCloudObjectTypesInSession(ref string sErr)
-        {
-            Globals.CloudObjectTypes co = new Globals.CloudObjectTypes();
-            co.Fill();
-            SetSessionObject("cloud_object_types", co, "Cloud");
-
-            return true;
-        }
-
         public bool PutCloudAccountsInSession(ref string sErr)
         {
-            string sSQL = "select account_id, account_type, account_name," +
-                " concat(account_name, ' (', account_type, ')') as account_label, " +
+            string sSQL = "select account_id, provider, account_name," +
+                " concat(account_name, ' (', provider, ')') as account_label, " +
                 " login_id, login_password, is_default" +
                 " from cloud_account" +
                 " order by is_default desc";
@@ -1019,20 +1021,29 @@ namespace acUI
                     //and using the first row (default) put those credentials in the session
                     SetSessionObject("cloud_account_id", dtCloudAccounts.Rows[0]["account_id"].ToString(), "Security");
                     SetSessionObject("cloud_login_id", dtCloudAccounts.Rows[0]["login_id"].ToString(), "Security");
-                    SetSessionObject("cloud_account_type", dtCloudAccounts.Rows[0]["account_type"].ToString(), "Security");
 
                     string sEncryptedPassword = dtCloudAccounts.Rows[0]["login_password"].ToString();
                     string sPassword = (!string.IsNullOrEmpty(sEncryptedPassword) ? dc.DeCrypt(sEncryptedPassword) : "").ToString();
 
                     SetSessionObject("cloud_login_password", sPassword, "Security");
-                }
+
+					//we'll get the whole Provider object for the selected one
+					CloudProviders cp = GetCloudProviders();
+					if (cp != null)
+					{
+						Provider p = cp[dtCloudAccounts.Rows[0]["provider"].ToString()];
+	                    SetSessionObject("cloud_provider", p, "Security");
+                    	SetSessionObject("cloud_provider_name", dtCloudAccounts.Rows[0]["provider"].ToString(), "Security");
+					}
+				}
                 else
                 {
                     //have to set empty ones... these fields arent important enough to cause a session drop.
                     SetSessionObject("cloud_account_id", "", "Security");
                     SetSessionObject("cloud_login_id", "", "Security");
                     SetSessionObject("cloud_login_password", "", "Security");
-                    SetSessionObject("cloud_account_type", "", "Security");
+                    SetSessionObject("cloud_provider_name", "", "Security");
+                    SetSessionObject("cloud_provider", null, "Security");
                 }
 
                 return true;
@@ -1040,59 +1051,71 @@ namespace acUI
 
         }
 
-        public string GetCloudAccountID()
+        public string GetSelectedCloudAccountID()
         {
             object o = GetSessionObject("cloud_account_id", "Security");
             if (o == null)
                 o = Convert.ToString("");
             return o.ToString();
         }
-        public string GetCloudLoginID()
+        public string GetSelectedCloudLoginID()
         {
             object o = GetSessionObject("cloud_login_id", "Security");
             if (o == null)
                 o = Convert.ToString("");
             return o.ToString();
         }
-        public string GetCloudLoginPassword()
+        public string GetSelectedCloudLoginPassword()
         {
             object o = GetSessionObject("cloud_login_password", "Security");
             if (o == null)
                 o = Convert.ToString("");
             return o.ToString();
         }
-        public string GetCloudAccountType()
+        public string GetSelectedCloudProviderName()
         {
-            object o = GetSessionObject("cloud_account_type", "Security");
+            object o = GetSessionObject("cloud_provider_name", "Security");
             if (o == null)
                 o = Convert.ToString("");
             return o.ToString();
         }
+        public Provider GetSelectedCloudProvider()
+        {
+			object o = GetSessionObject("cloud_provider", "Security");
+            if (o != null)
+			{
+				Provider p = (Provider) o;
+				return p;
+			}
+			
+			return null; 
+        }
+		//this one returns the entire Cloud Providers class... all data
+        public CloudProviders GetCloudProviders()
+        {
+            return (CloudProviders) GetSessionObject("cloud_providers", "Security");
+		}
 
-        public string GetCloudObjectTypes()
-        {
-            object o = GetSessionObject("cloud_object_types", "Cloud");
-            if (o == null)
-                o = Convert.ToString("");
-            return o.ToString();
-        }
+//        public string GetCloudObjectTypes()
+//        {
+//            object o = GetSessionObject("cloud_object_types", "Cloud");
+//            if (o == null)
+//                o = Convert.ToString("");
+//            return o.ToString();
+//        }
         public CloudObjectType GetCloudObjectType(string sObjectType)
         {
-            //refresh this cache if the user is a developer.  Saves us time as we are tweaking the db.
-            if (UserIsInRole("Developer") || UserIsInRole("Administrator"))
-            {
-                string sErr = "";
-                PutCloudObjectTypesInSession(ref sErr);
-            }
+			Provider p = GetSelectedCloudProvider();
+	        if (p == null)
+                RaiseError(Page, "Unable to get Cloud Provider.", false, "");
 
-            object o = GetSessionObject("cloud_object_types", "Cloud");
-            if (o != null)
-            {
-                //get the type from the collection
-                return ((CloudObjectTypes)o).GetCloudObjectType(sObjectType);
-            }
+			CloudObjectType cot = p.GetObjectTypeByName(sObjectType);
+            if (cot != null)
+                return cot;
+			
             return null;
         }
+
 
         #endregion
         #region "Logging Functions"

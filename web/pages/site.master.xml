@@ -28,7 +28,7 @@
 		<menu roles="developer user" label="Information" icon="../images/demo.png">
 			<item roles="developer" label="System Status" icon="../images/sys_stat_24.png" onclick="showPleaseWait();" href="../pages/systemStatusView.aspx">
 			</item>
-			<item roles="developer" label="Task Status" icon="../images/task_stat_24.png" onclick="showPleaseWait();" href="../pages/taskStatusView.aspx">
+			<item roles="developer user" label="Task Status" icon="../images/task_stat_24.png" onclick="showPleaseWait();" href="../pages/taskStatusView.aspx">
 			</item>
 			<item roles="developer user" label="About" icon="../images/icons/about_24.png" onclick="showPleaseWait();" href="../pages/about.aspx">
 			</item>
@@ -48,11 +48,15 @@
 			</item>
 			<item roles="developer user" label="Manage Ecosystems" icon="../images/icons/ecosystems_24.png" onclick="showPleaseWait();" href="../pages/ecosystemManage.aspx">
 			</item>
-			<item roles="developer" label="Discovery" icon="../images/icons/discovery_24.png" onclick="showPleaseWait();" href="../pages/awsDiscovery.aspx">
+			<item roles="developer user" label="Discovery" icon="../images/icons/discovery_24.png" onclick="showPleaseWait();" href="../pages/awsDiscovery.aspx">
+			</item>
+			<item roles="administrator" label="API Tester" icon="../images/icons/api_tester_24.png" onclick="showPleaseWait();" href="../pages/cloudAPITester.aspx">
 			</item>
 		</menu>
 		<menu roles="developer" label="Configuration" icon="../images/config_24.png">
 			<item label="Cloud Accounts" icon="../images/icons/cloud_accounts_24.png" onclick="showPleaseWait();" href="../pages/cloudAccountEdit.aspx">
+			</item>
+			<item label="Clouds" icon="../images/icons/clouds_24.png" onclick="showPleaseWait();" href="../pages/cloudEdit.aspx">
 			</item>
 			<item label="Set Login Defaults" icon="../images/login_24.png" onclick="showPleaseWait();" href="../pages/loginDefaultsEdit.aspx">
 			</item>
@@ -96,6 +100,8 @@
 				<page>taskStepVarsEdit.aspx</page>
 				<page>taskView.aspx</page>
 				<page>userPreferenceEdit.aspx</page>
+				<page>systemStatusView.aspx</page>
+				<page>importLoadFile.aspx</page>
 			</allowedpages>
 		</Developer>
 		<User>
@@ -103,6 +109,7 @@
 				<page>about.aspx</page>
 				<page>ecosystemEdit.aspx</page>
 				<page>ecosystemManage.aspx</page>
+				<page>awsDiscovery.aspx</page>
 				<page>home.aspx</page>
 				<page>taskActivityLog.aspx</page>
 				<page>taskRunLog.aspx</page>

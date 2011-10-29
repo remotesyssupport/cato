@@ -144,6 +144,8 @@
         Are you sure?
     </div>
     <div id="task_launch_dialog" title="Run Task">
+        <div id="plan_edit_dialog" title="Edit Plan">
+        </div>
     </div>
     <asp:HiddenField ID="hidTaskID" runat="server" Value="" />
     <asp:HiddenField ID="hidAssetID" runat="server" Value="" />

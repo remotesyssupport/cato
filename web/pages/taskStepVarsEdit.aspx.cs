@@ -200,7 +200,7 @@ namespace Web.pages
             }
 
             sSQL = "update task_step set " +
-                " variable_xml = '" + xVarsDoc.ToString().Replace("'", "''") + "'" +
+                " variable_xml = '" + xVarsDoc.ToString(SaveOptions.DisableFormatting).Replace("'", "''") + "'" +
                 " where step_id = '" + sStepID + "';";
 
             if (!dc.sqlExecuteUpdate(sSQL, ref sErr))

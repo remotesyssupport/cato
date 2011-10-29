@@ -100,6 +100,11 @@ $(document).ready(function () {
         }
     });
 
+    //any change to a value at all sets the dirty flag
+    $(".param_edit_value").live('change', function () {
+        $(this).attr("dirty","true");
+    });
+
 });
 
 //functions
@@ -179,10 +184,23 @@ function doSaveParam() {
     var vals = "";
     $("#param_edit_values .param_edit_value").each(
         function (index) {
+        	//for encrypted parameters...
+        	//if a value is dirty, use the value...
+        	//otherwise use the oev.
+
+			var val = packJSON($(this).val());;            
+
+        	if (encrypt) {
+        		///the oev is already "packed"
+        		if ($(this).attr("dirty")==null && $(this).attr("oev")!=null)
+        			val = "oev:" + $(this).attr("oev");
+        	}
+        	
             if (vals == "")
-                vals += packJSON($(this).val());
+                vals += val;
             else
-                vals += "|" + packJSON($(this).val());
+                vals += "|" + val;
+
         }
     );
 

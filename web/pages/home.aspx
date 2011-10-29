@@ -6,15 +6,22 @@
         #content
         {
             padding: 10px 10px 10px 10px;
+			width: 600px;
+			margin: 0 200px;
         }
     </style>
 </asp:Content>
 <asp:Content ID="cDetail" ContentPlaceHolderID="phDetail" runat="server">
     <div id="content">
-        <div id="dash_content">
-        </div>
+		<asp:Panel id="pnlGettingStarted" runat="server">
+		    <div id="getting_started" class="ui-widget-content ui-corner-all" style="padding: 20px; margin-top: 20px;">
+				<h1>Welcome to Cloud Sidekick Cato!</h1>
+				<p>There are just a few more things you need to do to get started.</p>
+				<asp:Literal id="ltGettingStartedItems" runat="server"></asp:Literal>
+			</div>
+		</asp:Panel>
     </div>
-    <div id="left_panel">
+	<div id="left_panel">
         <div id="group_tabs">
             <asp:PlaceHolder ID="phGroupTabs" runat="server"></asp:PlaceHolder>
         </div>

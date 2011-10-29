@@ -12,10 +12,6 @@
         {
             padding: 20px 0px 0px 0px;
         }
-        #results_list div
-        {
-            border: 1px solid #cccccc;
-        }
     </style>
     <script type="text/javascript">
         $(document).ready(function () {
@@ -33,14 +29,16 @@
                 var object_label = $(this).html();
                 var object_type = $(this).attr("object_type");
 
-                //well, I have no idea why, but this ajax fires before the showPleaseWait can take effect.
+        		var cloud_id = $("#ctl00_phDetail_ddlClouds").val();
+
+				//well, I have no idea why, but this ajax fires before the showPleaseWait can take effect.
                 //delaying it is the only solution I've found... :-(
                 setTimeout(function () {
                     $.ajax({
                         async: false,
                         type: "POST",
                         url: "cloudAPITester.aspx/wmGetCloudObjectList",
-                        data: '{"sObjectType":"' + object_type + '"}',
+                        data: '{"sCloudID":"' + cloud_id + '", "sObjectType":"' + object_type + '"}',
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
                         success: function (msg) {
@@ -60,20 +58,29 @@
                 }, 250);
             });
 
-        });</script>
+        });
+	
+		function CloudAccountWasChanged() {
+		    location.reload();
+		}
+	
+</script>
 </asp:Content>
 <asp:Content ID="cDetail" ContentPlaceHolderID="phDetail" runat="server">
     <div id="content">
         <div class="page_title">
             Cloud Object API Tester</div>
-        <hr />
+		<hr />
         <h2 id="results_label">
         </h2>
-        <div id="results_list">
+		<br />
+        <div id="results_list" class="ui-widget-content ui-corner-all">
         </div>
     </div>
     <div id="left_panel">
         <div id="group_tabs">
+			<asp:DropDownList id="ddlClouds" runat="server"></asp:DropDownList>
+			<hr />
             <ul>
                 <asp:Literal ID="ltTabs" runat="server"></asp:Literal>
             </ul>

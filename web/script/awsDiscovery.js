@@ -88,7 +88,7 @@ $(document).ready(function () {
     });
 
     $(".group_tab").click(function () {
-        showPleaseWait("Querying AWS...");
+        showPleaseWait("Querying the Cloud...");
 
         //style tabs
         $(".group_tab").removeClass("group_tab_selected");
@@ -96,10 +96,12 @@ $(document).ready(function () {
 
 
         //get content here at some possible point in the future.
-        $("#update_success_msg").text("Querying AWS...").show();
+        $("#update_success_msg").text("Querying the Cloud...").show();
 
         var object_label = $(this).html();
         var object_type = $(this).attr("object_type");
+
+        var cloud_id = $("#ctl00_phDetail_ddlClouds").val();
 
         //well, I have no idea why, but this ajax fires before the showPleaseWait can take effect.
         //delaying it is the only solution I've found... :-(
@@ -108,7 +110,7 @@ $(document).ready(function () {
                 async: false,
                 type: "POST",
                 url: "awsDiscovery.aspx/wmGetAWSObjectList",
-                data: '{"sObjectType":"' + object_type + '"}',
+                data: '{"sCloudID":"' + cloud_id + '", "sObjectType":"' + object_type + '"}',
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (msg) {
@@ -132,6 +134,15 @@ $(document).ready(function () {
             });
         }, 250);
     });
+    
+    //the cloud accounts dropdown updates the server session
+    $("#ctl00_phDetail_ddlClouds").change(function () {
+		//changing the Cloud just clears the results and sets all tabs back to unselected.
+		$(".group_tab").removeClass("group_tab_selected");
+		$("#results_label").empty();
+		$("#results_list").empty();
+    });
+    
 });
 
 function pageLoad() {
@@ -155,7 +166,8 @@ function CheckReady() {
 
         showInfo("Configuration Incomplete", msg, true);
     } else {
-    	$('.group_tab_selected').trigger('click');
+    	//NSC 10-21 Not doing this auto load any more... too annoying.
+    	//$('.group_tab_selected').trigger('click');
     }
 }
 function CloudAccountWasChanged() {
@@ -178,12 +190,17 @@ function Save() {
     }
     
     var ecosystem = $("#ctl00_phDetail_ddlEcosystems").val();
+    var cloud_id = $("#ctl00_phDetail_ddlClouds").val();
     var object_type = $("#hidCloudObjectType").val();
     var object_ids = $("#hidSelectedArray").val();
 
     if (ecosystem == null || ecosystem == "") {
         bSave = false;
         strValidationError += 'At least one Ecosystem is required.<br /><br /><a href="ecosystemManage.aspx">Click here</a> to manage Ecosystems.<br /><br />';
+    }
+    if (cloud_id == null || cloud_id == "") {
+        bSave = false;
+        strValidationError += 'A Cloud is required.<br /><br />';
     }
     if (object_ids == null || object_ids == "") {
         bSave = false;
@@ -203,7 +220,7 @@ function Save() {
         async: false,
         type: "POST",
         url: "uiMethods.asmx/wmAddEcosystemObjects",
-        data: '{"sEcosystemID":"' + ecosystem + '","sObjectType":"' + object_type + '","sObjectIDs":"' + object_ids + '"}',
+        data: '{"sEcosystemID":"' + ecosystem + '","sCloudID":"' + cloud_id + '","sObjectType":"' + object_type + '","sObjectIDs":"' + object_ids + '"}',
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (msg) {

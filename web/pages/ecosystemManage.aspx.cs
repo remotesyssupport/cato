@@ -118,7 +118,7 @@ namespace Web.pages
             sSQL = "select e.ecosystem_id, e.ecosystem_name, e.ecosystem_desc, e.account_id, et.ecotemplate_name" +
                    " from ecosystem e" +
                    " join ecotemplate et on e.ecotemplate_id = et.ecotemplate_id" +
-                    " where e.account_id = '" + ui.GetCloudAccountID() + "'" +
+                    " where e.account_id = '" + ui.GetSelectedCloudAccountID() + "'" +
                    sWhereString +
                    " order by e.ecosystem_name";
 

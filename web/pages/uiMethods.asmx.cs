@@ -1335,7 +1335,7 @@ namespace ACWebMethods
             try
             {
                 string sNewID = ui.NewGUID();
-                string sCloudAccountID = ui.GetCloudAccountID();
+                string sCloudAccountID = ui.GetSelectedCloudAccountID();
 
                 if (string.IsNullOrEmpty(sCloudAccountID))
                     return "Unable to create - No Cloud Account selected.";
@@ -1366,7 +1366,7 @@ namespace ACWebMethods
 
 
         [WebMethod(EnableSession = true)]
-        public void wmAddEcosystemObjects(string sEcosystemID, string sObjectType, string sObjectIDs)
+        public void wmAddEcosystemObjects(string sEcosystemID, string sCloudID, string sObjectType, string sObjectIDs)
         {
             dataAccess dc = new dataAccess();
             acUI.acUI ui = new acUI.acUI();
@@ -1381,9 +1381,10 @@ namespace ACWebMethods
             {
 
                 string sSQL = "insert into ecosystem_object " +
-                     " (ecosystem_id, ecosystem_object_id, ecosystem_object_type, added_dt)" +
+                     " (ecosystem_id, cloud_id, ecosystem_object_id, ecosystem_object_type, added_dt)" +
                      " values (" +
                      " '" + sEcosystemID + "'," +
+                     " '" + sCloudID + "'," +
                      " '" + sObjectID + "'," +
                      " '" + sObjectType + "'," +
                      " now() " +
@@ -1815,7 +1816,7 @@ namespace ACWebMethods
                     sSQL = "select ecosystem_id, ecosystem_name, ecosystem_desc" +
                         " from ecosystem" +
                         " where ecotemplate_id = '" + sEcoTemplateID + "'" +
-                        " and account_id = '" + ui.GetCloudAccountID() + "'" +
+                        " and account_id = '" + ui.GetSelectedCloudAccountID() + "'" +
                         " order by ecosystem_name";
 
                     DataTable dt = new DataTable();
@@ -2442,6 +2443,9 @@ namespace ACWebMethods
                     //the safest way to unencode it is to use the same javascript lib.
                     //(sometimes the javascript and .net libs don't translate exactly, google it.)
                     sActionDefaultsXML = ui.unpackJSON(sActionDefaultsXML);
+				
+					//we gotta peek into the XML and encrypt any newly keyed values
+					PrepareAndEncryptParameterXML(ref sActionDefaultsXML);				
 
 
                     //so, like when we read it, we gotta spin and compare, and build an XML that only represents *changes*
@@ -2494,9 +2498,14 @@ namespace ACWebMethods
                     //spin the nodes in the ACTION xml, then dig in to the task XML and UPDATE the value if found.
                     //(if the node no longer exists, delete the node from the action XML)
                     //and action "values" take precedence over task values.
-                    foreach (XElement xDefault in xADDoc.XPathSelectElements("//parameter"))
+					
+					//this does a regular loop because we can't remove from an IEnumerable
+					int x = xADDoc.XPathSelectElements("//parameter").Count();
+					for (int i = (x-1); i>=0; i--)
                     {
-                        //look it up in the task param xml
+						XElement xDefault = xADDoc.XPathSelectElements("//parameter").ElementAt(i);
+						
+						//look it up in the task param xml
                         XElement xADName = xDefault.XPathSelectElement("name");
                         string sADName = (xADName == null ? "" : xADName.Value);
                         XElement xADValues = xDefault.XPathSelectElement("values");
@@ -2517,13 +2526,88 @@ namespace ACWebMethods
                         //and the "values" collection will be the 'next' node
                         XElement xTaskParamValues = xTaskParam.XPathSelectElement("values");
 
-                        //if the values node matches, remove it
-                        if (xTaskParamValues.Value.Equals(xADValues.Value))
-                            xDefault.Remove();
+						
+						//so... it might be 
+						//a) just an oev (original encrypted value) so de-base64 it
+						//b) a value flagged for encryption
+						
+						//note we don't care about dirty unencrypted values... they'll compare down below just fine.
+						
+						//is it encrypted?
+						bool bEncrypted = false;
+						if (xTaskParam.Attribute("encrypt") != null)
+							bEncrypted = dc.IsTrue(xTaskParam.Attribute("encrypt").Value);
+								
+						if (bEncrypted)
+						{
+							foreach (XElement xVal in xADValues.XPathSelectElements("value"))
+							{
+								if (xVal.HasAttributes) {
+									//a) is it an oev?  unpackJSON it (that's just an obfuscation wrapper)
+									if (xVal.Attribute("oev") != null) 
+									{
+										if (dc.IsTrue(xVal.Attribute("oev").Value)) 
+										{
+											xVal.Value = ui.unpackJSON(xVal.Value);
+											xVal.SetAttributeValue("oev", null);
+										}
+									}
+									
+									//b) is it do_encrypt?  (remove the attribute to keep the db clutter down)
+									if (xVal.Attribute("do_encrypt") != null) 
+									{
+										xVal.Value = dc.EnCrypt(xVal.Value);
+										xVal.SetAttributeValue("do_encrypt", null);
+									}
+								}
+							}
+						}
+
+						
+						
+						//now that the encryption is sorted out,
+						// if the combined values of the parameter happens to match what's on the task
+						//  we just remove it.
+						
+						//we're doing combined because of lists (the whole list must match for it to be a dupe)
+						
+						//it's easy to look at all the values in a node with the node.Value property.
+						//but we'll have to manually concatenate all the oev attributes
+						
+						string sTaskVals = "";
+						string sDefVals = "";
+						
+						if (bEncrypted)
+						{
+							// the task document already has the oev obfuscated
+	                        foreach (XAttribute xa in xTaskParamValues.Elements("value").Attributes("oev"))
+							{
+								sTaskVals += xa.Value;
+							}
+							//but the XML we just got from the client doesn't... it's in the value.
+	                        foreach (XElement xe in xADValues.Elements("value"))
+							{
+								sDefVals += ui.packJSON(xe.Value);
+							}
+							if (sTaskVals.Equals(sDefVals))
+	                        {
+	                            xDefault.Remove();
+	                            continue;
+	                        }
+						}
+						else
+						{
+	                        if (xTaskParamValues.Value.Equals(xADValues.Value))
+	                        {
+	                            xDefault.Remove();
+	                            continue;
+	                        }
+						}
+
                     }
 
                     //done
-                    sOverrideXML = xADDoc.ToString();
+                    sOverrideXML = xADDoc.ToString(SaveOptions.DisableFormatting);
 
                     //FINALLY, we have an XML that represents only the differences we wanna save.
                     sSQL = "update ecotemplate_action set" +
@@ -2576,7 +2660,46 @@ namespace ACWebMethods
         #endregion
 
         #region "Task Launch Dialog"
-        [WebMethod(EnableSession = true)]
+		//this one is used by several functions... 
+		//it looks in the XML for anything to encrypt or rearrange
+		//because we can't do everything on the client.
+		public void PrepareAndEncryptParameterXML(ref string sParameterXML)
+		{
+    	    dataAccess dc = new dataAccess();
+            acUI.acUI ui = new acUI.acUI();
+		
+			if (!string.IsNullOrEmpty(sParameterXML))
+            {
+                XDocument xDoc = XDocument.Parse(sParameterXML);
+                if (xDoc == null)
+                    throw new Exception("Parameter XML data is invalid.");
+
+                XElement xParams = xDoc.XPathSelectElement("/parameters");
+                if (xParams == null)
+                    throw new Exception("Parameter XML data does not contain 'parameters' root node.");
+
+				//now, all we're doing here is:
+				// a) encrypting any new values
+				// b) moving any oev values from an attribute to a value
+				
+				// a) encrypt new values
+                foreach (XElement xToEncrypt in xDoc.XPathSelectElements("//parameter/values/value[@do_encrypt='true']"))
+	            {
+	                xToEncrypt.Value = dc.EnCrypt(xToEncrypt.Value);
+					xToEncrypt.SetAttributeValue("do_encrypt", null);
+				}
+
+				//b) unbase64 any oev's and move them to values
+                foreach (XElement xToEncrypt in xDoc.XPathSelectElements("//parameter/values/value[@oev='true']"))
+	            {
+	                xToEncrypt.Value = ui.unpackJSON(xToEncrypt.Value);
+					xToEncrypt.SetAttributeValue("oev", null);
+	            }
+				
+				sParameterXML = xDoc.ToString(SaveOptions.DisableFormatting);
+            }
+		}
+		[WebMethod(EnableSession = true)]
         public string wmGetActionPlans(string sTaskID, string sActionID, string sEcosystemID)
         {
             try
@@ -2787,7 +2910,7 @@ namespace ACWebMethods
 
             try
             {
-				string sCloudAccountID = ui.GetCloudAccountID();
+				string sCloudAccountID = ui.GetSelectedCloudAccountID();
 				
                 if (sTaskID.Length == 0 || sMonths.Length == 0 || sDays.Length == 0 || sHours.Length == 0 || sMinutes.Length == 0 || sDaysOrWeeks.Length == 0)
                     throw new Exception("Missing or invalid Schedule timing or Task ID.");
@@ -2796,6 +2919,9 @@ namespace ACWebMethods
                 //the safest way to unencode it is to use the same javascript lib.
                 //(sometimes the javascript and .net libs don't translate exactly, google it.)
                 sParameterXML = ui.unpackJSON(sParameterXML).Replace("'", "''");
+				
+				//we gotta peek into the XML and encrypt any newly keyed values
+				PrepareAndEncryptParameterXML(ref sParameterXML);				
 
                 dataAccess dc = new dataAccess();
                 string sSQL = null;
@@ -2835,10 +2961,11 @@ namespace ACWebMethods
         public void wmRunLater(string sTaskID, string sActionID, string sEcosystemID, string sRunOn, string sParameterXML, int iDebugLevel)
         {
             acUI.acUI ui = new acUI.acUI();
-            
+			dataAccess dc = new dataAccess();
+			
             try
             {
- 				string sCloudAccountID = ui.GetCloudAccountID();
+ 				string sCloudAccountID = ui.GetSelectedCloudAccountID();
 				
 				if (sTaskID.Length == 0 || sRunOn.Length == 0)
                     throw new Exception("Missing Action Plan date or Task ID.");
@@ -2847,8 +2974,10 @@ namespace ACWebMethods
                 //the safest way to unencode it is to use the same javascript lib.
                 //(sometimes the javascript and .net libs don't translate exactly, google it.)
                 sParameterXML = ui.unpackJSON(sParameterXML).Replace("'", "''");
+				
+				//we gotta peek into the XML and encrypt any newly keyed values
+				PrepareAndEncryptParameterXML(ref sParameterXML);				
 
-                dataAccess dc = new dataAccess();
                 string sSQL = null;
                 string sErr = null;
 
@@ -2875,6 +3004,12 @@ namespace ACWebMethods
         [WebMethod(EnableSession = true)]
         public void wmSavePlan(int iPlanID, string sParameterXML, int iDebugLevel)
         {
+			/*
+			 * JUST AS A REMINDER:
+			 * There is no parameter 'merging' happening here.  This is a Plan ...
+			 *   it has ALL the parameters it needs to pass to the CE.
+			 * 
+			 * */
             acUI.acUI ui = new acUI.acUI();
 
             try
@@ -2886,6 +3021,9 @@ namespace ACWebMethods
                 //the safest way to unencode it is to use the same javascript lib.
                 //(sometimes the javascript and .net libs don't translate exactly, google it.)
                 sParameterXML = ui.unpackJSON(sParameterXML).Replace("'", "''");
+				
+				//we gotta peek into the XML and encrypt any newly keyed values
+				PrepareAndEncryptParameterXML(ref sParameterXML);				
 
                 dataAccess dc = new dataAccess();
                 string sSQL = null;
@@ -2908,6 +3046,12 @@ namespace ACWebMethods
             string sMonths, string sDays, string sHours, string sMinutes, string sDaysOrWeeks,
             string sParameterXML, int iDebugLevel)
         {
+			/*
+			 * JUST AS A REMINDER:
+			 * There is no parameter 'merging' happening here.  This is a Scheduled Plan ...
+			 *   it has ALL the parameters it needs to pass to the CE.
+			 * 
+			 * */
             acUI.acUI ui = new acUI.acUI();
 
             try
@@ -2919,6 +3063,9 @@ namespace ACWebMethods
                 //the safest way to unencode it is to use the same javascript lib.
                 //(sometimes the javascript and .net libs don't translate exactly, google it.)
                 sParameterXML = ui.unpackJSON(sParameterXML).Replace("'", "''");
+				
+				//we gotta peek into the XML and encrypt any newly keyed values
+				PrepareAndEncryptParameterXML(ref sParameterXML);				
 
                 dataAccess dc = new dataAccess();
                 string sSQL = null;

@@ -39,25 +39,26 @@ namespace Web.pages
         {
             //Set Ecosystems Dropdown
             BindEcosystem();
-
+			
+			//get the clouds
+			BindClouds();
+			
             //draw the tabs
-            sSQL = "select cloud_object_type, label from cloud_object_type order by vendor, api";
+			Provider oProvider = ui.GetSelectedCloudProvider();
+	        if (oProvider == null)
+                ui.RaiseError(Page, "Unable to get Cloud Provider.", false, sErr);
 
-            DataTable dt = new DataTable();
-            if (!dc.sqlGetDataTable(ref dt, sSQL, ref sErr))
+            if (oProvider.Products.Count > 0)
             {
-                ui.RaiseError(Page, "Unable to get Cloud Object Types.", false, sErr);
-            }
-
-            if (dt.Rows.Count > 0)
-            {
-                string sSelectFirst = " group_tab_selected";
-                foreach (DataRow dr in dt.Rows)
+                foreach (Product oProduct in oProvider.Products.Values)
                 {
-                    ltTabs.Text += "<li class=\"group_tab" + sSelectFirst + "\" object_type=\"" + dr["cloud_object_type"].ToString() + "\">" + 
-                        dr["label"].ToString()  + "</li>";
-
-                    sSelectFirst = "";
+                    ltTabs.Text += "<li class=\"group_header\">" + oProduct.Label + "</li>";
+                	
+	                foreach (CloudObjectType oCOT in oProduct.CloudObjectTypes.Values)
+	                {
+	                    ltTabs.Text += "<li class=\"group_tab\" object_type=\"" + oCOT.ID + "\">" + 
+	                        oCOT.Label + "</li>";
+	                }
                 }
             }
 
@@ -85,7 +86,7 @@ namespace Web.pages
                 string sSQL = "select do.ecosystem_object_id, d.ecosystem_id, d.ecosystem_name" +
                     " from ecosystem_object do" +
                     " join ecosystem d on do.ecosystem_id = d.ecosystem_id" +
-                    " where d.account_id = '" + ui.GetCloudAccountID() + "'" +
+                    " where d.account_id = '" + ui.GetSelectedCloudAccountID() + "'" +
                     " and do.ecosystem_object_type = '" + sObjectType + "'" +
                     " order by do.ecosystem_object_id";
 
@@ -99,9 +100,14 @@ namespace Web.pages
                     {
                         string sResultList = "";
 
-                        //HARDCODED RULE ALERT!  we expect the "id" to be in the first column!
-                        string sObjectID = dr[0].ToString();
-
+						//aggregate all the id column values into one string
+		                string sObjectID = ""; //Possibly a composite of several properties.
+						foreach (DataColumn col in dt.Columns)
+		                {
+							if (col.ExtendedProperties["IsID"] != null) 
+								sObjectID += dr[col.ColumnName].ToString();
+						}
+						
                         //are there any ecosystem objects?
                         if (dtEcosystemObjects != null)
                         {
@@ -129,37 +135,45 @@ namespace Web.pages
 
         private void BindEcosystem()
         {
-            string sSettingXML = "";
-            sSQL = "select ecosystem_id, ecosystem_name from ecosystem where account_id = '" + ui.GetCloudAccountID() + "'";
-
-            if (!dc.sqlGetSingleString(ref sSettingXML, sSQL, ref sErr))
-            {
-                ui.RaiseError(Page, "Unable to get Ecosystems for selected Cloud Account.", false, sErr);
-            }
+            sSQL = "select ecosystem_id, ecosystem_name" +
+				" from ecosystem where account_id = '" + ui.GetSelectedCloudAccountID() + "'";
 
             DataTable dt = new DataTable();
-
             if (!dc.sqlGetDataTable(ref dt, sSQL, ref sErr))
-            {
-                ui.RaiseError(Page, sErr, true, "");
-            }
+                ui.RaiseError(Page, "Unable to get Ecosystems for selected Cloud Account.", false, sErr);
 
             ddlEcosystems.DataSource = dt;
             ddlEcosystems.DataValueField = "ecosystem_id";
             ddlEcosystems.DataTextField = "ecosystem_name";
             ddlEcosystems.DataBind();
+        }
 
+        private void BindClouds()
+        {
+            sSQL = "select cloud_id, cloud_name" +
+				" from clouds" +
+				" where provider = '" + ui.GetSelectedCloudProviderName() + "'";
+
+
+            DataTable dt = new DataTable();
+            if (!dc.sqlGetDataTable(ref dt, sSQL, ref sErr))
+                ui.RaiseError(Page, "Unable to get Clouds for selected Cloud Account.", false, sErr);
+
+            ddlClouds.DataSource = dt;
+            ddlClouds.DataValueField = "cloud_id";
+            ddlClouds.DataTextField = "cloud_name";
+            ddlClouds.DataBind();
         }
 
         [WebMethod(EnableSession = true)]
-        public static string wmGetAWSObjectList(string sObjectType)
+        public static string wmGetAWSObjectList(string sCloudID, string sObjectType)
         {
             awsMethods acAWS = new awsMethods();
 
             string sHTML = "";
             string sErr = "";
 
-            DataTable dt = acAWS.GetCloudObjectsAsDataTable(sObjectType, ref sErr);
+            DataTable dt = acAWS.GetCloudObjectsAsDataTable(sCloudID, sObjectType, ref sErr);
             if (dt != null)
             {
                 if (dt.Rows.Count > 0)
@@ -171,9 +185,16 @@ namespace Web.pages
                     sHTML = "No data returned from AWS.";
             }
             else
-                sHTML = sErr;
+			{
+				sHTML += "<div class=\"ui-widget\" style=\"margin-top: 10px;\">";
+				sHTML += "<div style=\"padding: 10px;\" class=\"ui-state-highlight ui-corner-all\">";
+				sHTML += "<span style=\"float: left; margin-right: .3em;\" class=\"ui-icon ui-icon-info\"></span>";
+				sHTML += "<p>" + sErr + "</p>";
+				sHTML += "</div>";
+				sHTML += "</div>";
+			}
 
-            return sHTML;
+			return sHTML;
         }
 
         private static string DrawTableForType(string sObjectType, DataTable dt)
@@ -203,15 +224,31 @@ namespace Web.pages
             //loop rows
             foreach (DataRow dr in dt.Rows)
             {
+				//aggregate all the id column values into one string
+                string sObjectID = ""; //Possibly a composite of several properties.
+				foreach (DataColumn dc in dr.Table.Columns)
+                {
+					if (dc.ExtendedProperties["IsID"] != null) 
+						sObjectID += dr[dc.ColumnName].ToString();
+				}
+				
+				//crush the spaces... a javascript ID can't have spaces
+				string sJSID = sObjectID.Trim().Replace(" ","");
+				
                 sHTML += "<tr>";
                 sHTML += "<td class=\"chkboxcolumn\">";
-                sHTML += "<input type=\"checkbox\" class=\"chkbox\"" +
-                    " id=\"chk_" + dr[0].ToString() + "\"" +
-                    " object_id=\"" + dr[0].ToString() + "\"" +
-                    " tag=\"chk\" />";
-                sHTML += "</td>";
+                
+				//not drawing the checkbox if there's no ID defined, we can't add it to an ecosystem without an id
+				if (!string.IsNullOrEmpty(sObjectID))
+					sHTML += "<input type=\"checkbox\" class=\"chkbox\"" +
+	                    " id=\"chk_" + sJSID + "\"" +
+	                    " object_id=\"" + sObjectID + "\"" +
+	                    " tag=\"chk\" />";
+                
+					sHTML += "</td>";
 
-                //loop data columns
+                
+					//loop data columns
                 foreach (DataColumn dc in dr.Table.Columns)
                 {
                     string sValue = dr[dc.ColumnName].ToString();  //yeah, the row item index by the column name... awesome

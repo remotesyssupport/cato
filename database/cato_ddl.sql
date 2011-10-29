@@ -1,7 +1,14 @@
+CREATE TABLE `clouds` (
+  `cloud_id` varchar(36) NOT NULL,
+  `provider` varchar(32) NOT NULL,
+  `cloud_name` varchar(32) NOT NULL,
+  `api_url` varchar(512) NOT NULL,
+  PRIMARY KEY (`cloud_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `users` (
-  `user_id` char(36) NOT NULL DEFAULT '',
+  `user_id` varchar(36) NOT NULL DEFAULT '',
   `username` varchar(128) NOT NULL,
   `full_name` varchar(255) NOT NULL DEFAULT '',
   `status` int(11) NOT NULL,
@@ -96,7 +103,7 @@ CREATE TABLE `application_registry` (
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `asset` (
-  `asset_id` char(36) NOT NULL DEFAULT '',
+  `asset_id` varchar(36) NOT NULL DEFAULT '',
   `asset_name` varchar(255) NOT NULL DEFAULT '',
   `asset_status` varchar(32) NOT NULL,
   `is_connection_system` int(11) NOT NULL,
@@ -131,7 +138,7 @@ CREATE TABLE `cloud_account` (
   `account_id` varchar(36) NOT NULL,
   `account_name` varchar(64) NOT NULL,
   `account_number` varchar(64) DEFAULT NULL,
-  `account_type` varchar(16) DEFAULT NULL,
+  `provider` varchar(16) DEFAULT NULL,
   `login_id` varchar(64) NOT NULL,
   `login_password` varchar(512) NOT NULL,
   `is_default` int(11) NOT NULL,
@@ -149,40 +156,6 @@ CREATE TABLE `cloud_account_keypair` (
   `passphrase` varchar(128) DEFAULT NULL,
   PRIMARY KEY (`account_id`,`keypair_name`),
   UNIQUE KEY `keypair_id_UNIQUE` (`keypair_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `cloud_object_type` (
-  `cloud_object_type` varchar(32) NOT NULL,
-  `vendor` varchar(16) NOT NULL,
-  `api` varchar(16) NOT NULL,
-  `label` varchar(32) NOT NULL,
-  `api_call` varchar(64) NOT NULL,
-  `describe_parameter` varchar(128) DEFAULT NULL,
-  `result_xpath` varchar(1024) DEFAULT NULL,
-  `api_hostname` varchar(256) DEFAULT NULL COMMENT '	',
-  `api_version` varchar(32) DEFAULT NULL,
-  `request_protocol` varchar(32) DEFAULT NULL,
-  `request_method` varchar(16) DEFAULT NULL,
-  `result_record_xpath` varchar(256) DEFAULT NULL,
-  `request_group_filter` varchar(256) DEFAULT NULL,
-  `request_record_filter` varchar(256) DEFAULT NULL,
-  PRIMARY KEY (`cloud_object_type`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `cloud_object_type_props` (
-  `cloud_object_type` varchar(32) NOT NULL,
-  `property_name` varchar(256) NOT NULL,
-  `property_label` varchar(256) DEFAULT NULL,
-  `property_xpath` varchar(256) NOT NULL,
-  `id_field` int(11) NOT NULL,
-  `has_icon` int(11) NOT NULL,
-  `short_list` int(11) NOT NULL,
-  `sort_order` int(11) NOT NULL,
-  PRIMARY KEY (`cloud_object_type`,`property_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -206,6 +179,7 @@ CREATE TABLE `ecosystem` (
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `ecosystem_object` (
   `ecosystem_id` varchar(36) NOT NULL,
+  `cloud_id` varchar(36) NOT NULL,
   `ecosystem_object_id` varchar(64) NOT NULL,
   `ecosystem_object_type` varchar(32) NOT NULL,
   `added_dt` datetime DEFAULT NULL,
@@ -249,9 +223,9 @@ CREATE TABLE `global_registry` (
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `import_task` (
-  `user_id` char(36) NOT NULL DEFAULT '',
-  `task_id` char(36) NOT NULL DEFAULT '',
-  `original_task_id` char(36) NOT NULL DEFAULT '',
+  `user_id` varchar(36) NOT NULL DEFAULT '',
+  `task_id` varchar(36) NOT NULL DEFAULT '',
+  `original_task_id` varchar(36) NOT NULL DEFAULT '',
   `version` decimal(18,3) NOT NULL,
   `task_name` varchar(255) NOT NULL DEFAULT '',
   `task_code` varchar(32) DEFAULT NULL,
@@ -270,14 +244,14 @@ CREATE TABLE `import_task` (
   `src_version` decimal(18,3) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE `import_task_codeblock` (
-  `user_id` char(36) NOT NULL DEFAULT '',
-  `task_id` char(36) NOT NULL DEFAULT '',
+  `user_id` varchar(36) NOT NULL DEFAULT '',
+  `task_id` varchar(36) NOT NULL DEFAULT '',
   `codeblock_name` varchar(32) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 CREATE TABLE `import_task_step` (
-  `user_id` char(36) NOT NULL DEFAULT '',
-  `step_id` char(36) NOT NULL DEFAULT '',
-  `task_id` char(36) NOT NULL DEFAULT '',
+  `user_id` varchar(36) NOT NULL DEFAULT '',
+  `step_id` varchar(36) NOT NULL DEFAULT '',
+  `task_id` varchar(36) NOT NULL DEFAULT '',
   `codeblock_name` varchar(36) NOT NULL DEFAULT '',
   `step_order` int(11) NOT NULL,
   `commented` int(11) NOT NULL DEFAULT '0',
@@ -468,7 +442,7 @@ CREATE TABLE `poller_settings` (
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `schedule` (
-  `schedule_id` char(36) NOT NULL DEFAULT '',
+  `schedule_id` varchar(36) NOT NULL DEFAULT '',
   `schedule_name` varchar(255) NOT NULL DEFAULT '',
   `schedule_desc` varchar(255) DEFAULT '',
   `status` varchar(50) NOT NULL,
@@ -489,7 +463,7 @@ CREATE TABLE `schedule` (
 CREATE TABLE `schedule_instance` (
   `schedule_instance` bigint(20) NOT NULL AUTO_INCREMENT,
   `schedule_instance_name` varchar(255) NOT NULL DEFAULT '',
-  `schedule_id` char(36) NOT NULL DEFAULT '',
+  `schedule_id` varchar(36) NOT NULL DEFAULT '',
   `status` varchar(16) DEFAULT NULL,
   `run_dt` datetime DEFAULT NULL,
   `ran_dt` datetime DEFAULT NULL,
@@ -502,8 +476,8 @@ CREATE TABLE `schedule_instance` (
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `schedule_object` (
-  `schedule_id` char(36) NOT NULL DEFAULT '',
-  `object_id` char(36) NOT NULL DEFAULT '',
+  `schedule_id` varchar(36) NOT NULL DEFAULT '',
+  `object_id` varchar(36) NOT NULL DEFAULT '',
   `object_type` int(11) NOT NULL,
   `commented` int(11) NOT NULL,
   `ecosystem_id` varchar(36) DEFAULT NULL,
@@ -513,9 +487,9 @@ CREATE TABLE `schedule_object` (
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `schedule_object_asset` (
-  `schedule_id` char(36) NOT NULL DEFAULT '',
-  `object_id` char(36) NOT NULL DEFAULT '',
-  `asset_id` char(36) NOT NULL DEFAULT '',
+  `schedule_id` varchar(36) NOT NULL DEFAULT '',
+  `object_id` varchar(36) NOT NULL DEFAULT '',
+  `asset_id` varchar(36) NOT NULL DEFAULT '',
   PRIMARY KEY (`schedule_id`,`object_id`,`asset_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -534,8 +508,8 @@ CREATE TABLE `scheduler_settings` (
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `task` (
-  `task_id` char(36) NOT NULL DEFAULT '',
-  `original_task_id` char(36) NOT NULL DEFAULT '',
+  `task_id` varchar(36) NOT NULL DEFAULT '',
+  `original_task_id` varchar(36) NOT NULL DEFAULT '',
   `version` decimal(18,3) NOT NULL,
   `task_name` varchar(255) NOT NULL DEFAULT '',
   `task_code` varchar(32) DEFAULT NULL,
@@ -555,7 +529,7 @@ CREATE TABLE `task` (
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `task_codeblock` (
-  `task_id` char(36) NOT NULL DEFAULT '',
+  `task_id` varchar(36) NOT NULL DEFAULT '',
   `codeblock_name` varchar(32) NOT NULL DEFAULT '',
   PRIMARY KEY (`task_id`,`codeblock_name`),
   KEY `FK_task_codeblock_task` (`task_id`),
@@ -580,11 +554,11 @@ CREATE TABLE `task_conn_log` (
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `task_instance` (
   `task_instance` bigint(20) NOT NULL AUTO_INCREMENT,
-  `task_id` char(36) NOT NULL DEFAULT '',
+  `task_id` varchar(36) NOT NULL DEFAULT '',
   `task_status` varchar(16) NOT NULL,
   `debug_level` int(11) NOT NULL DEFAULT '0',
-  `asset_id` char(36) DEFAULT '',
-  `submitted_by` char(36) DEFAULT '',
+  `asset_id` varchar(36) DEFAULT '',
+  `submitted_by` varchar(36) DEFAULT '',
   `submitted_dt` datetime DEFAULT NULL,
   `started_dt` datetime DEFAULT NULL,
   `completed_dt` datetime DEFAULT NULL,
@@ -611,7 +585,7 @@ CREATE TABLE `task_instance` (
 CREATE TABLE `task_instance_log` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `task_instance` bigint(20) NOT NULL,
-  `step_id` char(36) DEFAULT '',
+  `step_id` varchar(36) DEFAULT '',
   `entered_dt` datetime DEFAULT NULL,
   `connection_name` varchar(36) DEFAULT NULL,
   `log` mediumtext,
@@ -633,8 +607,8 @@ CREATE TABLE `task_instance_parameter` (
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `task_step` (
-  `step_id` char(36) NOT NULL DEFAULT '',
-  `task_id` char(36) NOT NULL DEFAULT '',
+  `step_id` varchar(36) NOT NULL DEFAULT '',
+  `task_id` varchar(36) NOT NULL DEFAULT '',
   `codeblock_name` varchar(36) NOT NULL DEFAULT '',
   `step_order` int(11) NOT NULL,
   `commented` int(11) NOT NULL DEFAULT '0',
@@ -655,30 +629,12 @@ CREATE TABLE `task_step` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `task_step_backup` (
-  `step_id` char(36) CHARACTER SET utf8 NOT NULL DEFAULT '',
-  `task_id` char(36) CHARACTER SET utf8 NOT NULL DEFAULT '',
-  `codeblock_name` varchar(36) CHARACTER SET utf8 NOT NULL DEFAULT '',
-  `step_order` int(11) NOT NULL,
-  `commented` int(11) NOT NULL DEFAULT '0',
-  `locked` int(11) NOT NULL DEFAULT '0',
-  `function_name` varchar(64) CHARACTER SET utf8 NOT NULL,
-  `function_xml` text CHARACTER SET utf8 NOT NULL,
-  `step_desc` varchar(255) CHARACTER SET utf8 DEFAULT '',
-  `output_parse_type` int(11) NOT NULL,
-  `output_row_delimiter` int(11) NOT NULL DEFAULT '0',
-  `output_column_delimiter` int(11) NOT NULL DEFAULT '0',
-  `variable_xml` text CHARACTER SET utf8
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `task_step_clipboard` (
-  `user_id` char(36) NOT NULL DEFAULT '',
+  `user_id` varchar(36) NOT NULL DEFAULT '',
   `clip_dt` datetime NOT NULL,
-  `src_step_id` char(36) NOT NULL DEFAULT '',
-  `root_step_id` char(36) NOT NULL DEFAULT '',
-  `step_id` char(36) NOT NULL DEFAULT '',
+  `src_step_id` varchar(36) NOT NULL DEFAULT '',
+  `root_step_id` varchar(36) NOT NULL DEFAULT '',
+  `step_id` varchar(36) NOT NULL DEFAULT '',
   `function_name` varchar(32) NOT NULL,
   `function_xml` text NOT NULL,
   `step_desc` varchar(255) DEFAULT '',
@@ -693,8 +649,8 @@ CREATE TABLE `task_step_clipboard` (
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `task_step_user_settings` (
-  `user_id` char(36) NOT NULL DEFAULT '',
-  `step_id` char(36) NOT NULL DEFAULT '',
+  `user_id` varchar(36) NOT NULL DEFAULT '',
+  `step_id` varchar(36) NOT NULL DEFAULT '',
   `visible` int(11) NOT NULL,
   `breakpoint` int(11) NOT NULL,
   `skip` int(11) NOT NULL,
@@ -709,7 +665,7 @@ CREATE TABLE `task_step_user_settings` (
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `user_password_history` (
-  `user_id` char(36) NOT NULL DEFAULT '',
+  `user_id` varchar(36) NOT NULL DEFAULT '',
   `change_time` datetime NOT NULL DEFAULT '1753-01-01 00:00:00',
   `password` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`user_id`,`change_time`),
@@ -723,7 +679,7 @@ CREATE TABLE `user_security_log` (
   `log_id` bigint(20) NOT NULL AUTO_INCREMENT,
   `log_type` varchar(16) NOT NULL,
   `action` varchar(32) NOT NULL,
-  `user_id` char(36) NOT NULL DEFAULT '',
+  `user_id` varchar(36) NOT NULL DEFAULT '',
   `log_dt` datetime NOT NULL,
   `object_type` int(11) DEFAULT NULL,
   `object_id` varchar(255) DEFAULT '',
@@ -740,7 +696,7 @@ CREATE TABLE `user_security_log` (
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `user_session` (
-  `user_id` char(36) NOT NULL DEFAULT '',
+  `user_id` varchar(36) NOT NULL DEFAULT '',
   `address` varchar(255) NOT NULL DEFAULT '',
   `login_dt` datetime NOT NULL,
   `heartbeat` datetime NOT NULL,
@@ -774,7 +730,7 @@ SET character_set_client = utf8;
 /*!50001 CREATE TABLE `tv_schedule_instance` (
   `schedule_instance` bigint(20),
   `schedule_instance_name` varchar(255),
-  `schedule_id` char(36),
+  `schedule_id` varchar(36),
   `status` varchar(16),
   `run_dt` datetime,
   `ran_dt` datetime
@@ -784,11 +740,11 @@ SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 /*!50001 CREATE TABLE `tv_task_instance` (
   `task_instance` bigint(20),
-  `task_id` char(36),
+  `task_id` varchar(36),
   `task_status` varchar(16),
   `debug_level` int(11),
-  `asset_id` char(36),
-  `submitted_by` char(36),
+  `asset_id` varchar(36),
+  `submitted_by` varchar(36),
   `submitted_dt` datetime,
   `started_dt` datetime,
   `completed_dt` datetime,

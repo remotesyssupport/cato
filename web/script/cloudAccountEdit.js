@@ -191,7 +191,7 @@ function FillEditForm(sEditID) {
                 // show the assets current values
                 $("#txtAccountName").val(oResultData.sAccountName);
                 $("#txtAccountNumber").val(oResultData.sAccountNumber)
-                $("#ddlAccountType").val(oResultData.sAccountType);
+                $("#ddlProvider").val(oResultData.sProvider);
                 $("#txtLoginID").val(oResultData.sLoginID);
                 $("#txtLoginPassword").val(oResultData.sLoginPassword);
                 $("#txtLoginPasswordConfirm").val(oResultData.sLoginPassword);
@@ -253,7 +253,7 @@ function SaveItem() {
     	"sAccountID":"' + sAccountID + '", \
         "sAccountName":"' + sAccountName + '", \
         "sAccountNumber":"' + $("#txtAccountNumber").val() + '", \
-        "sAccountType":"' + $("#ddlAccountType").val() + '", \
+        "sProvider":"' + $("#ddlProvider").val() + '", \
         "sLoginID":"' + $("#txtLoginID").val() + '", \
         "sLoginPassword":"' + $("#txtLoginPassword").val() + '", \
         "sLoginPasswordConfirm":"' + $("#txtLoginPasswordConfirm").val() + '", \
@@ -279,7 +279,7 @@ function SaveItem() {
 	
 				//if we are adding a new one, add it to the dropdown too
 				if ($("#hidMode").val() == "add") {
-		            $('#ctl00_ddlCloudAccounts').append($('<option>', { value : ret.account_id }).text(ret.account_name + ' (' + ret.account_type + ')')); 
+		            $('#ctl00_ddlCloudAccounts').append($('<option>', { value : ret.account_id }).text(ret.account_name + ' (' + ret.provider + ')')); 
 		          	//if this was the first one, get it in the session by nudging the change event.
 		          	if ($("#ctl00_ddlCloudAccounts option").length == 1)
 		          		$("#ctl00_ddlCloudAccounts").change();

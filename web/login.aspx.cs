@@ -98,20 +98,46 @@ namespace Web
 			
 			
 			//load the site.master.xml file into the session.  If it doesn't exist, we can't proceed.
-			XDocument xSiteMaster = XDocument.Load(HttpContext.Current.Server.MapPath("~/pages/site.master.xml"));
+			try 
+			{
+				XDocument xSiteMaster = XDocument.Load(HttpContext.Current.Server.MapPath("~/pages/site.master.xml"));
+				
+				if (xSiteMaster == null)
+				{
+					lblErrorMessage.Text = "Error: Site master XML file is missing or unreadable.";
+					btnLogin.Visible = false;
+				}
+				else 
+				{
+					ui.SetSessionObject("site_master_xml", xSiteMaster, "Security");
+				}
+			} catch (Exception ex) {
+				lblErrorMessage.Text = "Error: ite master XML is invalid." + ex.Message;
+			}
+
+
+			//load the cloud_providers.xml file into the session.  If it doesn't exist, we can't proceed.
+			try 
+			{
+				XDocument xProviders = XDocument.Load(HttpContext.Current.Server.MapPath("~/conf/cloud_providers.xml"));
+				
+				if (xProviders == null)
+				{
+					lblErrorMessage.Text = "Error: Cloud Providers XML file is missing or unreadable.";
+				}
+				else 
+				{
+					CloudProviders cp = new CloudProviders(xProviders);
+					ui.SetSessionObject("cloud_providers", cp, "Security");
+				}
+			} catch (Exception ex) {
+				lblErrorMessage.Text = "Error: Unable to load Cloud Providers XML." + ex.Message;
+			}
 			
-			if (xSiteMaster == null)
-			{
-				lblErrorMessage.Text = "Error: Site master XML file is missing or unreadable.";
-				btnLogin.Visible = false;
-			}
-			else 
-			{
-				ui.SetSessionObject("site_master_xml", xSiteMaster, "Security");
-			}
+			
+			
 
-
-			//get the slogin settings
+			//get the login settings
             sSQL = "select login_message, page_view_logging, report_view_logging, log_days" +
 				" from login_security_settings where id = 1";
             DataRow dr = null;
@@ -291,15 +317,7 @@ namespace Web
                     return;
                 }
 
-
-                //CLOUD OBJECT TYPES (custom type)
-                if (!ui.PutCloudObjectTypesInSession(ref sErr))
-                {
-                    lblErrorMessage.Text = sErr;
-                    return;
-                }
-
-				
+		
                 // allowed pages list (from the session)
                 XDocument xSiteMaster = (XDocument)ui.GetSessionObject("site_master_xml", "Security");
 
@@ -520,7 +538,14 @@ namespace Web
                 lblErrorMessage.Text = sErr;
                 return;
             }
+			
+			if (string.IsNullOrEmpty(sUserAuthType))
+            {
+                lblErrorMessage.Text = "Invalid User Name or Password.";
+                return;
+            }
 
+			
             if (sUserAuthType == "local")
             {
 
@@ -793,7 +818,7 @@ namespace Web
                                     pnlExpireWarning.Visible = true;
                                     hidID.Value = sTestPasswordString;
 
-                                    lblExpireWarning.Text = "Your Password expires in " + ts.Days.ToString() + " days.";
+                                    lblExpireWarning.Text = "Your password expires in " + ts.Days.ToString() + " days.";
                                     return;
 
                                 }
@@ -821,7 +846,7 @@ namespace Web
                             pnlLogin.Visible = false;
                             pnlForgotPassword.Visible = false;
                             pnlResetPassword.Visible = true;
-                            lblResetMessage.Text = "You must change your password." + sMessage;
+                            lblResetMessage.Text = "You must change your password.<br />" + sMessage;
                             return;
 
                         }
@@ -893,7 +918,7 @@ namespace Web
                 }
                 else
                 {
-                    lblErrorMessage.Text = "Error: Unable to locate domain";
+                    lblErrorMessage.Text = "Error: Unable to locate domain.";
                     return;
                 }
 
@@ -1096,7 +1121,7 @@ namespace Web
                         // we have to have the user_id to log this, if its not a valid user_id then we can't log it, seems like we need to log
                         // all attempts, but there is a foreign key on user_id in the user_security_log table
                         string sAttemptUserID = null;
-                        dc.sqlGetSingleString(ref sAttemptUserID, "Select user_id from users where username = '" + txtLoginUser.Text.Replace("'", "''").Replace(";", "") + "'", ref sErr);
+                        dc.sqlGetSingleString(ref sAttemptUserID, "select user_id from users where username = '" + txtLoginUser.Text.Replace("'", "''").Replace(";", "") + "'", ref sErr);
                         if (!string.IsNullOrEmpty(sAttemptUserID))
                         {
                             dc.addSecurityLog(sAttemptUserID, SecurityLogTypes.Security, SecurityLogActions.UserPasswordChange, acObjectTypes.User, txtLoginUser.Text.Replace("'", "''").Replace(";", ""), "Forgot password attempt, incorrect answer given.", ref sErr);
