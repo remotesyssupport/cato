@@ -143,7 +143,7 @@
                             Automatically grant port access for EC2? (ssh, winrm, etc.)
                         </td>
                     </tr>
-                </table>
+				</table>
             </div>
             <div id="KeyPairTab">
                 <span style="font-style: italic;">(Changes to Key Pairs are saved automatically, and

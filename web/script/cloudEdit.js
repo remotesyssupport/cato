@@ -50,10 +50,36 @@ $(document).ready(function () {
 	$("#item_search_btn").live("click", function () {
         GetClouds();
     });
+    
+    //the test connection buttton
+    $("#test_connection_btn").button({ icons: { primary: "ui-icon-link"} });
+	$("#test_connection_btn").live("click", function () {
+        TestConnection();
+    });
 });
 
 function pageLoad() {
     ManagePageLoad();
+}
+
+function TestConnection() {
+    var cloud_id = $("#hidCurrentEditID").val();
+    var account_id = $("#ctl00_ddlCloudAccounts").val();
+    
+    $.ajax({
+        type: "POST",
+        async: false,
+        url: "awsMethods.asmx/wmTestCloudConnection",
+        data: '{"sAccountID":"' + account_id + '","sCloudID":"' + cloud_id + '"}',
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
+        	alert(response.d);
+        },
+        error: function (response) {
+            showAlert(response.responseText);
+        }
+    });
 }
 
 function GetClouds() {

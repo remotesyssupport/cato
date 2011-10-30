@@ -35,7 +35,7 @@ namespace ACWebMethods
     [System.Web.Script.Services.ScriptService]
     public class uiMethods : System.Web.Services.WebService
     {
-
+		#region "General"
         [WebMethod(EnableSession = true)]
         public string wmGetTime()
         {
@@ -108,131 +108,7 @@ namespace ACWebMethods
             
 			return true;
         }
-		
-        [WebMethod(EnableSession = true)]
-        public string wmAssetSearch(string sSearchText, bool bAllowMultiSelect)
-        {
-            try
-            {
-                dataAccess dc = new dataAccess();
-                acUI.acUI ui = new acUI.acUI();
-                string sErr = "";
-                string sWhereString = " where 1=1 and a.asset_status ='Active'";
-
-                if (sSearchText.Length > 0)
-                {
-                    sSearchText = sSearchText.Replace("'", "''").Trim();
-
-                    //split on spaces
-                    int i = 0;
-                    string[] aSearchTerms = sSearchText.Split(' ');
-                    for (i = 0; i <= aSearchTerms.Length - 1; i++)
-                    {
-
-                        //if the value is a guid, it's an existing task.
-                        //otherwise it's a new task.
-                        if (aSearchTerms[i].Length > 0)
-                        {
-                            sWhereString += " and (a.asset_name like '%" + aSearchTerms[i] + "%' " +
-                                "or a.port like '%" + aSearchTerms[i] + "%' " +
-                                "or a.address like '%" + aSearchTerms[i] + "%' " +
-                                "or a.connection_type like '%" + aSearchTerms[i] + "%' " +
-                                "or a.db_name like '%" + aSearchTerms[i] + "%' " +
-                                "or u.full_name like '%" + aSearchTerms[i] + "%' " +
-                                "or ta.attributes like '%" + aSearchTerms[i] + "%') ";
-                        }
-                    }
-                }
-
-                //limit the results to the users 'tags' unless they are a super user
-                if (!ui.UserIsInRole("Developer") && !ui.UserIsInRole("Administrator"))
-                {
-                    sWhereString += " and a.asset_id in (" +
-                        "select distinct at.object_id" +
-                        " from object_tags ut" +
-                        " join object_tags at on ut.tag_name = at.tag_name" +
-                        " and ut.object_type = 1 and at.object_type = 2" +
-                        " where ut.object_id = '" + ui.GetSessionUserID() + "'" +
-                        ")";
-                }
-
-                string sSQL = "set nocount on;" +
-                        "create table #TempAttributes(" +
-                        "asset_id varchar(36)," +
-                        "attributes varchar(max)" +
-                        ");" +
-                        "insert into #TempAttributes " +
-                        "select aa2.asset_id, stuff((select ', '+ltrim(laa.attribute_name) +':: '+ltrim(laav.attribute_value) " +
-                        "from asset_attribute aa " +
-                        "join lu_asset_attribute_value laav on laav.attribute_value_id = " +
-                        "aa.attribute_value_id " +
-                        "join lu_asset_attribute laa on laa.attribute_id = laav.attribute_id " +
-                        "where aa2.asset_id = aa.asset_id " +
-                        "FOR XML PATH('')), 1, 2, '') as Attributes " +
-                        "from asset_attribute aa2 " +
-                        "group by asset_id;" +
-                        "select a.asset_id,a.asset_name,ifnull(u.full_name,'') as [owner],a.port,a.address,a.db_name,a.connection_type,ac.username, " +
-                        "case when a.is_connection_system = '1' then 'Yes' else 'No' end as [is_connection_system], ta.attributes " +
-                        "from asset a " +
-                        "left outer join asset_credential ac " +
-                        "on ac.credential_id = a.credential_id " +
-                        "left outer join user_asset_assignment uaa " +
-                        "on uaa.asset_id = a.asset_id " +
-                        "left outer join users u " +
-                        "on u.user_id = uaa.user_id " +
-                        "left outer join #TempAttributes ta " +
-                        "on ta.asset_id = a.asset_id " +
-                        sWhereString +
-                        " order by a.asset_name;" +
-                        "drop table #TempAttributes;";
-
-                DataTable dt = new DataTable();
-                if (!dc.sqlGetDataTable(ref dt, sSQL, ref sErr))
-                {
-                    throw new Exception(sErr);
-                }
-
-                string sHTML = "";
-                if (dt.Rows.Count == 0)
-                {
-                    sHTML += "No results found";
-                }
-                else
-                {
-                    int iRowsToGet = dt.Rows.Count;
-                    if (iRowsToGet >= 100)
-                    {
-                        sHTML += "<div>Search found " + dt.Rows.Count + " results.  Displaying the first 100.</div>";
-                        iRowsToGet = 99;
-                    }
-                    sHTML += "<ul id=\"search_asset_ul\" class=\"search_dialog_ul\">";
-
-                    for (int i = 0; i < iRowsToGet; i++)
-                    {
-                        sHTML += "<li class=\"search_dialog_value\" tag=\"asset_picker_row\" asset_id=\"" + dt.Rows[i]["asset_id"].ToString() + "\" asset_name=\"" + dt.Rows[i]["asset_name"].ToString() + "\">";
-
-                        sHTML += "<div class=\"search_dialog_value_name\">";
-                        if (bAllowMultiSelect)
-                            sHTML += "<input type='checkbox' name='assetcheckboxes' id='assetchk_" + dt.Rows[i]["asset_id"].ToString() + "' value='assetchk_" + dt.Rows[i]["asset_id"].ToString() + "'>";
-                        sHTML += "<span>" + dt.Rows[i]["asset_name"].ToString() + "</span>";
-                        sHTML += "</div>";
-
-                        sHTML += "<span class=\"search_dialog_value_inline_item\">Owner: " + dt.Rows[i]["owner"].ToString() + "</span>";
-                        sHTML += "<span class=\"search_dialog_value_inline_item\">Address: " + dt.Rows[i]["address"].ToString() + "</span>";
-                        sHTML += "<span class=\"search_dialog_value_inline_item\"> Connection Type: " + dt.Rows[i]["connection_type"].ToString() + "</span>";
-                        sHTML += "<div class=\"search_dialog_value_block_item italic\">Attributes: " + dt.Rows[i]["attributes"].ToString() + "</div>";
-                        sHTML += "</li>";
-                    }
-                }
-                sHTML += "</ul>";
-
-                return sHTML;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-        }
+		#endregion
 
         #region "Import/Export"
         [WebMethod(EnableSession = true)]
@@ -2656,8 +2532,7 @@ namespace ACWebMethods
 
             return "";
         }
-
-        #endregion
+		        #endregion
 
         #region "Task Launch Dialog"
 		//this one is used by several functions... 

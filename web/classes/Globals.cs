@@ -24,6 +24,7 @@ using System.Xml.XPath;
 
 namespace Globals
 {
+	#region "Enums"
     public enum acObjectTypes : int
     {
         None = 0,
@@ -87,7 +88,8 @@ namespace Globals
         Other = 900,
         ConfigChange = 901
     }
-    
+#endregion    
+
 	//this CurrentUser class will be used when we are ready to stop using Session
     public class CurrentUser
     {
@@ -98,7 +100,8 @@ namespace Globals
             set { sUserID = value; }
         }
     }
-    
+
+	#region "Database Settings"
 	public class DatabaseSettings
     {
 
@@ -166,8 +169,9 @@ namespace Globals
         }
 
     }
-    
-	
+	#endregion    
+
+	#region "Cloud"
 	/*
 	 * The Cloud Providers class contains all the definition of a Cloud Provider, including
 	 * object types and their properties.
@@ -182,22 +186,20 @@ namespace Globals
 	public class CloudProviders : Dictionary<string, Provider>  //CloudProviders IS a named dictionary of Provider objects
 	{
 		//the constructor requires an XDocument
-		public CloudProviders(XDocument xProviders)
-        {
+		public CloudProviders (XDocument xProviders)
+		{
 
-            if (xProviders == null)
-            {
-                throw new Exception("Error: Invalid or missing Cloud Providers XML.");
-            } 
-			else 
-			{
-				foreach (XElement xProvider in xProviders.XPathSelectElements("//providers/provider"))
-                {
-					if (xProvider.Attribute("name") == null) 
-						throw new Exception("Cloud Providers XML: All Providers must have the 'name' attribute.");
+			if (xProviders == null) {
+				throw new Exception ("Error: Invalid or missing Cloud Providers XML.");
+			} else {
+				foreach (XElement xProvider in xProviders.XPathSelectElements("//providers/provider")) {
+					if (xProvider.Attribute ("name") == null) 
+						throw new Exception ("Cloud Providers XML: All Providers must have the 'name' attribute.");
 					
 					Provider pv = new Provider();
-					pv.Name = xProvider.Attribute("name").Value;
+					pv.Name = xProvider.Attribute ("name").Value;
+					pv.TestProduct = (xProvider.Attribute ("test_product") == null ? "" : xProvider.Attribute ("test_product").Value);
+					pv.TestObject = (xProvider.Attribute ("test_object") == null ? "" : xProvider.Attribute ("test_object").Value);
 					
 					//get the cloudobjecttypes for this provider.					
 					foreach (XElement xProduct in xProvider.XPathSelectElements("products/product"))
@@ -272,6 +274,8 @@ namespace Globals
 	public class Provider
 	{
 		public string Name { get; set; }
+		public string TestProduct { get; set; }
+		public string TestObject { get; set; }
 		
 		//Provider CONTAINS a named dictionary of Products;
 		public Dictionary<string, Product> Products = new Dictionary<string, Product>();
@@ -324,25 +328,6 @@ namespace Globals
         }
 	}
 
-//	public class CloudObjectTypes
-//    {
-//        public ArrayList alCloudObjectTypes = new ArrayList();
-//        public CloudObjectType GetCloudObjectType(string sObjectType)
-//        {
-//            //This will find the object in this class by the ObjectType property and return it.
-//            CloudObjectType cob = null;
-//            foreach (CloudObjectType cob_loopVariable in alCloudObjectTypes)
-//            {
-//                cob = cob_loopVariable;
-//                if (cob.Name == sObjectType)
-//                {
-//                    return cob;
-//                }
-//            }
-//
-//            return null;
-//        }
-//    }
     public class CloudObjectType
     {
 		public Product ParentProduct { get; set; }
@@ -433,14 +418,12 @@ namespace Globals
 		}
 		
     }
-
-	
 	
 	public class Cloud
     {
         public string ID;
 		public string Name;
-		public string Provider;
+		public Provider Provider;
         public string APIUrl;
 		
 		//the default constructor
@@ -448,7 +431,8 @@ namespace Globals
         {
             //get the cloud from the db
             dataAccess dc = new dataAccess();
-
+			acUI.acUI ui = new acUI.acUI();
+			
             string sErr = "";
 
             string sSQL = "select cloud_name, provider, api_url" +
@@ -462,8 +446,13 @@ namespace Globals
                 {
 					ID = sCloudID;
 					Name = dr["cloud_name"].ToString();
-					Provider = dr["provider"].ToString();
 					APIUrl = dr["api_url"].ToString();
+					
+					CloudProviders cp = ui.GetCloudProviders();
+					if (cp != null) {
+						Provider p = cp[dr["provider"].ToString()];
+						Provider = p;
+					}
 				}
 				else 
 				{
@@ -486,4 +475,62 @@ namespace Globals
 
    }
 
+	public class CloudAccount
+    {
+        public string ID;
+		public string Name;
+		public string Provider;
+		public string AccountNumber;
+        public string LoginID;
+        public string LoginPassword;
+		
+		//the default constructor
+		public CloudAccount(string sAccountID)
+        {
+            //get the cloud from the db
+            dataAccess dc = new dataAccess();
+
+            string sErr = "";
+
+            string sSQL = "select account_name, account_number, provider, login_id, login_password" +
+                " from cloud_account" +
+                " where account_id = '" + sAccountID + "'";
+
+            DataRow dr = null;
+            if (dc.sqlGetDataRow(ref dr, sSQL, ref sErr))
+            {
+                if (dr != null)
+                {
+					ID = sAccountID;
+					Name = dr["account_name"].ToString();
+					Provider = dr["provider"].ToString();
+					AccountNumber = (string.IsNullOrEmpty(dr["account_number"].ToString()) ? "" : dr["account_number"].ToString());
+					LoginID = (string.IsNullOrEmpty (dr["login_id"].ToString()) ? "" : dr["login_id"].ToString());
+					LoginPassword = (string.IsNullOrEmpty (dr["login_password"].ToString()) ? "" : dc.DeCrypt(dr["login_password"].ToString()));
+				}
+				else 
+				{
+					throw new Exception("Unable to build Cloud Account object - no data found.");	
+				}
+			}
+			else 
+			{
+				throw new Exception("Error building Cloud Account object: " + sErr);	
+			}
+        }
+		
+        public bool IsValidForConnections()
+        {
+			if (string.IsNullOrEmpty (this.LoginID))
+				return false;
+
+			if (string.IsNullOrEmpty (this.LoginPassword))
+				return false;
+
+            return true;
+        }
+
+   }
+
+#endregion
 }

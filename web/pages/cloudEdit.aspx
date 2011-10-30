@@ -66,6 +66,20 @@
                     <input id="txtAPIUrl" class="usertextbox" name="txtAPIUrl" />
                 </td>
             </tr>
+             <tr>
+                <td>
+                </td>
+                <td>
+					&nbsp;
+				</td>
+            </tr>
+			<tr>
+				<td>
+				</td>
+				<td>
+					<span id="test_connection_btn">Test Connection</span>
+				</td>
+			</tr>
         </table>
     </div>
     <div id="delete_dialog" class="hidden" title="Delete Clouds">

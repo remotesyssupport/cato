@@ -25,6 +25,7 @@ using System.IO;
 using Globals;
 using System.Data;
 using System.Text.RegularExpressions;
+using System.Net;
 
 namespace acUI
 {
@@ -650,7 +651,58 @@ namespace acUI
 		    }
 		}
 				
- 		//Checks whether the value is a 36 character GUID       
+		//Get data via HTTP
+		public string HTTPGet(string sURL, ref string sErr)
+		{
+			string sResult = "";
+			try {
+				// Create a request for the URL. 
+				//WebRequest request = WebRequest.Create(sAPICall);
+				HttpWebRequest request = WebRequest.Create (sURL) as HttpWebRequest;
+				request.Method = "GET";
+				
+				HttpWebResponse response = request.GetResponse() as HttpWebResponse;
+				
+				if (response.StatusCode == HttpStatusCode.OK) {
+					// Get the stream containing content returned by the server.
+					Stream dataStream = response.GetResponseStream();
+					// Open the stream using a StreamReader for easy access.
+					StreamReader sr = new StreamReader (dataStream);
+					// Read the content.
+					sResult = sr.ReadToEnd();
+					// Clean up the streams and the response.
+					sr.Close();
+					response.Close();
+
+					return sResult;
+				}
+				else
+				{
+					sErr = response.StatusCode.ToString();
+					return "";
+				}
+				
+				
+			} catch (WebException ex) {
+				using (WebResponse response = ex.Response) {
+					if (response != null) {
+						HttpWebResponse httpResponse = (HttpWebResponse)response;
+						sErr = "HTTP Status Code: " + httpResponse.StatusCode.ToString();
+						using (Stream data = response.GetResponseStream()) {
+							string text = new StreamReader (data).ReadToEnd();
+							sErr += text;
+						}
+					} else
+						sErr = ex.Message;
+				}
+				return "";
+			} catch (Exception ex) {
+				sErr = ex.Message;
+				return "";
+			}
+		}
+		
+		//Checks whether the value is a 36 character GUID       
 		public bool IsGUID(string String)
         {
             if (!string.IsNullOrEmpty(String))

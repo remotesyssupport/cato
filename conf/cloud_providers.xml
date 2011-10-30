@@ -1,6 +1,6 @@
 <root>
 	<providers>
-		<provider name="Amazon AWS">
+		<provider name="Amazon AWS" test_product="ec2" test_object="aws_ec2_security_group">
 			<products>
 				<product name="ec2" label="EC2" api_protocol="HTTP" api_version="2010-05-15" api_url_prefix="ec2">
 					<object_types>
@@ -123,7 +123,7 @@
 				</product>-->
 			</products>
 		</provider>
-		<provider name="Eucalyptus">
+		<provider name="Eucalyptus" test_product="eucalyptus" test_object="eucalyptus_security_group">
 			<products>
 				<product name="eucalyptus" label="Eucalyptus" api_protocol="HTTP" api_version="2011-07-15" api_url_prefix="" api_uri="/services/Eucalyptus/">
 					<object_types>
