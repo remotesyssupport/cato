@@ -106,9 +106,13 @@ namespace Web.pages
 			
 			
             sXML = acAWS.GetCloudObjectsAsXML(sCloudID, cot, ref sErr, null);
+			if (!string.IsNullOrEmpty(sErr))
+			{
+				return "GetCloudObjectsAsXML failed with error: " + sErr;
+			}
 			if (string.IsNullOrEmpty(sXML))
 			{
-				return "GetCloudObjectsAsXML returned an empty document.";
+				return "Cloud connection was successful, but the query returned no data.";
 			}
 
 
@@ -121,7 +125,7 @@ namespace Web.pages
                 sHTML += cot.AsString();
             }
             else
-                sHTML = "<span class='ui-state-error'>GetCloudObjectType failed for [" + sObjectType + "]</span>";
+                sHTML = "<span class='ui-state-error'>GetCloudObjectType failed for [" + sObjectType + "].</span>";
 
             //this will return false if the object doesn't have enough information to form a call
             if (cot.IsValidForCalls())
@@ -132,7 +136,7 @@ namespace Web.pages
                 sXML = ui.RemoveNamespacesFromXML(sXML);
                 XElement xDoc = XElement.Parse(sXML);
                 if (xDoc == null)
-                    sHTML += "<span class='ui-state-error'>AWS Response XML document is invalid</span>.";
+                    sHTML += "<span class='ui-state-error'>Cloud Response XML document is invalid.</span>.";
                 else
                     sHTML += "Result is valid XML.";
                 sHTML += "</div>";
@@ -147,7 +151,7 @@ namespace Web.pages
                     XElement xe = xDoc.XPathSelectElement(cot.XMLRecordXPath);
                     if (xe == null) {
                         sHTML += "<span class='ui-state-info'>Record XPath [" + cot.XMLRecordXPath + "] was not found.</span><br />";
-                        sHTML += "<span class='ui-state-info'>(This may be a normal condition if the result XML doesn't contain any objects.)</span>";
+                        sHTML += "<span class='ui-state-info'>(This may be a normal condition if the Cloud doesn't contain any objects of this type.)</span>";
 					}
 					else
                         sHTML += "Record XPath found a node with [" + xe.Nodes().Count() + "] elements.";
