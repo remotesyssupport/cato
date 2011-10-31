@@ -56,7 +56,7 @@
 			</item>
 			<item label="Clouds" icon="../images/icons/clouds_24.png" onclick="showPleaseWait();" href="../pages/cloudEdit.aspx">
 			</item>
-			<item roles="administrator" label="Cloud API Tester" icon="../images/icons/api_tester_24.png" onclick="showPleaseWait();" href="../pages/cloudAPITester.aspx">
+			<item roles="developer" label="Cloud API Tester" icon="../images/icons/api_tester_24.png" onclick="showPleaseWait();" href="../pages/cloudAPITester.aspx">
 			</item>
 			<item label="Set Login Defaults" icon="../images/login_24.png" onclick="showPleaseWait();" href="../pages/loginDefaultsEdit.aspx">
 			</item>
@@ -102,6 +102,7 @@
 				<page>userPreferenceEdit.aspx</page>
 				<page>systemStatusView.aspx</page>
 				<page>importLoadFile.aspx</page>
+				<page>cloudAPITester.aspx</page>
 			</allowedpages>
 		</Developer>
 		<User>
