@@ -171,6 +171,9 @@ proc aws_Generic {product operation path command} {
 	if {"$::CLOUD_TYPE" == "Eucalyptus"} {
 output "euca"
 		if {"$aws_region" > ""} {
+			if {[array names ::CLOUD_ENDPOINTS "Eucalyptus,$aws_region"] == ""} {
+				error_out "Cloud region $aws_region does not exist. Either create a Eucalyptus Cloud definition or enter an existing cloud name in the region field" 9999
+			}
 			set endpoint $::CLOUD_ENDPOINTS(Eucalyptus,$aws_region)
 			if {"$endpoint" == ""} {
 				error_out "AWS error: Region $aws_region for Eucalyptus cloud not defined. Region name must match a valid cloud name." 9999
@@ -264,7 +267,7 @@ proc register_ecosystem_object {result ecosystem_id object_type path role api_co
 	foreach instance $instances {
 		set sql "insert into ecosystem_object (ecosystem_id, ecosystem_object_id, ecosystem_object_type, added_dt) values ('$ecosystem_id','[$instance asText]','$object_type',$::getdate)"
 		$::db_exec $::CONN $sql
-		if {"$role" > ""} {
+		if {"$role" > "" && "$::CLOUD_TYPE" == "Amazon AWS"} {
 			set the_arg ""
 			lappend the_arg ResourceId.1 [$instance asText] Tag.1.Key com.cloudsidekick.role Tag.1.Value $role
 			for {set counter 0} {$counter < 4} {incr counter} {
