@@ -183,7 +183,7 @@ namespace Web.pages
 						//perhaps a static class method to look up a type name based on the id?
 						//or a peek into the CloudProviders object in the session might be better.
 						
-						string sThisShouldBeAPrettyName = "";
+						string sThisShouldBeAPrettyName = dr["ecosystem_object_type"].ToString();
 						
 						//something here can look up the icon for each type if we wanna do that.
                         string sIcon = "aws_16.png";
