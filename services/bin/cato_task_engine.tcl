@@ -131,13 +131,20 @@ proc register_security_group {apply_to_group port} {
 
 proc gather_account_info {account_id} {
 	set proc_name gather_account_info
-	set sql "select ca.account_name, ca.account_type, ca.login_id, ca.login_password from cloud_account ca where ca.account_id = '$account_id'"
+	set sql "select ca.account_name, ca.provider, ca.login_id, ca.login_password from cloud_account ca where ca.account_id = '$account_id'"
 	$::db_query $::CONN $sql
 	set row [$::db_fetch $::CONN]
 	set ::CLOUD_NAME [lindex $row 0]
 	set ::CLOUD_TYPE [lindex $row 1]
 	set ::CLOUD_LOGIN_ID [lindex $row 2]
 	set ::CLOUD_LOGIN_PASS [decrypt_string [lindex $row 3] $::SITE_KEY]
+	if {"$::CLOUD_TYPE" == "Eucalyptus"} {
+		set sql "select cloud_name, api_url from clouds where provider = '$::CLOUD_TYPE'"
+		$::db_query $::CONN $sql
+		while {[string length [set row [$::db_fetch $::CONN]]] > 0} {
+			set ::CLOUD_ENDPOINTS($::CLOUD_TYPE,[lindex $row 0]) "[lindex $row 1]/services/Eucalyptus"
+		}
+	}
 }
 proc aws_Generic {product operation path command} {
 	set proc_name aws_Generic
@@ -161,7 +168,26 @@ proc aws_Generic {product operation path command} {
 	if {"$::CLOUD_LOGIN_ID" == "" || "$::CLOUD_LOGIN_PASS" == ""} {
 		error_out "Cloud account id or password is required" 9999
 	}
-        set x [::tclcloud::connection new $::CLOUD_LOGIN_ID $::CLOUD_LOGIN_PASS]
+	if {"$::CLOUD_TYPE" == "Eucalyptus"} {
+output "euca"
+		if {"$aws_region" > ""} {
+			set endpoint $::CLOUD_ENDPOINTS(Eucalyptus,$aws_region)
+			if {"$endpoint" == ""} {
+				error_out "AWS error: Region $aws_region for Eucalyptus cloud not defined. Region name must match a valid cloud name." 9999
+			}
+		} else {
+			set endpoint [lindex [array get ::CLOUD_ENDPOINTS Eucalyptus,*] 1]
+			if {"$endpoint" == ""} {
+				error_out "AWS error: A default cloud for Eucalyptus not defined. Create a valid cloud with endpoint url for Eucalyptus." 9999
+			}
+		}
+output "region is $aws_region, endpoint is $endpoint"
+	} else {
+		set endpoint ""
+	}
+	output "::tclcloud::connection new $::CLOUD_LOGIN_ID $::CLOUD_LOGIN_PASS {$aws_region $endpoint}"
+	lappend region_endpoint $aws_region $endpoint
+        set x [::tclcloud::connection new $::CLOUD_LOGIN_ID $::CLOUD_LOGIN_PASS $region_endpoint]
         set cmd "$x  call_aws $product \"$aws_region\" $operation"
 
 	lappend cmd $params
@@ -560,6 +586,7 @@ proc initialize {} {
 	set ::BREAK 0
 	set ::INLOOP 0
 	set ::SENSITIVE ""
+	set ::CLOUD_ENDPOINTS() ""
 
 	#set ::FILTER_BUFFER 0
 	#set ::TIMEOUT_CODEBLOCK "" 
