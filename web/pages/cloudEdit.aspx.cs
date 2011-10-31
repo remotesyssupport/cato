@@ -39,6 +39,20 @@ namespace Web.pages
  				
 				//one time get of the Provider list.
 				ltProviders.Text = GetProviders();
+				
+
+				//fill the test cloud account drop down
+                DataTable dtCloudAccounts = (DataTable)ui.GetSessionObject("cloud_accounts_dt", "Security");
+                if (dtCloudAccounts != null)
+                {
+                    if (dtCloudAccounts.Rows.Count > 0)
+                    {
+                        ddlTestAccount.DataTextField = "account_label";
+                        ddlTestAccount.DataValueField = "account_id";
+                        ddlTestAccount.DataSource = dtCloudAccounts;
+                        ddlTestAccount.DataBind();
+                    }
+                }
            }
         }
 		

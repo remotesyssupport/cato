@@ -67,19 +67,29 @@
                 </td>
             </tr>
              <tr>
+                <td colspan="2">
+					<hr />
+				</td>
+            </tr>
+             <tr>
                 <td>
+					Test Account:
                 </td>
                 <td>
-					&nbsp;
+					<asp:DropDownList id="ddlTestAccount" runat="server"></asp:DropDownList>
 				</td>
             </tr>
 			<tr>
-				<td>
-				</td>
-				<td>
+				<td colspan="2" style="text-align: center;">
 					<span id="test_connection_btn">Test Connection</span>
 				</td>
 			</tr>
+             <tr>
+                <td colspan="2">
+					<div id="conn_test_result" style="margin-top: 10px;"></div>
+					<div id="conn_test_error" style="font-size: 0.8em; font-style: italic; margin-top: 10px;"></div>
+			</td>
+            </tr>
         </table>
     </div>
     <div id="delete_dialog" class="hidden" title="Delete Clouds">

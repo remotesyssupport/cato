@@ -92,7 +92,8 @@ namespace Web.pages
             string sHTML = "";
 			
             //get the cloud object type from the session
-            CloudObjectType cot = ui.GetCloudObjectType(sObjectType);
+ 			Provider p = ui.GetSelectedCloudProvider();
+			CloudObjectType cot = ui.GetCloudObjectType(p, sObjectType);
             if (cot != null)
             {
                 if (string.IsNullOrEmpty(cot.ID))

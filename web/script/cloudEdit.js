@@ -63,8 +63,12 @@ function pageLoad() {
 }
 
 function TestConnection() {
+	$("#conn_test_result").text("Testing...");
+	$("#conn_test_error").empty();
+
+    
     var cloud_id = $("#hidCurrentEditID").val();
-    var account_id = $("#ctl00_ddlCloudAccounts").val();
+    var account_id = $("#ctl00_phDetail_ddlTestAccount").val();
     
     $.ajax({
         type: "POST",
@@ -74,7 +78,27 @@ function TestConnection() {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (response) {
-        	alert(response.d);
+			try
+			{
+	        	var oResultData = eval('(' + response.d + ')');
+				if (oResultData != null)
+				{
+					if (oResultData.result == "success") {
+						$("#conn_test_result").css("color","green");
+						$("#conn_test_result").text("Connection Successful.");
+					}
+					if (oResultData.result == "fail") {
+						$("#conn_test_result").css("color","red");
+						$("#conn_test_result").text("Connection Failed.");
+						$("#conn_test_error").text(unpackJSON(oResultData.error));
+					}			
+				
+				}
+			}
+			catch(err)
+			{
+				alert(err);
+			}
         },
         error: function (response) {
             showAlert(response.responseText);

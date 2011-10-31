@@ -151,7 +151,7 @@ namespace Web
                 ui.addPageViewLog();
 
 
-                //fill the clould account drop down
+                //fill the cloud account drop down
                 DataTable dtCloudAccounts = (DataTable)ui.GetSessionObject("cloud_accounts_dt", "Security");
                 if (dtCloudAccounts != null)
                 {

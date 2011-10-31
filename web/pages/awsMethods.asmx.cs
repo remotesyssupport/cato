@@ -61,47 +61,41 @@ namespace Web.pages
 			
 			Cloud c = new Cloud(sCloudID);
 			if (c.ID == null) {
-				return "{fail:'Failed to get Cloud details for Cloud ID [" + sCloudID + "].'}";
+				return "{'result':'fail','error':'Failed to get Cloud details for Cloud ID [" + sCloudID + "].'}";
 			}
 			
 			CloudAccount ca = new CloudAccount(sAccountID);
 			if (ca.ID == null) {
-				return "{fail:'Failed to get Cloud Account details for Cloud Account ID [" + sAccountID + "].'";
+				return "{'result':'fail','error':'Failed to get Cloud Account details for Cloud Account ID [" + sAccountID + "].'}";
 			}
 
 			CloudProviders cp = ui.GetCloudProviders();
-			if (cp != null) {
+			if (cp == null) 
+			{
+				return "{'result':'fail','error':'Failed to get Cloud Providers definition from session.'}";
+			}
+			else 
+			{
 				//get the test cloud object type for this provider
-				CloudObjectType cot = ui.GetCloudObjectType(c.Provider.TestObject);
+				CloudObjectType cot = ui.GetCloudObjectType(c.Provider, c.Provider.TestObject);
 				if (cot != null) {
 					if (string.IsNullOrEmpty(cot.ID)) {
-						return "{fail:'Cannot find definition for requested object type [" + c.Provider.TestObject + "].'}";
+						return "{'result':'fail','error':'Cannot find definition for requested object type [" + c.Provider.TestObject + "].'}";
 					}
 				} else {
-					return "{fail:'GetCloudObjectType failed for [" + c.Provider.TestObject + "].'";
+					return "{'result':'fail','error':'GetCloudObjectType failed for [" + c.Provider.TestObject + "].'}";
 				}
 				
 				string sURL = GetURL(ca, c, cot, null, ref sErr);			
 				if (!string.IsNullOrEmpty(sErr))
-					return "{fail:'Error: [" + sErr + "].'";
+					return "{'result':'fail','error':'" + ui.packJSON(sErr) +"'}";
 				
 				string sResult = ui.HTTPGet(sURL, ref sErr);
 				if (!string.IsNullOrEmpty(sErr))
-					return "{fail:'Error: [" + sErr + "].'";
+					return "{'result':'fail','error':'" + ui.packJSON(sErr) + "'}";
 
-				return sResult;
+				return "{'result':'success','response':'" + ui.packJSON(sResult) + "'}";
 			}
-			
-						
-			
-//            sXML = acAWS.GetCloudObjectsAsXML(sCloudID, cot, ref sErr, null);
-//			if (string.IsNullOrEmpty(sXML))
-//			{
-//				return "GetCloudObjectsAsXML returned an empty document.";
-//			}
-
-			
-			return "{success:'Connection Successful.'}";
 		}
 
         #region "Request Building Methods"
@@ -117,7 +111,8 @@ namespace Web.pages
                 DataTable dt = new DataTable();
 
                 //get the cloud object type from the session
-                CloudObjectType cot = ui.GetCloudObjectType(sObjectType);
+				Provider p = ui.GetSelectedCloudProvider();
+				CloudObjectType cot = ui.GetCloudObjectType(p, sObjectType);
                 if (cot != null)
                 {
                     if (string.IsNullOrEmpty(cot.ID))
@@ -154,26 +149,26 @@ namespace Web.pages
                 //what columns go in the DataTable?
                 if (cot.Properties.Count > 0)
                 {
-                    foreach (CloudObjectTypeProperty p in cot.Properties)
+                    foreach (CloudObjectTypeProperty prop in cot.Properties)
                     {
                         //the column on the data table *becomes* the property.
                         //we'll load it up with all the goodness we need anywhere else
                         DataColumn dc = new DataColumn();
 
-                        dc.ColumnName = p.Name;
+                        dc.ColumnName = prop.Name;
 
                         //This is important!  Places in the GUI expect the first column to be the ID column.
                         //hoping to stop doing that in favor of this property.
-                        if (p.IsID) dc.ExtendedProperties.Add("IsID", true);
+                        if (prop.IsID) dc.ExtendedProperties.Add("IsID", true);
                         //will we try to draw an icon?
-                        if (p.HasIcon) dc.ExtendedProperties.Add("HasIcon", true);
+                        if (prop.HasIcon) dc.ExtendedProperties.Add("HasIcon", true);
 
 						//what was the xpath for this property?
-                        dc.ExtendedProperties.Add("XPath", p.XPath);
+                        dc.ExtendedProperties.Add("XPath", prop.XPath);
                         //a "short list" property is one that will always show up... it's a shortcut in some places.
-                        dc.ExtendedProperties.Add("ShortList", p.ShortList);
+                        dc.ExtendedProperties.Add("ShortList", prop.ShortList);
                         //it might have a custom caption
-                        if (!string.IsNullOrEmpty(p.Label)) dc.Caption = p.Label;
+                        if (!string.IsNullOrEmpty(prop.Label)) dc.Caption = prop.Label;
 
                         //add the column
                         dt.Columns.Add(dc);

@@ -1155,9 +1155,8 @@ namespace acUI
 //                o = Convert.ToString("");
 //            return o.ToString();
 //        }
-        public CloudObjectType GetCloudObjectType(string sObjectType)
+        public CloudObjectType GetCloudObjectType(Provider p, string sObjectType)
         {
-			Provider p = GetSelectedCloudProvider();
 	        if (p == null)
                 RaiseError(Page, "Unable to get Cloud Provider.", false, "");
 
