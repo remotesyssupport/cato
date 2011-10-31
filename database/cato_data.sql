@@ -4,12 +4,11 @@ INSERT INTO `user_password_history` (`user_id`, `password`, `change_time`) VALUE
 INSERT INTO `login_security_settings` (`id`, `pass_max_age`, `pass_max_attempts`, `pass_max_length`, `pass_min_length`, `pass_complexity`, `pass_age_warn_days`, `pass_require_initial_change`, `auto_lock_reset`, `login_message`, `auth_error_message`, `pass_history`, `page_view_logging`, `report_view_logging`, `allow_login`, `new_user_email_message`, `log_days`) VALUES (1,90,99,15,6,0,5,0,5,'New Cato Install','Login Error - Please check your user id and password.',0,0,0,1,'',90);
 INSERT INTO `logserver_settings` (`id`, `mode_off_on`, `loop_delay_sec`, `port`, `log_file_days`, `log_table_days`) VALUES (1,'on',5,4010,90,90);
 
-INSERT INTO `clouds` (cloud_id,cloud_name,provider,api_url) VALUES ('4d6f35fc-faa7-11e0-b2ec-12313d0024c3','US East','Amazon AWS','us-east-1.amazonaws.com');
-INSERT INTO `clouds` (cloud_id,cloud_name,provider,api_url) VALUES ('74876296-fc72-11e0-847b-12313d0024c3','My Private Cloud','Eucalyptus','eucalyptus.com:8773');
-INSERT INTO `clouds` (cloud_id,cloud_name,provider,api_url) VALUES ('96e7d2c0-faa7-11e0-b2ec-12313d0024c3','US West','Amazon AWS','us-west-1.amazonaws.com');
-INSERT INTO `clouds` (cloud_id,cloud_name,provider,api_url) VALUES ('a9f303bc-faa7-11e0-b2ec-12313d0024c3','EU Ireland','Amazon AWS','eu-west-1.amazonaws.com');
-INSERT INTO `clouds` (cloud_id,cloud_name,provider,api_url) VALUES ('a9fe9bdc-faa7-11e0-b2ec-12313d0024c3','AP Singapore','Amazon AWS','ap-southeast-1.amazonaws.com');
-INSERT INTO `clouds` (cloud_id,cloud_name,provider,api_url) VALUES ('aa09974e-faa7-11e0-b2ec-12313d0024c3','AP Tokyo','Amazon AWS','ap-northeast-1.amazonaws.com');
+INSERT INTO `clouds` (cloud_id,cloud_name,provider,api_url) VALUES ('4d6f35fc-faa7-11e0-b2ec-12313d0024c3','us-east-1','Amazon AWS','us-east-1.amazonaws.com');
+INSERT INTO `clouds` (cloud_id,cloud_name,provider,api_url) VALUES ('96e7d2c0-faa7-11e0-b2ec-12313d0024c3','us-west-1','Amazon AWS','us-west-1.amazonaws.com');
+INSERT INTO `clouds` (cloud_id,cloud_name,provider,api_url) VALUES ('a9f303bc-faa7-11e0-b2ec-12313d0024c3','eu-west-1','Amazon AWS','eu-west-1.amazonaws.com');
+INSERT INTO `clouds` (cloud_id,cloud_name,provider,api_url) VALUES ('a9fe9bdc-faa7-11e0-b2ec-12313d0024c3','ap-southeast-1','Amazon AWS','ap-southeast-1.amazonaws.com');
+INSERT INTO `clouds` (cloud_id,cloud_name,provider,api_url) VALUES ('aa09974e-faa7-11e0-b2ec-12313d0024c3','ap-northeast-1','Amazon AWS','ap-northeast-1.amazonaws.com');
 
 INSERT INTO `lu_task_step_function_category` (`category_name`, `category_label`, `sort_order`, `description`, `icon`) VALUES ('aws_as','AWS AS','20.00','','icons/aws_32.png');
 INSERT INTO `lu_task_step_function_category` (`category_name`, `category_label`, `sort_order`, `description`, `icon`) VALUES ('aws_cfn','AWS CFN','30.00','','icons/aws_32.png');
