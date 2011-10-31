@@ -120,42 +120,89 @@ namespace Web.pages
 
             //try a few debugging things:
             //Peek at our object type definition
-            sHTML += "<h3>Getting Cloud Object Type definition...</h3><div>";
+            sHTML += "<div class=\"ui-state-default\">Cloud Object Type Definition</div>";
+			sHTML += "<div class=\"ui-widget-content\">";
             if (cot != null)
             {
-                sHTML += cot.AsString();
+	            string sReq = "<span class=\"ui-widget-content ui-state-error\">required</span>";
+				
+				//product stuff
+	            sHTML += "<span class=\"property\">Product:</span> <span class=\"code\">" + (string.IsNullOrEmpty(cot.ParentProduct.Name) ? sReq : cot.ParentProduct.Name).ToString() + "</span><br />";
+	            sHTML += "<span class=\"property\">APIVersion:</span> <span class=\"code\">" + (string.IsNullOrEmpty(cot.ParentProduct.APIVersion) ? sReq : cot.ParentProduct.APIVersion).ToString() + "</span><br />";
+				
+				//type stuff
+	            sHTML += "<span class=\"property\">Name:</span> <span class=\"code\">" + (string.IsNullOrEmpty(cot.ID) ? sReq : cot.ID).ToString() + "</span>";
+	            sHTML += "<span class=\"property\">Label:</span> <span class=\"code\">" + cot.Label + "</span><br />";
+	            sHTML += "<span class=\"property\">API:</span> <span class=\"code\">" + cot.APICall + "</span>";
+	            sHTML += "<span class=\"property\">APIUrlPrefix:</span> <span class=\"code\">" + cot.ParentProduct.APIUrlPrefix.ToString() + "</span>";
+	            sHTML += "<span class=\"property\">APICall:</span> <span class=\"code\">" + cot.APICall.ToString() + "</span><br />";
+	            sHTML += "<span class=\"property\">APIRequestGroupFilter:</span> <span class=\"code\">" + (string.IsNullOrEmpty(cot.APIRequestGroupFilter) ? "N/A" : cot.APIRequestGroupFilter) + "</span><br />";
+	            sHTML += "<span class=\"property\">APIRequestRecordFilter:</span> <span class=\"code\">" + (string.IsNullOrEmpty(cot.APIRequestRecordFilter) ? "N/A" : cot.APIRequestRecordFilter) + "</span><br />";
+	            sHTML += "<span class=\"property\">XMLRecordXPath:</span> <span class=\"code\">" + (string.IsNullOrEmpty(cot.XMLRecordXPath) ? sReq : cot.XMLRecordXPath).ToString() + "</span><br />";
+	
+				sHTML += "<div class=\"properties\">";
+	            if (cot.Properties.Count > 0)
+	            {
+	                foreach (CloudObjectTypeProperty cop in cot.Properties)
+	                {
+	                    sHTML += "<div class=\"ui-state-default\">" + cop.Name + "</div>";
+	                    sHTML += "<div class=\"ui-widget-content ui-corner-bottom\">";
+						sHTML += "<span class=\"property\">Label: <span class=\"code\">" + (string.IsNullOrEmpty(cop.Label) ? "N/A" : cop.Label) + "</span></span>";
+						sHTML += "<span class=\"property\">XPath: <span class=\"code\">" + cop.XPath + "</span></span>";
+						sHTML += "<span class=\"property\">HasIcon: <span class=\"code\">" + cop.HasIcon + "</span></span>";
+	                    sHTML += "<span class=\"property\">IsID: <span class=\"code\">" + cop.IsID + "</span></span>";
+	                    sHTML += "<span class=\"property\">ShortList: <span class=\"code\">" + cop.ShortList + "</span></span>";
+	                    sHTML += "</div>";
+	                }
+	            }
+	            else
+	            {
+	                sHTML += "<span class=\"ui-widget-content ui-state-error\">At least one Property is required.</span>";
+	            }
+				sHTML += "</div>";
+				
             }
             else
-                sHTML = "<span class='ui-state-error'>GetCloudObjectType failed for [" + sObjectType + "].</span>";
+                sHTML = "<span class=\"ui-widget-content ui-state-error\">GetCloudObjectType failed for [" + sObjectType + "].</span>";
+			
+			//end object type definition box
+			sHTML += "</div>";
+			
+			sHTML += "<hr />";
 
-            //this will return false if the object doesn't have enough information to form a call
+			
+			//API RESULTS
+			sHTML += "<div class=\"ui-state-default\">API Results</div>";
+			sHTML += "<div class=\"ui-widget-content\">";
+			
+			//this will return false if the object doesn't have enough information to form a call
             if (cot.IsValidForCalls())
             {
                 //we have a complete enough object type to make a call.
                 //can it be parsed?
-                sHTML += "<h3>Parsing XML...</h3><div>";
+
                 sXML = ui.RemoveNamespacesFromXML(sXML);
                 XElement xDoc = XElement.Parse(sXML);
                 if (xDoc == null)
-                    sHTML += "<span class='ui-state-error'>Cloud Response XML document is invalid.</span>.";
+                    sHTML += "<span class=\"ui-widget-content ui-state-error\">Cloud Response XML document is invalid.</span>.";
                 else
                     sHTML += "Result is valid XML.";
-                sHTML += "</div>";
+
 
 
 
 
                 //test the record xpath
-                sHTML += "<h3>Checking RecordXpath [" + cot.XMLRecordXPath + "]...</h3><div>";
+                sHTML += "<div>Checking Record Xpath [" + cot.XMLRecordXPath + "]... ";
                 if (cot.XMLRecordXPath != "")
                 {
                     XElement xe = xDoc.XPathSelectElement(cot.XMLRecordXPath);
                     if (xe == null) {
-                        sHTML += "<span class='ui-state-info'>Record XPath [" + cot.XMLRecordXPath + "] was not found.</span><br />";
-                        sHTML += "<span class='ui-state-info'>(This may be a normal condition if the Cloud doesn't contain any objects of this type.)</span>";
+                        sHTML += "<span class=\"ui-state-info\">Record XPath [" + cot.XMLRecordXPath + "] was not found.</span><br />";
+                        sHTML += "<span class=\"ui-state-info\">(This may be a normal condition if the Cloud doesn't contain any objects of this type.)</span>";
 					}
 					else
-                        sHTML += "Record XPath found a node with [" + xe.Nodes().Count() + "] elements.";
+                        sHTML += "Record XPath matched [" + xe.Nodes().Count() + "] items.";
                 }
                 else
                     sHTML += "Record XPath is not defined.";
@@ -163,11 +210,20 @@ namespace Web.pages
 
 
 
-                sHTML += "<h3>Result XML</h3><pre><code>";
+                sHTML += "<div class=\"ui-state-default\"><span id=\"api_results_toggler\" class=\"ui-icon-circle-triangle-e ui-icon floatleft\"></span>Result XML</div>";
+				sHTML += "<div id=\"api_results_div\" class=\"hidden\">";
+				sHTML += "<pre><code>";
                 sHTML += ui.FixBreaks(ui.SafeHTML(sXML));
                 sHTML += "</code></pre>";
-            }
-
+                sHTML += "</div>";
+			}
+			else 
+			{
+                sHTML = "<span class=\"ui-widget-content ui-state-error\">Cloud Object Type definition for [" + sObjectType + "] is incomplete.</span>";				
+			}
+			
+			//end API RESULTS
+			sHTML += "</div>";
 
 
             return sHTML;

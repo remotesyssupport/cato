@@ -12,6 +12,15 @@
         {
             padding: 20px 0px 0px 0px;
         }
+        .properties
+        {
+            margin-left: 15px;
+        }
+        .property
+        {
+            margin-left: 15px;
+        }
+
     </style>
     <script type="text/javascript">
         $(document).ready(function () {
@@ -58,6 +67,27 @@
                 }, 250);
             });
 
+			//the xml div toggler
+			$("#api_results_toggler").live("click", function () {
+		        var visible = 0;
+		
+		        //toggle it
+		        $("#api_results_div").toggleClass("hidden");
+		
+		        //then check it
+		        if (!$("#api_results_div").hasClass("hidden"))
+		            visible = 1;
+		
+		        // swap the child image, this will work as long as the up down image stays the first child if the span
+		        if (visible == 1) {
+		            $("#api_results_toggler").addClass("ui-icon-circle-triangle-s").removeClass("ui-icon-circle-triangle-e");
+		        } else {
+		            $("#api_results_toggler").addClass("ui-icon-circle-triangle-e").removeClass("ui-icon-circle-triangle-s");
+		        }
+	
+			
+			});		
+		
         });
 	
 		function CloudAccountWasChanged() {
@@ -74,7 +104,7 @@
         <h2 id="results_label">
         </h2>
 		<br />
-        <div id="results_list" class="ui-widget-content ui-corner-all">
+        <div id="results_list">
         </div>
     </div>
     <div id="left_panel">
