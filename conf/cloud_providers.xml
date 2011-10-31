@@ -125,7 +125,7 @@
 		</provider>
 		<provider name="Eucalyptus" test_product="eucalyptus" test_object="eucalyptus_security_group">
 			<products>
-				<product name="eucalyptus" label="Eucalyptus" api_protocol="HTTPS" api_version="2009-03-01" api_url_prefix="" api_uri="/services/Eucalyptus/">
+				<product name="eucalyptus" label="Eucalyptus" api_protocol="HTTP" api_version="2009-03-01" api_url_prefix="" api_uri="/services/Eucalyptus/">
 					<object_types>
 						<type id="eucalyptus_address" label="Elastic IP Addresses" api_call="DescribeAddresses" xml_record_xpath="addressesSet/item">
 							<property name="PublicIp" label="" xpath="publicIp" id_field="1" short_list="1" sort_order="1" />
