@@ -334,6 +334,7 @@ body
 {
 	font-family: Courier New;
 	font-size: 10pt;
+	font-weight: normal;
 	color: #11A;
 }
 .codebox
@@ -503,10 +504,8 @@ td.row_over
 	color: #555555;
 	outline: none;
 	cursor: pointer;
-	-moz-border-radius-bottomright: 6px;
-	-webkit-border-top-right-radius: 6px;
-	-moz-border-radius-topright: 6px;
-	-webkit-border-top-right-radius: 6px;
+	border-bottom-right-radius: 6px;
+	border-top-right-radius: 6px;
 }
 .group_tab_selected
 {
@@ -533,10 +532,8 @@ td.row_over
 	font-size: 10pt;
 	color: #f4f4f4;
 	outline: none;
-	-moz-border-radius-bottomright: 6px;
-	-webkit-border-top-right-radius: 6px;
-	-moz-border-radius-topright: 6px;
-	-webkit-border-top-right-radius: 6px;
+	border-bottom-right-radius: 6px;
+	border-top-right-radius: 6px;
 }
 
 /*"Tags" that show up on the various edit pages.*/
@@ -660,7 +657,7 @@ We used a table to avoid the annoyance of div float left and right.
 {
 	border: solid 1px #e5e5e5;
 	font-size: 9pt;
-	-moz-border-radius: 8px;
+	border-radius: 8px;
 	font-weight: bold;
 	margin: 2px 0px 2px 0px;
 	padding: 2px 4px 0px 4px;
@@ -668,8 +665,6 @@ We used a table to avoid the annoyance of div float left and right.
 .task_launch_parameter_required
 {
 	background-color: #eeeeee;
-	-moz-box-shadow: 5px 5px 5px #ccc;
-	-webkit-box-shadow: 5px 5px 5px #ccc;
 	box-shadow: 5px 5px 5px #ccc;
 }
 .task_launch_parameter_name
@@ -687,7 +682,7 @@ We used a table to avoid the annoyance of div float left and right.
 	font-weight: normal;
 	border: solid 1px #e5e5e5;
 	padding: 2px 0px 2px 8px;
-	-moz-border-radius: 8px;
+	border-radius: 8px;
 	/*required for the encoverlay*/
 	position: relative;
 }
@@ -728,10 +723,7 @@ We used a table to avoid the annoyance of div float left and right.
 }
 .ui-dropslide span
 {
-	-moz-border-radius-bottomleft: 2px;
-	-moz-border-radius-bottomright: 2px;
-	-moz-border-radius-topleft: 2px;
-	-moz-border-radius-topright: 2px;
+	border-radius: 2px;
 	cursor: pointer;
 	display: block;
 	font-size: 0.7em;

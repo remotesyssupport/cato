@@ -40,7 +40,7 @@
 	border-left: 1px solid #BCBCBC;
 	border-right: 1px solid #BCBCBC;
 	border-bottom: 1px solid #BCBCBC;
-	-moz-border-radius-bottomleft: 10px;
+	border-radius-bottomleft: 10px;
 }
 .view_step_detail_block
 {
@@ -48,7 +48,7 @@
 	padding: 4px 4px 4px 4px;
 	background: #f4f4f4;
 	border: 1px solid #BCBCBC;
-	-moz-border-radius: 8px;
+	border-radius: 8px;
 	height: 85px;
 }
 
