@@ -50,13 +50,13 @@
 			</item>
 			<item roles="developer user" label="Discovery" icon="../images/icons/discovery_24.png" onclick="showPleaseWait();" href="../pages/awsDiscovery.aspx">
 			</item>
-			<item roles="administrator" label="API Tester" icon="../images/icons/api_tester_24.png" onclick="showPleaseWait();" href="../pages/cloudAPITester.aspx">
-			</item>
 		</menu>
 		<menu roles="developer" label="Configuration" icon="../images/config_24.png">
 			<item label="Cloud Accounts" icon="../images/icons/cloud_accounts_24.png" onclick="showPleaseWait();" href="../pages/cloudAccountEdit.aspx">
 			</item>
 			<item label="Clouds" icon="../images/icons/clouds_24.png" onclick="showPleaseWait();" href="../pages/cloudEdit.aspx">
+			</item>
+			<item roles="administrator" label="Cloud API Tester" icon="../images/icons/api_tester_24.png" onclick="showPleaseWait();" href="../pages/cloudAPITester.aspx">
 			</item>
 			<item label="Set Login Defaults" icon="../images/login_24.png" onclick="showPleaseWait();" href="../pages/loginDefaultsEdit.aspx">
 			</item>
