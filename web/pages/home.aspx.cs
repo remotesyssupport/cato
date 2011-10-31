@@ -103,16 +103,13 @@ namespace Web.pages
 				}
 				if (aItems.Count > 0)
 					ltGettingStartedItems.Text += DrawGettingStartedItem("Cloud Accounts", aItems, "<a href=\"../pages/cloudAccountEdit.aspx\">Click here</a> to manage Cloud Accounts.");
-
-	
-			
-			
-				//if the phGettingStarted has anything in it, show the getting started panel
-				if (string.IsNullOrEmpty(ltGettingStartedItems.Text))
-					pnlGettingStarted.Visible = false;
-				else
-					pnlGettingStarted.Visible = true;
 			}
+
+			//if the phGettingStarted has anything in it, show the getting started panel
+			if (string.IsNullOrEmpty(ltGettingStartedItems.Text))
+				pnlGettingStarted.Visible = false;
+			else
+				pnlGettingStarted.Visible = true;
 			
         }
     
