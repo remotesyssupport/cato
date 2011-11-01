@@ -681,9 +681,9 @@ proc parse_input_params {params} {
 		if {"$value_nodes" > ""} {
 			foreach value_node [$value_nodes childNodes] {
 				set value [fix [$value_node asText]]
-				if {"$is_encrypted" == "true"} {
-					#set value [decrypt_string $value $::SITE_KEY]
-					#lappend ::SENSITIVE $value
+				if {"$is_encrypted" == "true" && "$value" > ""} {
+					set value [decrypt_string $value $::SITE_KEY]
+					lappend ::SENSITIVE $value
 				}
 				output "value node $name, $value" 3
 				set_variable $name,$ii $value
