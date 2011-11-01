@@ -411,7 +411,7 @@ namespace Globals
 				}
 				else 
 				{
-					throw new Exception("Unable to build Cloud object - no data found.");	
+					throw new Exception("Unable to build Cloud object. Either no Clouds are defined, or no Cloud with ID [" + sCloudID + "] could be found.");	
 				}
 			}
 			else 
@@ -465,7 +465,7 @@ namespace Globals
 				}
 				else 
 				{
-					throw new Exception("Unable to build Cloud Account object - no data found.");	
+					throw new Exception("Unable to build Cloud Account object. Either no Cloud Accounts are defined, or no Account with ID [" + sAccountID + "] could be found.");	
 				}
 			}
 			else 

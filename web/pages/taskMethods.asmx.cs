@@ -2599,7 +2599,7 @@ namespace ACWebMethods
             foreach (DataRow drStepIDs in dtStepIDs.Rows)
             {
                 oTrans.Command.CommandText = "update _copy_task_step" +
-                    " set function_xml = replace(function_xml, '" + drStepIDs["step_id"].ToString() + "', '" + drStepIDs["newstep_id"].ToString() + "')" +
+                    " set function_xml = replace(lower(function_xml), '" + drStepIDs["step_id"].ToString().ToLower() + "', '" + drStepIDs["newstep_id"].ToString() + "')" +
                     " where function_name in ('if','loop','exists')";
                 if (!oTrans.ExecUpdate(ref sErr))
                     throw new Exception(sErr);

@@ -182,7 +182,7 @@ namespace Web.pages
                     sHTML = DrawTableForType(sObjectType, dt);
                 }
                 else
-                    sHTML = "No data returned from AWS.";
+                    sHTML = "No data returned from the Cloud Provider.";
             }
             else
 			{
