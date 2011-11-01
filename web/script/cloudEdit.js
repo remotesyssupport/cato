@@ -32,7 +32,7 @@ $(document).ready(function () {
         bgiframe: true,
         buttons: {
             "Save": function () {
-                SaveItem();
+                SaveItem(1);
             },
             Cancel: function () {
                 $("#edit_dialog").dialog('close');
@@ -63,47 +63,56 @@ function pageLoad() {
 }
 
 function TestConnection() {
-	$("#conn_test_result").text("Testing...");
-	$("#conn_test_error").empty();
+	SaveItem(0);
 
-    
     var cloud_id = $("#hidCurrentEditID").val();
     var account_id = $("#ctl00_phDetail_ddlTestAccount").val();
-    
-    $.ajax({
-        type: "POST",
-        async: false,
-        url: "awsMethods.asmx/wmTestCloudConnection",
-        data: '{"sAccountID":"' + account_id + '","sCloudID":"' + cloud_id + '"}',
-        contentType: "application/json; charset=utf-8",
-        dataType: "json",
-        success: function (response) {
-			try
-			{
-	        	var oResultData = eval('(' + response.d + ')');
-				if (oResultData != null)
+
+    //if there's no cloud_id, it's not been saved yet.  We can't do anything.
+    //but there's no point in displaying anything, as the save routine should handle all
+    //the field level validation.
+    if (cloud_id != "")
+    {    
+		
+		$("#conn_test_result").text("Testing...");
+		$("#conn_test_error").empty();
+	
+	    
+	    $.ajax({
+	        type: "POST",
+	        async: false,
+	        url: "awsMethods.asmx/wmTestCloudConnection",
+	        data: '{"sAccountID":"' + account_id + '","sCloudID":"' + cloud_id + '"}',
+	        contentType: "application/json; charset=utf-8",
+	        dataType: "json",
+	        success: function (response) {
+				try
 				{
-					if (oResultData.result == "success") {
-						$("#conn_test_result").css("color","green");
-						$("#conn_test_result").text("Connection Successful.");
+		        	var oResultData = eval('(' + response.d + ')');
+					if (oResultData != null)
+					{
+						if (oResultData.result == "success") {
+							$("#conn_test_result").css("color","green");
+							$("#conn_test_result").text("Connection Successful.");
+						}
+						if (oResultData.result == "fail") {
+							$("#conn_test_result").css("color","red");
+							$("#conn_test_result").text("Connection Failed.");
+							$("#conn_test_error").text(unpackJSON(oResultData.error));
+						}			
+					
 					}
-					if (oResultData.result == "fail") {
-						$("#conn_test_result").css("color","red");
-						$("#conn_test_result").text("Connection Failed.");
-						$("#conn_test_error").text(unpackJSON(oResultData.error));
-					}			
-				
 				}
-			}
-			catch(err)
-			{
-				alert(err);
-			}
-        },
-        error: function (response) {
-            showAlert(response.responseText);
-        }
-    });
+				catch(err)
+				{
+					alert(err);
+				}
+	        },
+	        error: function (response) {
+	            showAlert(response.responseText);
+	        }
+	    });
+	}
 }
 
 function GetClouds() {
@@ -126,6 +135,10 @@ function GetClouds() {
 }
 
 function LoadEditDialog(editID) {
+    //specifically for the test connection feature
+	$("#conn_test_result").empty();
+	$("#conn_test_error").empty();
+   
     clearEditDialog();
     $("#hidMode").val("edit");
 
@@ -168,7 +181,7 @@ function FillEditForm(sEditID) {
     });
 }
 
-function SaveItem() {
+function SaveItem(close_after_save) {
     var bSave = true;
     var strValidationError = '';
 
@@ -181,6 +194,12 @@ function SaveItem() {
         strValidationError += 'Cloud Name required.';
     };
 
+    var sAPIUrl = $("#txtAPIUrl").val();
+    if (sAPIUrl == '') {
+        bSave = false;
+        strValidationError += 'API URL required.';
+    };
+
     if (bSave != true) {
         showInfo(strValidationError);
         return false;
@@ -190,7 +209,7 @@ function SaveItem() {
     	"sCloudID":"' + sCloudID + '", \
         "sCloudName":"' + sCloudName + '", \
         "sProvider":"' + $("#ddlProvider").val() + '", \
-        "sAPIUrl":"' + $("#txtAPIUrl").val() + '" \
+        "sAPIUrl":"' + sAPIUrl + '" \
         }';
 
 
@@ -208,7 +227,14 @@ function SaveItem() {
                 $("[id*='txtSearch']").val("");
 				GetClouds();
 	            
-	            $("#edit_dialog").dialog('close');
+	            if (close_after_save) {
+	            	$("#edit_dialog").dialog('close');
+            	} else {
+	            	//we aren't closing? fine, we're now in 'edit' mode.
+	            	$("#hidMode").val("edit");
+            		$("#hidCurrentEditID").val(ret.cloud_id);
+            		$("#edit_dialog").dialog("option", "title", "Modify Cloud");	
+            	}
 	        } else {
 	            showAlert(response.d);
 	        }
@@ -220,6 +246,12 @@ function SaveItem() {
 }
 
 function ShowItemAdd() {
+    //specifically for the test connection feature
+	$("#conn_test_result").empty();
+	$("#conn_test_error").empty();
+    $("#hidCurrentEditID").val("");
+    
+  
     clearEditDialog();
     $("#hidMode").val("add");
 
