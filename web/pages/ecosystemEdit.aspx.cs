@@ -195,7 +195,7 @@ namespace Web.pages
                         sHTML += "<div class=\"ui-widget-content ui-corner-all ecosystem_type\" id=\"" + dr["ecosystem_object_type"].ToString() + "\" label=\"" + sThisShouldBeAPrettyName + "\">";
                         sHTML += "    <div class=\"ecosystem_type_header\">";
                         sHTML += "        <div class=\"ecosystem_item_header_title\">";
-                        sHTML += "            <span>" + sThisShouldBeAPrettyName + "</span>";
+                        sHTML += "            <span>" + sLabel + "</span>";
                         sHTML += "        </div>";
                         sHTML += "        <div class=\"ecosystem_item_header_icons\">";
                         //might eventually enable whacking the whole group

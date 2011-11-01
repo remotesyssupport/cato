@@ -357,8 +357,23 @@ public class dataAccess
             object o = new object();
             if (!sqlExecuteScalar(ref o, sSQL, ref ErrorMessage))
                 return false;
-            i = Convert.ToInt32(o);
+			
+			if (object.ReferenceEquals(o, DBNull.Value))
+			{
+				ErrorMessage = "GetSingleInteger cannot convert a null result to an integer.";
+				return false;
+			}
+			
+			bool bSuccess = Int32.TryParse(o.ToString(), out i);
+
+			if (!bSuccess)
+			{
+				ErrorMessage = "GetSingleInteger cannot convert [" + o.ToString() + "] to an integer.";
+				return false;
+			}
+			
             return true;
+            
         }
         catch (Exception ex)
         {
