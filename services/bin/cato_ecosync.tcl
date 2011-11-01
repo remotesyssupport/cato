@@ -21,13 +21,33 @@ set ::CATO_HOME [file dirname [file dirname [file dirname [file normalize $argv0
 source $::CATO_HOME/services/bin/common.tcl
 read_config
 
+### the following code is depricated. Need to change to read from the cloud_providers.xml file. Workaround below
+#proc get_object_types {} {
+
+#	set sql "select cloud_object_type, api, api_call, describe_parameter, result_xpath from cloud_object_type"
+#	set object_types [::mysql::sel $::CONN $sql -list]
+#	foreach object_type $object_types {
+#		set ::OBJECT_TYPES([lindex $object_type 0]) [lrange $object_type 1 end]
+#	}
+#}
 proc get_object_types {} {
 
-	set sql "select cloud_object_type, api, api_call, describe_parameter, result_xpath from cloud_object_type"
-	set object_types [::mysql::sel $::CONN $sql -list]
-	foreach object_type $object_types {
-		set ::OBJECT_TYPES([lindex $object_type 0]) [lrange $object_type 1 end]
-	}
+	lappend ::OBJECT_TYPES(aws_as_group) as DescribeAutoScalingGroups AutoScalingGroupNames.member.N //AutoScalingGroupName 
+	lappend ::OBJECT_TYPES(aws_ec2_address) ec2 DescribeAddresses PublicIp.n //publicIp 
+	lappend ::OBJECT_TYPES(aws_ec2_image) ec2 DescribeImages ImageId.n //imageId 
+	lappend ::OBJECT_TYPES(aws_ec2_instance) ec2 DescribeInstances InstanceId.n //instancesSet/item/instanceId 
+	lappend ::OBJECT_TYPES(aws_ec2_keypair) ec2 DescribeKeyPairs KeyName.n //keyName 
+	lappend ::OBJECT_TYPES(aws_ec2_security_group) ec2 DescribeSecurityGroups GroupName.n //groupName 
+	lappend ::OBJECT_TYPES(aws_ec2_snapshot) ec2 DescribeSnapshots SnapshotId.n //snapshotId 
+	lappend ::OBJECT_TYPES(aws_ec2_spotinstance) ec2 DescribeSpotInstanceRequests {} {} 
+	lappend ::OBJECT_TYPES(aws_ec2_volume) ec2 DescribeVolumes {} //Volume 
+	lappend ::OBJECT_TYPES(aws_elb_balancer) elb DescribeLoadBalancers LoadBalancerNames.member.N //LoadBalancerName 
+	lappend ::OBJECT_TYPES(aws_emr_jobflow) emr DescribeJobFlows JobFlowIds.member.N //JobFlowId 
+	lappend ::OBJECT_TYPES(aws_rds_instance) rds DescribeDBInstances DBInstanceIdentifier //DBInstance/DBInstanceIdentifier 
+	lappend ::OBJECT_TYPES(aws_rds_snapshot) rds DescribeDBSnapshots DBInstanceIdentifier //DBName 
+	lappend ::OBJECT_TYPES(aws_sdb_domain) sdb ListDomains {} //DomainName 
+
+
 }
 proc add_new_objects {objects object_type ecosystem_id} {
 	
@@ -47,7 +67,7 @@ proc remove_old_objects {objects object_type ecosystem_id} {
 }
 proc get_ecosystems {} {
 
-	set sql "select d.ecosystem_name, d.ecosystem_id, d.account_id from ecosystem d join ecosystem_object do where d.ecosystem_id = do.ecosystem_id order by account_id"
+	set sql "select d.ecosystem_name, d.ecosystem_id, d.account_id from ecosystem d join ecosystem_object do on d.ecosystem_id = do.ecosystem_id join cloud_account ca on ca.account_id = d.account_id where ca.provider = 'Amazon AWS' order by account_id"
 	set  ::ECOSYSTEMS [::mysql::sel $::CONN $sql -list]
 	#output $::ECOSYSTEMS
 }
@@ -182,7 +202,7 @@ proc check_as_instances {ecosystem_id} {
 }
 proc get_account_creds {account_id} {
 	if {"$::ACCOUNT_ID" != "$account_id"} {	
-		set sql "select login_id, login_password from cloud_account where account_id = '$account_id'"
+		set sql "select login_id, login_password from cloud_account where account_id = '$account_id' and provider = 'Amazon AWS'"
 		set creds [::mysql::sel $::CONN $sql -list]
 		set ::ACCOUNT_CREDS $creds
 		set ::ACCOUNT_ID $account_id
