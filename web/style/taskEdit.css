@@ -201,8 +201,6 @@
 	margin: 0px 0px 0px 10px;
 	width: 200px;
 	border-width: 3px;
-	-moz-box-shadow: 5px 5px 5px #ccc;
-	-webkit-box-shadow: 5px 5px 5px #ccc;
 	box-shadow: 5px 5px 5px #ccc;
 	overflow: auto;
 	z-index: 1000;
@@ -375,7 +373,7 @@
 	color: #000000;
 	background: #efefef;
 	font-size: 12px;
-	-moz-border-radius: 12px;
+	border-radius: 12px;
 	padding: 3px 0px 0px 23px;
 }
 .te_help_box_detail
@@ -465,7 +463,7 @@
 	padding: 4px 4px 4px 4px;
 	background: #f8f8f8;
 	font-size: 12px;
-	border-top: none; /*border-left: 3px solid #BCBCBC; 	border-right: 3px solid #BCBCBC; 	border-bottom: 3px solid #BCBCBC; 	-moz-border-radius-bottomleft: 17px;*/
+	border-top: none; /*border-left: 3px solid #BCBCBC; 	border-right: 3px solid #BCBCBC; 	border-bottom: 3px solid #BCBCBC; 	border-radius-bottomleft: 17px;*/
 }
 
 .step_common
@@ -493,7 +491,7 @@
 	padding: 0px 4px 0px 4px;
 	margin: 1px 2px 1px 2px;
 	height: 16px;
-	-moz-border-radius: 12px;
+	border-radius: 12px;
 }
 .step_common_button_active
 {
@@ -667,7 +665,7 @@ tr.row td
 	border: 1px solid#CCCCCC;
 	margin: 4px 0px 4px 0px;
 	padding: 4px 0px 0px 20px;
-	-moz-border-radius: 12px;
+	border-radius: 12px;
 }
 .info_syntax_errors
 {

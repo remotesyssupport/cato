@@ -13,7 +13,7 @@
             width: 28px;
             border: 1px solid #CCC;
             text-align: center;
-            -moz-border-radius: 6px;
+            border-radius: 6px;
         }
         .delimiter
         {
@@ -26,7 +26,7 @@
             border: 1px solid #CCC;
             text-align: center;
             cursor: pointer;
-            -moz-border-radius: 6px;
+            border-radius: 6px;
         }
         .variables
         {
@@ -36,7 +36,7 @@
         {
             border: 1px solid #CCC;
             list-style: none;
-            -moz-border-radius: 6px;
+            border-radius: 6px;
             padding: 2px;
             margin: 2px;
         }

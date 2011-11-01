@@ -4,11 +4,7 @@
 	border-right: #d0e5f5 1px solid;
 	border-top: #d0e5f5 1px solid;
 	border-bottom: #d0e5f5 1px solid;
-	-moz-box-shadow: 5px 5px 5px #ccc;
-	-webkit-box-shadow: 5px 5px 5px #ccc;
 	box-shadow: 5px 5px 5px #ccc;
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
 	border-radius: 5px;
 }
 div.action_btn
@@ -39,8 +35,6 @@ div.action_btn:active
 {
 	background: #d0e5f5 url(images/ui-bg_glass_75_d0e5f5_1x400.png) 50% 50% repeat-x;
 	border-style: inset !important;
-	-moz-box-shadow: none !important;
-	-webkit-box-shadow: none !important;
 	box-shadow: none !important;
 }
 #action_flow
@@ -65,8 +59,6 @@ div.action_inner
 {
 	height: 80px;
 	margin-bottom: 10px;
-	-moz-box-shadow: 5px 5px 5px #ccc;
-	-webkit-box-shadow: 5px 5px 5px #ccc;
 	box-shadow: 5px 5px 5px #ccc;
 }
 

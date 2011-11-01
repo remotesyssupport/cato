@@ -99,8 +99,8 @@ namespace Web.pages
 		}
 
         #region "Request Building Methods"
-        //this method looks up a cloud object in our database, and executes a call based on parameters stored in the cloud_object_type table.
-        //the columns created as part of the object are defined in cloud_object_type_detail table
+        //this method looks up a cloud object in our database, and executes a call based on CloudObjectType parameters.
+        //the columns created as part of the object are defined as CloudObjectTypeProperty.
         public DataTable GetCloudObjectsAsDataTable(string sCloudID, string sObjectType, ref string sErr)
         {
             acUI.acUI ui = new acUI.acUI();

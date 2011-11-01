@@ -29,6 +29,7 @@ using System.Xml.Linq;
 using System.Xml;
 using System.Xml.XPath;
 using ACWebMethods;
+using Globals;
 
 namespace Web.pages
 {
@@ -162,12 +163,11 @@ namespace Web.pages
                 string sHTML = "";
                 string sErr = "";
 
-                string sSQL = "select eo.ecosystem_object_type, cot.label, count(*) as num_objects" +
+                string sSQL = "select eo.ecosystem_object_type, count(*) as num_objects" +
                     " from ecosystem_object eo" +
-                    " join cloud_object_type cot on eo.ecosystem_object_type = cot.cloud_object_type" +
                     " where eo.ecosystem_id ='" + sEcosystemID + "'" +
-                    " group by eo.ecosystem_object_type, cot.label" +
-                    " order by cot.label";
+                    " group by eo.ecosystem_object_type" +
+                    " order by eo.ecosystem_object_type";
 
                 DataTable dt = new DataTable();
                 if (!dc.sqlGetDataTable(ref dt, sSQL, ref sErr))
@@ -178,18 +178,24 @@ namespace Web.pages
                 {
                     foreach (DataRow dr in dt.Rows)
                     {
-
-                        //something here can look up the icon for each type if we wanna do that.
+						//TODO: we need a way to get the pretty label for an object type here, since we moved 
+						//it out of the database.
+						//perhaps a static class method to look up a type name based on the id?
+						//or a peek into the CloudProviders object in the session might be better.
+						
+						string sThisShouldBeAPrettyName = "";
+						
+						//something here can look up the icon for each type if we wanna do that.
                         string sIcon = "aws_16.png";
 
                         sIcon = "<img src=\"../images/icons/" + sIcon + "\" alt=\"\" style=\"width: 16px; height: 16px;\" />&nbsp;&nbsp;&nbsp;";
 
-                        string sLabel = sIcon + dr["label"].ToString() + " (" + dr["num_objects"].ToString() + ")";
+                        string sLabel = sIcon + sThisShouldBeAPrettyName + " (" + dr["num_objects"].ToString() + ")";
 
-                        sHTML += "<div class=\"ui-widget-content ui-corner-all ecosystem_type\" id=\"" + dr["ecosystem_object_type"].ToString() + "\" label=\"" + dr["label"].ToString() + "\">";
+                        sHTML += "<div class=\"ui-widget-content ui-corner-all ecosystem_type\" id=\"" + dr["ecosystem_object_type"].ToString() + "\" label=\"" + sThisShouldBeAPrettyName + "\">";
                         sHTML += "    <div class=\"ecosystem_type_header\">";
                         sHTML += "        <div class=\"ecosystem_item_header_title\">";
-                        sHTML += "            <span>" + sLabel + "</span>";
+                        sHTML += "            <span>" + sThisShouldBeAPrettyName + "</span>";
                         sHTML += "        </div>";
                         sHTML += "        <div class=\"ecosystem_item_header_icons\">";
                         //might eventually enable whacking the whole group
@@ -252,13 +258,12 @@ namespace Web.pages
 						string sCloudName = drCloud["cloud_name"].ToString();
 
 		                //get the cloud object rows
-		                sSQL = "select eo.ecosystem_object_id, eo.ecosystem_object_type, cot.label" +
+		                sSQL = "select eo.ecosystem_object_id, eo.ecosystem_object_type" +
 		                    " from ecosystem_object eo" +
-		                    " join cloud_object_type cot on eo.ecosystem_object_type = cot.cloud_object_type" +
 		                    " where eo.ecosystem_id ='" + sEcosystemID + "'" +
 		                    " and eo.ecosystem_object_type = '" + sType + "'" +
 		                    " and eo.cloud_id = '" + sCloudID + "'" +
-							" order by cot.label";
+							" order by eo.ecosystem_object_type";
 		
 		                DataTable dtObjects = new DataTable();
 		                if (!dc.sqlGetDataTable(ref dtObjects, sSQL, ref sErr))

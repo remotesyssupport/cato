@@ -67,8 +67,7 @@ function showPleaseWait(msg) {
             'width': '200px',
             'height': '20px',
             'padding-top': '6px',
-            '-webkit-border-radius': '10px',
-            '-moz-border-radius': '10px',
+            'border-radius': '10px',
             'font-size': '0.8em'
         },
         overlayCSS: {

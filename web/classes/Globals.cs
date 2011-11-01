@@ -354,51 +354,6 @@ namespace Globals
 
             return true;
         }
-
-        public string AsString()
-        {
-            //This will find the object in this class by the ObjectType property and return it as a nice string.
-            string sReq = "<span class='ui-state-error'>required</span>";
-            string sOut = "";
-			
-			//product stuff
-            sOut += "<span class=\"bold\">Product:</span> <span class=\"code\">" + (string.IsNullOrEmpty(this.ParentProduct.Name) ? sReq : this.ParentProduct.Name).ToString() + "</span><br />";
-            sOut += "<span class=\"bold\">APIUrlPrefix:</span> <span class=\"code\">" + (string.IsNullOrEmpty(this.ParentProduct.APIUrlPrefix) ? sReq : this.ParentProduct.APIUrlPrefix).ToString() + "</span><br />";
-            sOut += "<span class=\"bold\">APIVersion:</span> <span class=\"code\">" + (string.IsNullOrEmpty(this.ParentProduct.APIVersion) ? sReq : this.ParentProduct.APIVersion).ToString() + "</span><br />";
-			
-			//type stuff
-            sOut += "<span class=\"bold\">Name:</span> <span class=\"code\">" + (string.IsNullOrEmpty(this.ID) ? sReq : this.ID).ToString() + "</span><br />";
-            sOut += "<span class=\"bold\">Label:</span> <span class=\"code\">" + this.Label + "</span><br />";
-            sOut += "<span class=\"bold\">API:</span> <span class=\"code\">" + this.APICall + "</span><br />";
-            sOut += "<span class=\"bold\">APICall:</span> <span class=\"code\">" + (string.IsNullOrEmpty(this.APICall) ? sReq : this.APICall).ToString() + "</span><br />";
-            sOut += "<span class=\"bold\">APIRequestGroupFilter:</span> <span class=\"code\">" + this.APIRequestGroupFilter + "</span><br />";
-            sOut += "<span class=\"bold\">APIRequestRecordFilter:</span> <span class=\"code\">" + this.APIRequestRecordFilter + "</span><br />";
-            sOut += "<span class=\"bold\">XMLRecordXPath:</span> <span class=\"code\">" + (string.IsNullOrEmpty(this.XMLRecordXPath) ? sReq : this.XMLRecordXPath).ToString() + "</span><br />";
-
-            sOut += "<span class=\"bold\">Properties:</span><br />";
-            if (this.Properties.Count > 0)
-            {
-                CloudObjectTypeProperty cop = new CloudObjectTypeProperty(this);
-                foreach (CloudObjectTypeProperty cop_loopVariable in this.Properties)
-                {
-                    cop = cop_loopVariable;
-                    sOut += "<div class='ui-widget-content ui-corner-all'>";
-                    sOut += "<span class=\"bold\">Name:</span> <span class=\"code\">" + cop.Name + "</span><br />";
-                    sOut += "<span class=\"bold\">Label:</span> <span class=\"code\">" + cop.Label + "</span><br />";
-                    sOut += "<span class=\"bold\">XPath:</span> <span class=\"code\">" + cop.XPath + "</span><br />";
-                    sOut += "<span class=\"bold\">HasIcon:</span> <span class=\"code\">" + cop.HasIcon + "</span><br />";
-                    sOut += "<span class=\"bold\">IsID:</span> <span class=\"code\">" + cop.IsID + "</span><br />";
-                    sOut += "<span class=\"bold\">ShortList:</span> <span class=\"code\">" + cop.ShortList + "</span>";
-                    sOut += "</div>";
-                }
-            }
-            else
-            {
-                sOut += "<span class='ui-state-error'>At least one Property is required.</span>";
-            }
-
-            return sOut;
-        }
     }
     public class CloudObjectTypeProperty
     {
