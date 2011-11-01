@@ -198,12 +198,12 @@ namespace Web.pages
 			string sLoginID, string sLoginPassword, string sLoginPasswordConfirm, string sIsDefault, string sAutoManageSecurity)
         {
             // for logging
-            string sOriginalName = null;
+            string sOriginalName = "";
 
             dataAccess dc = new dataAccess();
             acUI.acUI ui = new acUI.acUI();
-            string sSql = null;
-            string sErr = null;
+            string sSql = "";
+            string sErr = "";
 
 
             //if we are editing get the original values
@@ -253,13 +253,27 @@ namespace Web.pages
 					dc.TestDBConnection(ref sErr);
 
 					//if there are no rows yet, make this one the default even if the box isn't checked.
-	                int iExists = -1;
-					sSql = "select count(*) as cnt from cloud_account";
-                	if (!dc.sqlGetSingleInteger(ref iExists, sSql, ref sErr))
-                    	throw new Exception("Unable to count Cloud Accounts: " + sErr);
-					
-					if (iExists == 0)
-						sIsDefault = "1";
+					if (sIsDefault == "0")
+					{
+						int iExists = -1;
+						
+						sSql = "select count(*) as cnt from cloud_account";
+	                	if (!dc.sqlGetSingleInteger(ref iExists, sSql, ref sErr))
+						{
+							System.Threading.Thread.Sleep(300);
+							if (!dc.sqlGetSingleInteger(ref iExists, sSql, ref sErr))
+							{
+								System.Threading.Thread.Sleep(300);
+								if (!dc.sqlGetSingleInteger(ref iExists, sSql, ref sErr))
+									throw new Exception("Unable to count Cloud Accounts: " + sErr);
+							}
+						}
+
+
+						
+						if (iExists == 0)
+							sIsDefault = "1";
+					}
 					
 					sAccountID = ui.NewGUID();
                     sSql = "insert into cloud_account (account_id, account_name, account_number, provider, is_default, login_id, login_password, auto_manage_security)" +
@@ -292,11 +306,11 @@ namespace Web.pages
 				//refresh the cloud account list in the session
 	            if (!ui.PutCloudAccountsInSession(ref sErr))
 					throw new Exception("Error refreshing accounts in session: " + sErr);
-           }
-            catch (Exception ex)
-            {
-                throw new Exception("Error: General Exception: " + ex.Message);
-            }
+			}
+			catch (Exception ex)
+			{
+			    throw new Exception("Error: General Exception: " + ex.Message);
+			}
 			
             // no errors to here, so return an empty string
             return "{'account_id':'" + sAccountID + "', 'account_name':'" + sAccountName + "', 'provider':'" + sProvider + "'}";
