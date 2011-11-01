@@ -151,7 +151,7 @@ CREATE TABLE `cloud_account` (
 CREATE TABLE `cloud_account_keypair` (
   `keypair_id` varchar(36) NOT NULL,
   `account_id` varchar(36) NOT NULL,
-  `keypair_name` varchar(512) NOT NULL,
+  `keypair_name` varchar(64) NOT NULL,
   `private_key` varchar(4096) NOT NULL,
   `passphrase` varchar(128) DEFAULT NULL,
   PRIMARY KEY (`account_id`,`keypair_name`),
