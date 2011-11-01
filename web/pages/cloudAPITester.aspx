@@ -25,7 +25,7 @@
     <script type="text/javascript">
         $(document).ready(function () {
             $(".group_tab").click(function () {
-                showPleaseWait("Querying AWS...");
+                showPleaseWait("Querying the Cloud...");
 
                 //style tabs
                 $(".group_tab").removeClass("group_tab_selected");
@@ -33,7 +33,7 @@
 
 
                 //get content here at some possible point in the future.
-                $("#update_success_msg").text("Querying AWS...").show();
+                $("#update_success_msg").text("Querying the Cloud...").show();
 
                 var object_label = $(this).html();
                 var object_type = $(this).attr("object_type");

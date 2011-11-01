@@ -143,7 +143,7 @@ namespace Web.pages
                 sXML = ui.RemoveNamespacesFromXML(sXML);
 
                 XElement xDoc = XElement.Parse(sXML);
-                if (xDoc == null) { sErr = "AWS Response XML document is invalid."; return null; }
+                if (xDoc == null) { sErr = "API Response XML document is invalid."; return null; }
 
 
                 //what columns go in the DataTable?
