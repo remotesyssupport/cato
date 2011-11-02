@@ -286,6 +286,9 @@ public class dataAccess
                     case 1045:
                         ErrorMessage = FormatError("MySQL: Invalid username/password.");
                         break;
+                    default:
+                        ErrorMessage = FormatError("MySQL: Unable to connect. " + ex.Message);
+                        break;
                 }
                 return null;
             }
@@ -308,6 +311,7 @@ public class dataAccess
             if (oConn.State != ConnectionState.Closed)
             {
                 oConn.Close();
+				oConn.Dispose();
             }
         }
     }
@@ -1199,6 +1203,7 @@ public class dataAccess
             {
                 Transaction.Rollback();
                 Connection.Close();
+				Connection.Dispose();
                 sErr = ex.Message;
                 return false;
             }
@@ -1216,7 +1221,8 @@ public class dataAccess
             {
                 Transaction.Rollback();
                 Connection.Close();
-                sErr = ex.Message;
+				Connection.Dispose();
+				sErr = ex.Message;
                 return false;
             }
         }
@@ -1231,6 +1237,7 @@ public class dataAccess
             {
                 Transaction.Rollback();
                 Connection.Close();
+				Connection.Dispose();
                 sErr = ex.Message;
                 return false;
             }
@@ -1250,6 +1257,7 @@ public class dataAccess
             {
                 Transaction.Rollback();
                 Connection.Close();
+				Connection.Dispose();
                 sErr = ex.Message;
                 return false;
             }
@@ -1280,6 +1288,7 @@ public class dataAccess
             {
                 Transaction.Rollback();
                 Connection.Close();
+				Connection.Dispose();
                 sErr = ex.Message;
                 return false;
             }
@@ -1299,6 +1308,7 @@ public class dataAccess
             {
                 Transaction.Rollback();
                 Connection.Close();
+				Connection.Dispose();
                 sErr = ex.Message;
                 return false;
             }
@@ -1311,6 +1321,7 @@ public class dataAccess
             Transaction.Commit();
             if (Connection.State != ConnectionState.Closed)
                 Connection.Close();
+				Connection.Dispose();
         }
 
         public void RollBack()
@@ -1318,6 +1329,7 @@ public class dataAccess
             Transaction.Rollback();
             if (Connection.State != ConnectionState.Closed)
                 Connection.Close();
+				Connection.Dispose();
         }
 
         private MySqlTransaction BeginTransaction()
