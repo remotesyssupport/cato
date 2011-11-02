@@ -479,14 +479,20 @@ public class dataAccess
             if (!sqlGetDataTable(ref dt, sSQL, ref ErrorMessage))
                 return false;
 
-            if (dt.Rows.Count > 0)
+            if (dt == null)
+            {
+                ErrorMessage = "No data returned. " + ErrorMessage;
+                return true;
+            }
+
+			if (dt.Rows.Count > 0)
             {
                 dr = dt.Rows[0];
                 return true;
             }
             else
             {
-                ErrorMessage = "No rows returned.";
+                ErrorMessage = "No rows returned. " + ErrorMessage;
                 return true;
             }
         }
