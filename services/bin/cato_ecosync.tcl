@@ -153,9 +153,11 @@ proc get_object_status {object_type account_id objects} {
 	}
 	#output "$account_id = $::OBJECT_TYPES($object_type)"
 	if {$one_at_atime == 0} {
+		set ::ACCOUNT_HANDLE [::tclcloud::connection new $::CLOUD_LOGIN_ID $::CLOUD_LOGIN_PASS]
 		set cmd "$::ACCOUNT_HANDLE call_aws [lindex $::OBJECT_TYPES($object_type) 0] {} [lindex $::OBJECT_TYPES($object_type) 1]"
 		lappend cmd $params
 		set return_val [eval $cmd]
+		$::ACCOUNT_HANDLE destroy
 		
 	}
 	foreach object $objects {
@@ -184,11 +186,13 @@ proc check_as_instances {ecosystem_id} {
 	##output "ec2 instance = $::EC2_INSTANCES"
 	if {"$::EC2_INSTANCES" == ""} {
 		lappend params Filter.1.Name instance-state-name Filter.1.Value.1 pending Filter.1.Value.2 running Filter.1.Value.3 shutting-down Filter.1.Value.4 stopping Filter.1.Value.5 stopped
+                set ::ACCOUNT_HANDLE [::tclcloud::connection new $::CLOUD_LOGIN_ID $::CLOUD_LOGIN_PASS]
 		set cmd "$::ACCOUNT_HANDLE call_aws ec2 {} DescribeInstances"
 		lappend cmd $params
 		set return_val [eval $cmd]
+		$::ACCOUNT_HANDLE destroy
 		set ::EC2_INSTANCES [parse_results //instancesSet/item/instanceId $return_val]
-		##output "ec2 instance = $::EC2_INSTANCES"
+		#output "ec2 instance = $::EC2_INSTANCES"
 	}
 	if {"$::AS_XML" > "" && "$::EC2_INSTANCES" > ""} {
 		set as_instances [parse_results //InstanceId $::AS_XML]
@@ -208,7 +212,7 @@ proc get_account_creds {account_id} {
 		set ::ACCOUNT_ID $account_id
 		set ::CLOUD_LOGIN_ID [lindex [lindex $creds 0] 0]
 		set ::CLOUD_LOGIN_PASS [decrypt_string [lindex [lindex $creds 0] 1] $::SITE_KEY]
-		set ::ACCOUNT_HANDLE [::tclcloud::connection new $::CLOUD_LOGIN_ID $::CLOUD_LOGIN_PASS]
+		#set ::ACCOUNT_HANDLE [::tclcloud::connection new $::CLOUD_LOGIN_ID $::CLOUD_LOGIN_PASS]
 
 	}
 
