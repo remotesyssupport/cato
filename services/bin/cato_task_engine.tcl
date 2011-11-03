@@ -95,15 +95,15 @@ proc aws_get_results {result path var_name} {
 	$root delete
 	$xmldoc delete
 }
-proc get_my_ip {} {
+proc get_meta {name} {
         set proc_name get_my_ip
         package require http
-        set tok [::http::geturl http://169.254.169.254/latest/meta-data/local-ipv4]
+        set tok [::http::geturl http://169.254.169.254/latest/meta-data/$name]
         set ip [::http::data $tok]
         ::http::cleanup $tok
         return $ip
 }
-proc register_security_group {apply_to_group port} {
+proc register_security_group {apply_to_group port region} {
         set proc_name register_security_group
         package require tclcloud
         #if {"$::CLOUD_LOGIN_ID" == "" || "$::CLOUD_LOGIN_PASS" == ""} {
@@ -121,9 +121,14 @@ proc register_security_group {apply_to_group port} {
         #}
 
         set x [::tclcloud::connection new $::CLOUD_LOGIN_ID $::CLOUD_LOGIN_PASS]
+	if {"$region" > ""} {
+		set ip [get_meta public-ipv4]
+	} else {
+		set ip [get_meta local-ipv4]
+	}
         #set params "GroupId $apply_to_group IpPermissions.1.Groups.1.UserId $::CSK_ACCOUNT IpPermissions.1.Groups.1.GroupId $::CSK_SECURITY_GROUP IpPermissions.1.IpProtocol tcp IpPermissions.1.FromPort $port IpPermissions.1.ToPort $port"
-        set params "GroupId $apply_to_group IpPermissions.1.IpRanges.1.CidrIp [get_my_ip]/32 IpPermissions.1.IpProtocol tcp IpPermissions.1.FromPort $port IpPermissions.1.ToPort $port"
-        set cmd "$x  call_aws ec2 {} AuthorizeSecurityGroupIngress"
+        set params "GroupId $apply_to_group IpPermissions.1.IpRanges.1.CidrIp $ip/32 IpPermissions.1.IpProtocol tcp IpPermissions.1.FromPort $port IpPermissions.1.ToPort $port"
+        set cmd "$x  call_aws ec2 $region AuthorizeSecurityGroupIngress"
         lappend cmd $params
         catch {set  result [eval $cmd]} result
         output $result
@@ -169,7 +174,6 @@ proc aws_Generic {product operation path command} {
 		error_out "Cloud account id or password is required" 9999
 	}
 	if {"$::CLOUD_TYPE" == "Eucalyptus"} {
-output "euca"
 		if {"$aws_region" > ""} {
 			if {[array names ::CLOUD_ENDPOINTS "Eucalyptus,$aws_region"] == ""} {
 				error_out "Cloud region $aws_region does not exist. Either create a Eucalyptus Cloud definition or enter an existing cloud name in the region field" 9999
@@ -184,7 +188,6 @@ output "euca"
 				error_out "AWS error: A default cloud for Eucalyptus not defined. Create a valid cloud with endpoint url for Eucalyptus." 9999
 			}
 		}
-output "region is $aws_region, endpoint is $endpoint"
 	} else {
 		set endpoint ""
 	}
@@ -214,31 +217,31 @@ output "region is $aws_region, endpoint is $endpoint"
 		output "got a ecosystem, operation is $operation"
 		switch $operation {
 			RunJobFlow {
-				register_ecosystem_object $result $::ECOSYSTEM_ID aws_emr_jobflow {//JobFlowId} {} {}
+				register_ecosystem_object $result $::ECOSYSTEM_ID aws_emr_jobflow {//JobFlowId} {} {} $aws_region
 			}
 			RunInstances {
-				register_ecosystem_object $result $::ECOSYSTEM_ID aws_ec2_instance {//instancesSet/item/instanceId} $instance_role $x
+				register_ecosystem_object $result $::ECOSYSTEM_ID aws_ec2_instance {//instancesSet/item/instanceId} $instance_role $x $aws_region
 			}
 			CreateAutoScalingGroup {
-				register_ecosystem_object $command $::ECOSYSTEM_ID aws_as_group {//AutoScalingGroupName} {} {}
+				register_ecosystem_object $command $::ECOSYSTEM_ID aws_as_group {//AutoScalingGroupName} {} {} $aws_region
 			}
 			CreateDomain {
-				register_ecosystem_object $command $::ECOSYSTEM_ID aws_sdb_domain {//DomainName} {} {}
+				register_ecosystem_object $command $::ECOSYSTEM_ID aws_sdb_domain {//DomainName} {} {} $aws_region
 			}
 			CreateKeyPair {
-				register_ecosystem_object $result $::ECOSYSTEM_ID aws_ec2_keypair {//keyName} {} {}
+				register_ecosystem_object $result $::ECOSYSTEM_ID aws_ec2_keypair {//keyName} {} {} $aws_region
 			}
 			CreateSecurityGroup {
-				register_ecosystem_object $command $::ECOSYSTEM_ID aws_ec2_security_group {//GroupName} {} {}
+				register_ecosystem_object $command $::ECOSYSTEM_ID aws_ec2_security_group {//GroupName} {} {} $aws_region
 			}
 			CreateLoadBalancer {
-				register_ecosystem_object $command $::ECOSYSTEM_ID aws_elb_balancer {//LoadBalancerName} {} {}
+				register_ecosystem_object $command $::ECOSYSTEM_ID aws_elb_balancer {//LoadBalancerName} {} {} $aws_region
 			}
 			AllocateAddress {
-				register_ecosystem_object $result $::ECOSYSTEM_ID aws_ec2_address {//publicIp} {} {}
+				register_ecosystem_object $result $::ECOSYSTEM_ID aws_ec2_address {//publicIp} {} {} $aws_region
 			}
 			CreateDBInstance {
-				register_ecosystem_object $result $::ECOSYSTEM_ID aws_rds_instance {//DBInstance/DBInstanceIdentifier} {} {}
+				register_ecosystem_object $result $::ECOSYSTEM_ID aws_rds_instance {//DBInstance/DBInstanceIdentifier} {} {} $aws_region
 			}
 		}
 	} 
@@ -249,7 +252,7 @@ output "region is $aws_region, endpoint is $endpoint"
 	$x destroy
 }
 
-proc register_ecosystem_object {result ecosystem_id object_type path role api_conn} {
+proc register_ecosystem_object {result ecosystem_id object_type path role api_conn $region} {
 	set proc_name register_ecosystem_object
         set xmldoc [dom parse -simple $result]
         set root [$xmldoc documentElement]
@@ -267,11 +270,11 @@ proc register_ecosystem_object {result ecosystem_id object_type path role api_co
 	foreach instance $instances {
 		set sql "insert into ecosystem_object (ecosystem_id, ecosystem_object_id, ecosystem_object_type, added_dt) values ('$ecosystem_id','[$instance asText]','$object_type',$::getdate)"
 		$::db_exec $::CONN $sql
-		if {"$role" > "" && "$::CLOUD_TYPE" == "Amazon AWS"} {
+		if {"$role" > ""} {
 			set the_arg ""
-			lappend the_arg ResourceId.1 [$instance asText] Tag.1.Key com.cloudsidekick.role Tag.1.Value $role
+			lappend the_arg ResourceId.1 [$instance asText] Tag.1.Key cato.role Tag.1.Value $role
 			for {set counter 0} {$counter < 4} {incr counter} {
-				if {[catch {$api_conn call_aws ec2 {} CreateTags $the_arg} errMsg]} {
+				if {[catch {$api_conn call_aws ec2 $region CreateTags $the_arg} errMsg]} {
 					if {[string match "*does not exist*" $errMsg]} {
 						output "Waiting five seconds to reattempt tagging"
 						sleep 5
@@ -329,11 +332,11 @@ proc get_aws_private_key {keyname} {
 	$::db_query $::CONN $sql
 	return [$::db_fetch $::CONN]
 }
-proc gather_aws_system_info {instance_id user_id} {
+proc gather_aws_system_info {instance_id user_id region} {
         set proc_name gather_aws_system_info
         package require tclcloud
         set x [::tclcloud::connection new $::CLOUD_LOGIN_ID $::CLOUD_LOGIN_PASS]
-        set cmd "$x call_aws ec2 {} DescribeInstances "
+        set cmd "$x call_aws ec2 $region DescribeInstances "
         set params "InstanceId $instance_id"
         lappend cmd $params
         lappend cmd {}
@@ -363,7 +366,7 @@ proc gather_aws_system_info {instance_id user_id} {
         } else {
                 set platform "linux"
         }
-        set address [[[$root selectNodes {//instancesSet/item/privateIpAddress}]  childNode] data]
+        set address [[[$root selectNodes {//instancesSet/item/ipAddress}]  childNode] data]
         output "$instance_id state = $state, keyname = $keyname, platform = $platform, address = $address" 3
         $root delete
         $xmldoc delete
@@ -590,6 +593,7 @@ proc initialize {} {
 	set ::INLOOP 0
 	set ::SENSITIVE ""
 	set ::CLOUD_ENDPOINTS() ""
+	set ::runtime_arr(_AWS_REGION,1) ""
 
 	#set ::FILTER_BUFFER 0
 	#set ::TIMEOUT_CODEBLOCK "" 
@@ -3240,9 +3244,9 @@ proc new_connection {connection_system conn_name conn_type} {
 		if {"$user_id" == ""} {
 			error_out "The user id value is required for a connection type of ssh - ec2, example: root@$connection_system" 9999
 		}
-		for {set ii 0} {$ii < 10} {incr ii} {
+		for {set ii 0} {$ii < 20} {incr ii} {
 			sleep 1
-			set state [gather_aws_system_info $connection_system $user_id]
+			set state [gather_aws_system_info $connection_system $user_id $::runtime_arr(_AWS_REGION,1)]
 			if {"$state" == "running"} {
 				break
 			} elseif {"$state" == "pending"} {
@@ -3251,7 +3255,10 @@ proc new_connection {connection_system conn_name conn_type} {
 				error_out "The instance $connection_system is not in a running or pending state. Current state is $state. Cannot connect" 9999
 			}
 		}
-		register_security_group $::system_arr($connection_system,security_group) 22
+		if {"$state" == "pending"} {
+			error_out "The instance $connection_system has been stuck in a pending state for 220 seconds. Check the status of the instance" 9999
+		}
+		register_security_group $::system_arr($connection_system,security_group) 22 $::runtime_arr(_AWS_REGION,1)
 	}	
 	insert_audit $::STEP_ID "" "Connecting to ($asset_name)... " "$connection_system"
 
@@ -3408,6 +3415,9 @@ proc http_command {command} {
 	set proc_name http_command
 
 	package require http
+	package require tls
+	::http::register https 443 ::tls::socket
+
 	get_xml_root $command
 	set url [replace_variables_all [$::ROOT selectNodes string(url)]]
 	set type [$::ROOT selectNodes string(type)]
@@ -5127,20 +5137,24 @@ proc launch_run_task {} {
 	$xmldoc delete
 	
 	if {"$version" > ""} {
-		set sql "select task_id from task where original_task_id = '$original_task_id' and version = '$version'"
+		set sql "select task_id, task_name, version, default_version, now() from task where original_task_id = '$original_task_id' and version = '$version'"
 	} else {
-		set sql "select task_id from task where original_task_id = '$original_task_id' and default_version = 1"
+		set sql "select task_id, task_name, version, default_version, now() from task where original_task_id = '$original_task_id' and default_version = 1"
 	}
 	$::db_query $::CONN $sql
-	set task_id [$::db_fetch $::CONN]
+	set row [$::db_fetch $::CONN]
+	set task_id [lindex $row 0]
+	set task_name [lindex $row 1]
+	set task_version [lindex $row 2]
+	set default_version [lindex $row 3]
+	set submitted_dt [lindex $row 4]
 	output "run task $task_id"
 					
 	regsub -all "(')" $parameterXML "''" parameterXML
-	set sql "addTaskInstance '$task_id','$asset_id','$::SUBMITTED_BY', null, '', $::DEBUG_LEVEL, null, $::TASK_INSTANCE, '$parameterXML'"
+	#set sql "addTaskInstance '$task_id','$asset_id','$::SUBMITTED_BY', null, '', $::DEBUG_LEVEL, null, $::TASK_INSTANCE, '$parameterXML'"
+	set sql "call addTaskInstance ('$task_id',NULL,'$::SUBMITTED_BY','$::DEBUG_LEVEL','','$parameterXML','$::ECOSYSTEM_ID','$::CLOUD_ACCOUNT')"
 	#output $sql
-	$::db_query $::CONN $sql
-	set row [$::db_fetch $::CONN]
-	set task_instance_id [lindex $row 0]
+	set task_instance_id [::mysql::sel $::CONN $sql -list]
 	if {"$task_instance_id" == ""} {
 		# must be queued, no task created
 		insert_audit $::STEP_ID  "" "Task instance not created, maximum queue depth reached" ""
@@ -5154,11 +5168,12 @@ proc launch_run_task {} {
 	set_handle_var "#${handle}.INSTANCE" $task_instance_id
 	set_handle_var "#${handle}.TASKID" $task_id
 	set_handle_var "#${handle}.SUBMITTED_BY" $::SUBMITTED_BY
-	set_handle_var "#${handle}.STATUS" [lindex $row 1]
-	set_handle_var "#${handle}.TASKNAME" [lindex $row 2]
-	set_handle_var "#${handle}.TASKVERSION" [lindex $row 3]
-	set_handle_var "#${handle}.ISDEFAULT" [lindex $row 4]
-	set_handle_var "#${handle}.SUBMITTED_DT" [lindex $row 5]
+	set_handle_var "#${handle}.STATUS" Submitted
+	#set_handle_var "#${handle}.STATUS" [lindex $row 1]
+	set_handle_var "#${handle}.TASKNAME" $task_name
+	set_handle_var "#${handle}.TASKVERSION" $task_version
+	set_handle_var "#${handle}.ISDEFAULT" $default_version
+	set_handle_var "#${handle}.SUBMITTED_DT" $submitted_dt
 
 
 	##NOTE! we are putting a "command name" in this insert_audit.  This is a special case
@@ -5170,11 +5185,9 @@ proc launch_run_task {} {
 		set asset_name [lindex [$::db_fetch $::CONN] 0]
 		set_handle_var "#${handle}.ASSET_NAME" $asset_name
 
-		insert_audit $::STEP_ID  "run_task $task_instance_id" "Running Task Instance {$task_instance_id} :: ID {$task_id}, Name {[lindex $row 2]}, Version {[lindex $row 3]} on Asset ID $asset_id, Asset Name $asset_name using handle $handle." ""
-		output "Run Task: Instance {$task_instance_id}, Status {[lindex $row 1]}, ID {$task_id}, Name {[lindex $row 2]}, Version {[lindex $row 3]}, Default? {[lindex $row 4]}, Submitted By {$::SUBMITTED_BY}, Submitted On {[lindex $row 5]} on Asset ID {$asset_id}, Asset Name $asset_name using handle $handle." 1
+		insert_audit $::STEP_ID  "run_task $task_instance_id" "Running Task Instance $task_instance_id :: ID $task_id, Name $task_name, Version $task_version on Asset ID $asset_id, Asset Name $asset_name using handle $handle." ""
 	} else {
-		insert_audit $::STEP_ID  "run_task $task_instance_id" "Running Task Instance {$task_instance_id} :: ID {$task_id}, Name {[lindex $row 2]}, Version {[lindex $row 3]} using handle $handle." ""
-		output "Run Task: Instance {$task_instance_id}, Status {[lindex $row 1]}, ID {$task_id}, Name {[lindex $row 2]}, Version {[lindex $row 3]}, Default? {[lindex $row 4]}, Submitted By {$::SUBMITTED_BY}, Submitted On {[lindex $row 5]} using handle $handle." 1
+		insert_audit $::STEP_ID  "run_task $task_instance_id" "Running Task Instance $task_instance_id :: ID $task_id, Name $task_name, Version $task_version on Asset ID $asset_id using handle $handle." ""
 	}
 	if {[string is integer $wait_time] && "$wait_time" > ""} {
 		if {$wait_time == 0} {
@@ -5394,7 +5407,7 @@ proc connect_db {} {
                 exit
 	        }
 		} else {
-    	    if {[catch {set ::CONN [::mysql::connect -user $::CONNECT_USER -password $::CONNECT_PASSWORD -host $::CONNECT_SERVER -db $::CONNECT_DB -port $::CONNECT_PORT]} errMsg]} {
+    	    if {[catch {set ::CONN [::mysql::connect -user $::CONNECT_USER -password $::CONNECT_PASSWORD -host $::CONNECT_SERVER -db $::CONNECT_DB -port $::CONNECT_PORT -multiresult 1 -multistatement 1]} errMsg]} {
                 output "Could not connect to the database. Error message -> $errMsg"
                 output "Exiting..."
                 exit
