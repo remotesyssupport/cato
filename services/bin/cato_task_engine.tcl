@@ -366,7 +366,7 @@ proc gather_aws_system_info {instance_id user_id region} {
         } else {
                 set platform "linux"
         }
-        set address [[[$root selectNodes {//instancesSet/item/ipAddress}]  childNode] data]
+        set address [[[$root selectNodes {//instancesSet/item/dnsName}]  childNode] data]
         output "$instance_id state = $state, keyname = $keyname, platform = $platform, address = $address" 3
         $root delete
         $xmldoc delete
