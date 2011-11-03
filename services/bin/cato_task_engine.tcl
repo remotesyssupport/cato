@@ -128,7 +128,7 @@ proc register_security_group {apply_to_group port region} {
 	}
         #set params "GroupId $apply_to_group IpPermissions.1.Groups.1.UserId $::CSK_ACCOUNT IpPermissions.1.Groups.1.GroupId $::CSK_SECURITY_GROUP IpPermissions.1.IpProtocol tcp IpPermissions.1.FromPort $port IpPermissions.1.ToPort $port"
         set params "GroupId $apply_to_group IpPermissions.1.IpRanges.1.CidrIp $ip/32 IpPermissions.1.IpProtocol tcp IpPermissions.1.FromPort $port IpPermissions.1.ToPort $port"
-        set cmd "$x  call_aws ec2 $region AuthorizeSecurityGroupIngress"
+        set cmd "$x  call_aws ec2 \"$region\" AuthorizeSecurityGroupIngress"
         lappend cmd $params
         catch {set  result [eval $cmd]} result
         output $result
@@ -274,7 +274,7 @@ proc register_ecosystem_object {result ecosystem_id object_type path role api_co
 			set the_arg ""
 			lappend the_arg ResourceId.1 [$instance asText] Tag.1.Key cato.role Tag.1.Value $role
 			for {set counter 0} {$counter < 4} {incr counter} {
-				if {[catch {$api_conn call_aws ec2 $region CreateTags $the_arg} errMsg]} {
+				if {[catch {$api_conn call_aws ec2 \"$region\" CreateTags $the_arg} errMsg]} {
 					if {[string match "*does not exist*" $errMsg]} {
 						output "Waiting five seconds to reattempt tagging"
 						sleep 5
@@ -336,7 +336,7 @@ proc gather_aws_system_info {instance_id user_id region} {
         set proc_name gather_aws_system_info
         package require tclcloud
         set x [::tclcloud::connection new $::CLOUD_LOGIN_ID $::CLOUD_LOGIN_PASS]
-        set cmd "$x call_aws ec2 $region DescribeInstances "
+        set cmd "$x call_aws ec2 \"$region\" DescribeInstances "
         set params "InstanceId $instance_id"
         lappend cmd $params
         lappend cmd {}
