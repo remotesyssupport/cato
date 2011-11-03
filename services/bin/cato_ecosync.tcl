@@ -192,7 +192,7 @@ proc check_as_instances {ecosystem_id} {
 		set return_val [eval $cmd]
 		$::ACCOUNT_HANDLE destroy
 		set ::EC2_INSTANCES [parse_results //instancesSet/item/instanceId $return_val]
-		##output "ec2 instance = $::EC2_INSTANCES"
+		#output "ec2 instance = $::EC2_INSTANCES"
 	}
 	if {"$::AS_XML" > "" && "$::EC2_INSTANCES" > ""} {
 		set as_instances [parse_results //InstanceId $::AS_XML]
