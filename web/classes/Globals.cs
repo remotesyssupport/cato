@@ -298,6 +298,20 @@ namespace Globals
 			}
 			return null;
 		}
+		public Dictionary<string, CloudObjectType> GetAllObjectTypes()
+		{
+			Dictionary<string, CloudObjectType> cots = new Dictionary<string, CloudObjectType>();
+			
+	        foreach (Product p in this.Products.Values)
+	        {
+		        foreach (CloudObjectType cot in p.CloudObjectTypes.Values)
+		        {
+					if (cot != null)
+						cots.Add(cot.ID, cot);
+				}
+			}
+			return cots;
+		}
 	}
 
 	public class Product

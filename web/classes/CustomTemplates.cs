@@ -20,6 +20,7 @@ using System.Xml.Linq;
 using System.Xml;
 using System.Xml.XPath;
 using System.Data;
+using Globals;
 
 namespace FunctionTemplates
 {
@@ -68,28 +69,25 @@ namespace FunctionTemplates
             string sObjectType = xObjectType.Value;
 
             string sHTML = "";
-            string sErr = "";
 
             sHTML += "Select Object Type:" + Environment.NewLine;
             sHTML += "<select " + CommonAttribs(sStepID, sFunction, true, "object_type", "") + ">" + Environment.NewLine;
             sHTML += "  <option " + SetOption("", sObjectType) + " value=\"\"></option>" + Environment.NewLine;
 
-            string sSQL = "select cloud_object_type, label from cloud_object_type order by label";
-            DataTable dt = new DataTable();
-            if (!dc.sqlGetDataTable(ref dt, sSQL, ref sErr))
-            {
-                return "Database Error:" + sErr;
-            }
-
-            if (dt.Rows.Count > 0)
-            {
-                foreach (DataRow dr in dt.Rows)
-                {
-                    sHTML += "<option " + SetOption(dr["cloud_object_type"].ToString(), sObjectType) + " value=\"" + dr["cloud_object_type"].ToString() + "\">" + dr["label"].ToString() + "</option>" + Environment.NewLine;
-                }
-            }
             
-            
+			//temporary, waiting on issue #111/#128
+			CloudProviders cp = ui.GetCloudProviders();
+			if (cp != null)
+			{
+				foreach (Provider p in cp.Values) {
+					Dictionary<string, CloudObjectType> cots = p.GetAllObjectTypes();
+					foreach (CloudObjectType cot in cots.Values) {
+						sHTML += "<option " + SetOption(cot.ID, sObjectType) + " value=\"" + cot.ID + "\">" + p.Name + " - " + cot.Label + "</option>" + Environment.NewLine;			
+					}
+				}
+			}
+			
+			
             sHTML += "</select> <br />" + Environment.NewLine;
 
             XElement xResultName = xd.XPathSelectElement("//result_name");
