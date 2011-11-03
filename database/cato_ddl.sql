@@ -229,7 +229,7 @@ CREATE TABLE `import_task` (
   `version` decimal(18,3) NOT NULL,
   `task_name` varchar(255) NOT NULL DEFAULT '',
   `task_code` varchar(32) DEFAULT NULL,
-  `task_desc` varchar(255) DEFAULT '',
+  `task_desc` varchar(1024) DEFAULT '',
   `task_status` varchar(32) NOT NULL DEFAULT 'Development',
   `use_connector_system` int(11) NOT NULL DEFAULT '0',
   `default_version` int(11) NOT NULL,
