@@ -3258,7 +3258,7 @@ proc new_connection {connection_system conn_name conn_type} {
 		if {"$state" == "pending"} {
 			error_out "The instance $connection_system has been stuck in a pending state for 220 seconds. Check the status of the instance" 9999
 		}
-		register_security_group $::system_arr($connection_system,security_group) 22 $::runtime_arr(_AWS_REGION,1)
+		#register_security_group $::system_arr($connection_system,security_group) 22 $::runtime_arr(_AWS_REGION,1)
 	}	
 	insert_audit $::STEP_ID "" "Connecting to ($asset_name)... " "$connection_system"
 
