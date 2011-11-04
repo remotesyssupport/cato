@@ -22,6 +22,7 @@ using System.Text.RegularExpressions;
 using System.Web.Services;
 using System.Xml.Linq;
 using System.Xml.XPath;
+using System.IO;
 
 namespace ACWebMethods
 {
@@ -2126,8 +2127,32 @@ namespace ACWebMethods
 				throw new Exception(ex.Message);
 			}
         }
-
+		
+		//THIS METHOD IS INTERNAL
+		//we use it for renaming a backup file suitable for the task library.
+		//it's not bulletproof, and is not exposed in the gui.
         [WebMethod(EnableSession = true)]
+        public string wmRenameFile(string sExistingName, string sNewFileName)
+        {
+			string sPath = Server.MapPath("~/temp/");
+
+			try
+			{
+				//delete the new name if it exists
+				//File.Delete(sPath + sNewFileName);
+			
+				//rename the file to our new name
+				File.Move(sPath + sExistingName, sPath + sNewFileName);
+				
+				return sNewFileName;
+			}
+			catch (Exception ex)
+			{
+				throw new Exception(ex.Message);
+			}
+        }
+
+		[WebMethod(EnableSession = true)]
         public string wmCreateTask(object[] oObj)
         {
             try

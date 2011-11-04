@@ -275,7 +275,12 @@ function ExportTasks() {
             //if it's valid, it will have a ".zip" in it.
             //otherwise we assume it's an error
             if (msg.d.indexOf(".zip") > -1) {
+                //developer utility for renaming the file
+                //note: only works with one task at a time.
+                //var filename = RenameBackupFile(msg.d, ArrayString);
+                //the NORMAL way
                 var filename = msg.d;
+                
                 $("#hidSelectedArray").val("");
                 $("#export_dialog").dialog('close');
 
@@ -359,4 +364,37 @@ function SaveNewTask() {
 
     }
 
+}
+
+function RenameBackupFile(src_file_name, otid) {
+	//real simple... call our rename webmethod for the file we just exported
+	
+	//but first, build a new name from the task name.
+	x = $("tr[task_id='" + otid + "']").children()[2];
+	newname = $(x).text().trim().toLowerCase().replace(/ /g, "-");
+	
+	newname = newname + ".zip";
+
+    $.ajax({
+        type: "POST",
+        async: false,
+        url: "taskMethods.asmx/wmRenameFile",
+        data: '{"sExistingName":"' + src_file_name + '","sNewFileName":"' + newname + '"}',
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (msg) {
+            //the return code might be a filename or an error.
+            //if it's valid, it will have a ".zip" in it.
+            //otherwise we assume it's an error
+            if (msg.d.indexOf(".zip") > -1) {
+            } else {
+                showAlert(msg.d);
+            }
+        },
+        error: function (response) {
+            showAlert(response.responseText);
+        }
+    });
+
+	return newname;
 }
